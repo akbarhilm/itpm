@@ -1,0 +1,4235 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Dokumentasi API Service Profil",
+        "version": "1.0.0",
+        "title": "Service Profil",
+        "contact": {
+            "name": "Racka Pratama",
+            "url": "@rackapratamaps",
+            "email": "racka@indonesian-aerospace.com"
+        }
+    },
+    "host": "10.1.94.235:8002",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "Aplikasi",
+            "description": "Pengelolaan Aplikasi"
+        },
+        {
+            "name": "Menu",
+            "description": "Pengelolaan Menu"
+        },
+        {
+            "name": "Otoritas",
+            "description": "Pengelolaan Otoritas"
+        },
+        {
+            "name": "Otoritas Aplikasi",
+            "description": "Pengelolaan Otoritas Aplikasi"
+        },
+        {
+            "name": "Otoritas Menu",
+            "description": "Pengelolaan Otoritas Menu"
+        },
+        {
+            "name": "Otoritas Pengguna",
+            "description": "Pengelolaan Otoritas Pengguna"
+        },
+        {
+            "name": "Pegawai",
+            "description": "Pengelolaan Pegawai"
+        },
+        {
+            "name": "Pengguna",
+            "description": "Pengelolaan Pengguna"
+        }
+    ],
+    "paths": {
+        "/aplikasi": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan aplikasi",
+                "operationId": "getAllUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua aplikasi, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "semua",
+                        "in": "query",
+                        "description": "Filter semua aplikasi, semua = 1 atau kosongkan untuk mengambil list aplikasi termasuk \"Semua Aplikasi\" dan SAP, semua = 0 untuk mengambil list aplikasi tanpa \"Semua Aplikasi\" dan SAP",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Aplikasi"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aplikasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/hapus": {
+            "delete": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menghapus aplikasi",
+                "operationId": "deleteUsingDELETE",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Aplikasi dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Hapus semua entitas anak dari Aplikasi dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/sap/modul": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan modul yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getSAPModulUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Modul"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Modul tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/statusaktif": {
+            "put": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk mengubah status aktif aplikasi",
+                "description": "Dari yang sebelumnya aktif menjadi tidak aktif dan sebaliknya",
+                "operationId": "activeStatusUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Aplikasi dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Aplikasi dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/tambah": {
+            "post": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menambah aplikasi",
+                "operationId": "saveUsingPOST",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Aplikasi",
+                        "description": "Format JSON untuk request aplikasi",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Aplikasi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Aplikasi"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "409": {
+                        "description": "Aplikasi dengan kode {kode} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/ubah": {
+            "put": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk mengubah aplikasi",
+                "operationId": "updateUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Aplikasi",
+                        "description": "Format JSON untuk request aplikasi",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Aplikasi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Aplikasi"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Aplikasi dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Aplikasi dengan kode {kode} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getOneUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Aplikasi"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Aplikasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}/file": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan file yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getAllFileUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response File"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "File tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}/menu": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan menu yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getAllMenuUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua menu, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Menu"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Menu tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}/modul": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan modul yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getAllModulUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Modul"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Modul tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}/otoritas": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getAllOtoritasUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua otoritas, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}/pengguna": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getAllPenggunaUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua pengguna, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Pengguna"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}/pengumuman": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan pengumuman yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getAllPengumumanUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Pengumuman"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Pengumuman tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/{id}/proyek": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan proyek yang dimiliki aplikasi",
+                "description": "Berdasarkan id aplikasi",
+                "operationId": "getAllProyekUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Proyek"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Proyek tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan menu",
+                "operationId": "getAllUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua menu, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "sidebar",
+                        "in": "query",
+                        "description": "Filter kode sidebar, kosongkan untuk mengambil semua menu, sidebar = 1 jika hanya yang menu di sidebar, sidebar = 0 jika semua yang bukan di sidebar",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Menu"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Menu tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/hapus": {
+            "delete": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menghapus menu",
+                "operationId": "deleteUsingDELETE_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Menu dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Hapus semua entitas anak dari Menu dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/statusaktif": {
+            "put": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk mengubah status aktif menu",
+                "description": "Dari yang sebelumnya aktif menjadi tidak aktif dan sebaliknya",
+                "operationId": "activeStatusUsingPUT_1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Menu dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Menu dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/tambah": {
+            "post": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menambah menu",
+                "operationId": "saveUsingPOST_1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Menu",
+                        "description": "Format JSON untuk request menu",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Menu"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Menu Induk dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Menu dengan kode {kode} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/ubah": {
+            "put": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk mengubah menu",
+                "operationId": "updateUsingPUT_1",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Menu",
+                        "description": "Format JSON untuk request menu",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Menu"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Menu dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Menu dengan kode {kode} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/{id}": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan menu",
+                "description": "Berdasarkan id menu",
+                "operationId": "getOneUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id menu",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Menu tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/{id}/aplikasi": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan aplikasi yang memiliki menu",
+                "description": "Berdasarkan id menu",
+                "operationId": "getAllAplikasiUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua aplikasi, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id menu",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Aplikasi"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Aplikasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/{id}/induk": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan menu induk",
+                "description": "Berdasarkan id menu",
+                "operationId": "getIndukUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id menu",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Tidak memiliki Menu Induk"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/{id}/otoritas": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas yang memiliki menu",
+                "description": "Berdasarkan id menu",
+                "operationId": "getAllOtoritasUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua otoritas, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id menu",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/{id}/pengguna": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna yang memiliki menu",
+                "description": "Berdasarkan id menu",
+                "operationId": "getAllPenggunaUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua pengguna, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id menu",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Pengguna"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/{id}/sub": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan sub menu",
+                "description": "Berdasarkan id menu",
+                "operationId": "getSubUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id menu",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Tidak memiliki Sub Menu"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas": {
+            "get": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas",
+                "operationId": "getAllUsingGET_3",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua otoritas, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Otoritas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/hapus": {
+            "delete": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk menghapus otoritas",
+                "operationId": "deleteUsingDELETE_3",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Hapus semua entitas anak dari Otoritas dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/statusaktif": {
+            "put": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk mengubah status aktif otoritas",
+                "description": "Dari yang sebelumnya aktif menjadi tidak aktif dan sebaliknya",
+                "operationId": "activeStatusUsingPUT_3",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Otoritas dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/tambah": {
+            "post": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk menambah otoritas",
+                "operationId": "saveUsingPOST_3",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas",
+                        "description": "Format JSON untuk request otoritas",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "409": {
+                        "description": "Otoritas dengan kode {kode} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/ubah": {
+            "put": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk mengubah otoritas",
+                "operationId": "updateUsingPUT_3",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas",
+                        "description": "Format JSON untuk request otoritas",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Otoritas dengan kode {kode} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/{id}": {
+            "get": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas",
+                "description": "Berdasarkan id otoritas",
+                "operationId": "getOneUsingGET_2",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id otoritas",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/{id}/aplikasi": {
+            "get": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk menampilkan aplikasi yang memiliki otoritas",
+                "description": "Berdasarkan id otoritas",
+                "operationId": "getAllAplikasiUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua aplikasi, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id otoritas",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Aplikasi"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Aplikasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/{id}/menu/{idaplikasi}": {
+            "get": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk menampilkan menu yang dimiliki otoritas",
+                "description": "Berdasarkan id otoritas",
+                "operationId": "getAllMenuUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua menu, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id otoritas",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    },
+                    {
+                        "name": "idaplikasi",
+                        "in": "path",
+                        "description": "Id aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Menu"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Menu tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritas/{value}/pengguna": {
+            "get": {
+                "tags": [
+                    "Otoritas"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna yang memiliki otoritas",
+                "description": "Berdasarkan id atau otoritas",
+                "operationId": "getAllPenggunaUsingGET_2",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua pengguna, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "value",
+                        "in": "path",
+                        "description": "Id atau kode otoritas",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Pengguna"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasaplikasi": {
+            "get": {
+                "tags": [
+                    "Otoritas Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan seluruh otoritas aplikasi",
+                "operationId": "getAllUsingGET_2",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua otoritas aplikasi, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idaplikasi",
+                        "in": "query",
+                        "description": "Id aplikasi, kosongkan untuk mengambil semua otoritas aplikasi",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idotoritas",
+                        "in": "query",
+                        "description": "Id otoritas, kosongkan untuk mengambil semua otoritas aplikasi",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas Aplikasi"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id Aplikasi dan/atau Otoritas tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas Aplikasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasaplikasi/hapus": {
+            "delete": {
+                "tags": [
+                    "Otoritas Aplikasi"
+                ],
+                "summary": "Fungsi untuk menghapus otoritas aplikasi",
+                "operationId": "deleteUsingDELETE_2",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Aplikasi dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Hapus semua entitas anak dari Otoritas Aplikasi dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasaplikasi/statusaktif": {
+            "put": {
+                "tags": [
+                    "Otoritas Aplikasi"
+                ],
+                "summary": "Fungsi untuk mengubah status aktif otoritas aplikasi",
+                "description": "Dari yang sebelumnya aktif menjadi tidak aktif dan sebaliknya",
+                "operationId": "activeStatusUsingPUT_2",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Aplikasi dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Otoritas Aplikasi dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasaplikasi/tambah": {
+            "post": {
+                "tags": [
+                    "Otoritas Aplikasi"
+                ],
+                "summary": "Fungsi untuk menambah otoritas aplikasi",
+                "operationId": "saveUsingPOST_2",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas Aplikasi",
+                        "description": "Format JSON untuk request otoritas aplikasi",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas Aplikasi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Aplikasi"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "409": {
+                        "description": "Otoritas Aplikasi dengan Id Aplikasi & Id Otoritas {idaplikasi} & {idotoritas} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasaplikasi/ubah": {
+            "put": {
+                "tags": [
+                    "Otoritas Aplikasi"
+                ],
+                "summary": "Fungsi untuk mengubah otoritas aplikasi",
+                "operationId": "updateUsingPUT_2",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas Aplikasi",
+                        "description": "Format JSON untuk request otoritas aplikasi",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas Aplikasi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Aplikasi"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Aplikasi dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Otoritas Aplikasi dengan Id Aplikasi & Id Otoritas {idaplikasi} & {idotoritas} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasaplikasi/{id}": {
+            "get": {
+                "tags": [
+                    "Otoritas Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas aplikasi",
+                "description": "Berdasarkan id otoritas aplikasi",
+                "operationId": "getOneOtoritasAplikasiUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id otoritas aplikasi",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Aplikasi"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas Aplikasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasmenu": {
+            "get": {
+                "tags": [
+                    "Otoritas Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan seluruh otoritas menu",
+                "operationId": "getAllUsingGET_4",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua otoritas menu, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idmenu",
+                        "in": "query",
+                        "description": "Id menu, kosongkan untuk mengambil semua otoritas menu",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idotoritasaplikasi",
+                        "in": "query",
+                        "description": "Id otoritas aplikasi, kosongkan untuk mengambil semua otoritas menu",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas Menu"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id Menu dan/atau Otoritas Aplikasi tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas Menu tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasmenu/hapus": {
+            "delete": {
+                "tags": [
+                    "Otoritas Menu"
+                ],
+                "summary": "Fungsi untuk menghapus otoritas menu",
+                "operationId": "deleteUsingDELETE_4",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Menu dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Hapus semua entitas anak dari Otoritas Menu dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasmenu/statusaktif": {
+            "put": {
+                "tags": [
+                    "Otoritas Menu"
+                ],
+                "summary": "Fungsi untuk mengubah status aktif otoritas menu",
+                "description": "Dari yang sebelumnya aktif menjadi tidak aktif dan sebaliknya",
+                "operationId": "activeStatusUsingPUT_4",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Menu dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Otoritas Menu dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasmenu/tambah": {
+            "post": {
+                "tags": [
+                    "Otoritas Menu"
+                ],
+                "summary": "Fungsi untuk menambah otoritas menu",
+                "operationId": "saveUsingPOST_4",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas Menu",
+                        "description": "Format JSON untuk request otoritas menu",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas Menu"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "409": {
+                        "description": "Otoritas Menu dengan Id Menu & Id Otoritas Aplikasi {idmenu} & {idotoritasaplikasi} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasmenu/ubah": {
+            "put": {
+                "tags": [
+                    "Otoritas Menu"
+                ],
+                "summary": "Fungsi untuk mengubah otoritas menu",
+                "operationId": "updateUsingPUT_4",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas Menu",
+                        "description": "Format JSON untuk request otoritas menu",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas Menu"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Menu dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Otoritas Menu dengan Id Menu & Id Otoritas Aplikasi {idmenu} & {idotoritasaplikasi} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritasmenu/{id}": {
+            "get": {
+                "tags": [
+                    "Otoritas Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas menu",
+                "description": "Berdasarkan id otoritas menu",
+                "operationId": "getOneUsingGET_3",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id otoritas menu",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Menu"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas Menu tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritaspengguna": {
+            "get": {
+                "tags": [
+                    "Otoritas Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan seluruh otoritas pengguna",
+                "operationId": "getAllUsingGET_5",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua otoritas pengguna, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idotoritasaplikasi",
+                        "in": "query",
+                        "description": "Id otoritas aplikasi, kosongkan untuk mengambil semua otoritas pengguna",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idpengguna",
+                        "in": "query",
+                        "description": "Id pengguna, kosongkan untuk mengambil semua otoritas pengguna",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas Pengguna"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id Pengguna dan/atau Otoritas Aplikasi tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritaspengguna/hapus": {
+            "delete": {
+                "tags": [
+                    "Otoritas Pengguna"
+                ],
+                "summary": "Fungsi untuk menghapus otoritas pengguna",
+                "operationId": "deleteUsingDELETE_5",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Pengguna dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Hapus semua entitas anak dari Otoritas Pengguna dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritaspengguna/statusaktif": {
+            "put": {
+                "tags": [
+                    "Otoritas Pengguna"
+                ],
+                "summary": "Fungsi untuk mengubah status aktif otoritas pengguna",
+                "description": "Dari yang sebelumnya aktif menjadi tidak aktif dan sebaliknya",
+                "operationId": "activeStatusUsingPUT_5",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Pengguna dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Otoritas Pengguna dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritaspengguna/tambah": {
+            "post": {
+                "tags": [
+                    "Otoritas Pengguna"
+                ],
+                "summary": "Fungsi untuk menambah otoritas pengguna",
+                "operationId": "saveUsingPOST_5",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas Pengguna",
+                        "description": "Format JSON untuk request otoritas pengguna",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas Pengguna"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "409": {
+                        "description": "Otoritas Pengguna dengan Id Pengguna & Id Otoritas Aplikasi {idpengguna} & {idotoritasaplikasi} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritaspengguna/ubah": {
+            "put": {
+                "tags": [
+                    "Otoritas Pengguna"
+                ],
+                "summary": "Fungsi untuk mengubah otoritas pengguna",
+                "operationId": "updateUsingPUT_5",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Otoritas Pengguna",
+                        "description": "Format JSON untuk request otoritas pengguna",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Otoritas Pengguna"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Otoritas Pengguna dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Otoritas Pengguna dengan Id Pengguna & Id Otoritas Aplikasi {idpengguna} & {idotoritasaplikasi} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/otoritaspengguna/{id}": {
+            "get": {
+                "tags": [
+                    "Otoritas Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas pengguna",
+                "description": "Berdasarkan id otoritas pengguna",
+                "operationId": "getOneOtoritasPenggunaUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id otoritas pengguna",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Otoritas Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pegawai": {
+            "get": {
+                "tags": [
+                    "Pegawai"
+                ],
+                "summary": "Fungsi untuk menampilkan pegawai",
+                "operationId": "getAllUsingGET_6",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "organisasi",
+                        "in": "query",
+                        "description": "Filter organisasi, dapat berupa filter bidang (cth, ITXX00), department (cth, ITX000), atau divisi (cth, IT atau IT000), kosongkan untuk mengambil semua pegawai",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Pegawai"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pegawai tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pegawai/{nik}": {
+            "get": {
+                "tags": [
+                    "Pegawai"
+                ],
+                "summary": "Fungsi untuk menampilkan pegawai",
+                "description": "Berdasarkan id otoritas",
+                "operationId": "getOneUsingGET_4",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "nik",
+                        "in": "path",
+                        "description": "NIK pegawai",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "100100"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Pegawai"
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Pegawai tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna",
+                "operationId": "getAllUsingGET_7",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua pengguna, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "organisasi",
+                        "in": "query",
+                        "description": "Filter organisasi, dapat berupa filter bidang (cth, ITXX00), department (cth, ITX000), atau divisi (cth, IT atau IT000), kosongkan untuk mengambil semua pegawai",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Pengguna"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/hapus": {
+            "delete": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menghapus pengguna",
+                "operationId": "deleteUsingDELETE_6",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Pengguna dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Hapus semua entitas anak dari Pengguna dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/kunci": {
+            "put": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk mengubah status kunci pengguna",
+                "description": "Dari yang sebelumnya dikunci menjadi tidak dan sebaliknya",
+                "operationId": "lockUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Pengguna dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Pengguna dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/nik/{nik}": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna",
+                "description": "Berdasarkan nik pengguna",
+                "operationId": "getOneByNikUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "nik",
+                        "in": "path",
+                        "description": "NIK pengguna",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "NIK tidak valid"
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/resetsandi": {
+            "put": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk mereset sandi pengguna",
+                "operationId": "resetPasswordUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Pengguna dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/statusaktif": {
+            "put": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk mengubah status aktif pengguna",
+                "description": "Dari yang sebelumnya aktif menjadi tidak aktif dan sebaliknya",
+                "operationId": "activeStatusUsingPUT_6",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Id",
+                        "description": "Format JSON untuk request id",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Pengguna dengan Id {id}"
+                    },
+                    "500": {
+                        "description": "Nonaktifkan semua entitas anak dari Pengguna dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/tambah": {
+            "post": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menambah pengguna",
+                "operationId": "saveUsingPOST_6",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Pengguna",
+                        "description": "Format JSON untuk request pengguna",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Pengguna"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "409": {
+                        "description": "Pengguna dengan NIK {nik} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/ubah": {
+            "put": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk mengubah pengguna",
+                "operationId": "updateUsingPUT_6",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Update Pengguna",
+                        "description": "Format JSON untuk request update pengguna",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Update Pengguna"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Pengguna dengan Id {id}"
+                    },
+                    "409": {
+                        "description": "Pengguna dengan kode {kode} sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/ubahsandi": {
+            "put": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk mengubah sandi pengguna",
+                "operationId": "updatePasswordUsingPUT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request Update Sandi Pengguna",
+                        "description": "Format JSON untuk request update sandi pengguna",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Sandi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Umum"
+                        }
+                    },
+                    "400": {
+                        "description": "{param} {keterangan error}"
+                    },
+                    "404": {
+                        "description": "Tidak ditemukan Pengguna dengan Id {id}"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/{id}": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna",
+                "description": "Berdasarkan id pengguna",
+                "operationId": "getOneByIdUsingGET",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id pengguna",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "ID tidak valid"
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/{id}/aplikasi": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan aplikasi yang dimiliki pengguna",
+                "description": "Berdasarkan id pengguna",
+                "operationId": "getAllAplikasiUsingGET_2",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua aplikasi, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id pengguna",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Aplikasi"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Aplikasi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/{id}/menu": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan menu yang dimiliki pengguna",
+                "description": "Berdasarkan id pengguna, id aplikasi, dan id proyek",
+                "operationId": "getAllMenuUsingGET_2",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua menu, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id pengguna",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    },
+                    {
+                        "name": "idaplikasi",
+                        "in": "query",
+                        "description": "Filter berdasarkan id aplikasi",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idproyek",
+                        "in": "query",
+                        "description": "Filter berdasarkan id proyek",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Menu dalam bentuk Tree"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Menu tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/{id}/otoritas": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas yang dimiliki pengguna",
+                "description": "Berdasarkan id pengguna",
+                "operationId": "getAllOtoritasUsingGET_2",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua otoritas, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id pengguna",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    },
+                    {
+                        "name": "idproyek",
+                        "in": "query",
+                        "description": "Filter berdasarkan id proyek",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Otoritas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/{id}/proyek": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan proyek yang dimiliki pengguna",
+                "description": "Berdasarkan id pengguna",
+                "operationId": "getAllProyekUsingGET_1",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "aktif",
+                        "in": "query",
+                        "description": "Filter status aktif, kosongkan untuk mengambil semua proyek, aktif = 1 jika hanya yang aktif, aktif = 0 jika semua yang nonaktif",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id pengguna",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Proyek"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Id tidak valid"
+                    },
+                    "404": {
+                        "description": "Proyek tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Request Aplikasi": {
+            "type": "object",
+            "required": [
+                "keterangan",
+                "kode",
+                "link",
+                "nama"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi hanya saat proses ubah data"
+                },
+                "keterangan": {
+                    "type": "string",
+                    "example": "Aplikasi pertama pada sistem",
+                    "description": "Keterangan maksimal 400 karakter"
+                },
+                "kode": {
+                    "type": "string",
+                    "example": "APP001",
+                    "description": "Kode maksimal 15 karakter"
+                },
+                "link": {
+                    "type": "string",
+                    "example": "app001",
+                    "description": "Link aplikasi, maksimal 255 karakter"
+                },
+                "nama": {
+                    "type": "string",
+                    "example": "Aplikasi 1",
+                    "description": "Nama maksimal 255 karakter"
+                }
+            },
+            "title": "Request Aplikasi"
+        },
+        "Request Id": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1
+                }
+            },
+            "title": "Request Id"
+        },
+        "Request Menu": {
+            "type": "object",
+            "required": [
+                "keterangan",
+                "nama"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi hanya saat proses ubah data"
+                },
+                "idInduk": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Isi jika memiliki id induk, kosongkan jika tidak"
+                },
+                "keterangan": {
+                    "type": "string",
+                    "example": "Menu pertama aplikasi 1",
+                    "description": "Keterangan maksimal 400 karakter"
+                },
+                "link": {
+                    "type": "string",
+                    "example": "/menu001",
+                    "description": "Link menu, maksimal 255 karakter"
+                },
+                "nama": {
+                    "type": "string",
+                    "example": "Menu 1",
+                    "description": "Nama maksimal 255 karakter"
+                },
+                "sidebar": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Kode Sidebar untuk Menu harus diantara, 1 - Sidebar atau 0 - Bukan Sidebar"
+                },
+                "urutan": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Urutan Menu, kosongkan jika tidak harus berurutan"
+                }
+            },
+            "title": "Request Menu"
+        },
+        "Request Otentikasi": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi jika otentikasi berdasarkan id"
+                },
+                "nik": {
+                    "type": "string",
+                    "example": 180144,
+                    "description": "Diisi jika otentikasi berdasarkan nik"
+                }
+            },
+            "title": "Request Otentikasi"
+        },
+        "Request Otoritas": {
+            "type": "object",
+            "required": [
+                "keterangan",
+                "kode",
+                "nama"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi hanya saat proses ubah data"
+                },
+                "keterangan": {
+                    "type": "string",
+                    "example": "Otoritas standar aplikasi",
+                    "description": "Keterangan maksimal 400 karakter"
+                },
+                "kode": {
+                    "type": "string",
+                    "example": "PENGGUNA",
+                    "description": "Kode maksimal 15 karakter"
+                },
+                "nama": {
+                    "type": "string",
+                    "example": "Pengguna",
+                    "description": "Nama maksimal 255 karakter"
+                }
+            },
+            "title": "Request Otoritas"
+        },
+        "Request Otoritas Aplikasi": {
+            "type": "object",
+            "required": [
+                "idAplikasi",
+                "idOtoritas"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi hanya saat proses ubah data"
+                },
+                "idAplikasi": {
+                    "type": "string",
+                    "example": 1
+                },
+                "idOtoritas": {
+                    "type": "string",
+                    "example": 1
+                }
+            },
+            "title": "Request Otoritas Aplikasi"
+        },
+        "Request Otoritas Menu": {
+            "type": "object",
+            "required": [
+                "idMenu",
+                "idOtoritasAplikasi"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi hanya saat proses ubah data"
+                },
+                "idMenu": {
+                    "type": "string",
+                    "example": 1
+                },
+                "idOtoritasAplikasi": {
+                    "type": "string",
+                    "example": 1
+                }
+            },
+            "title": "Request Otoritas Menu"
+        },
+        "Request Otoritas Pengguna": {
+            "type": "object",
+            "required": [
+                "idOtoritasAplikasi",
+                "idPengguna"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi hanya saat proses ubah data"
+                },
+                "idOtoritasAplikasi": {
+                    "type": "string",
+                    "example": 1
+                },
+                "idPengguna": {
+                    "type": "string",
+                    "example": 1
+                }
+            },
+            "title": "Request Otoritas Pengguna"
+        },
+        "Request Pengguna": {
+            "type": "object",
+            "required": [
+                "nik",
+                "sandi"
+            ],
+            "properties": {
+                "nik": {
+                    "type": "string",
+                    "example": 180144,
+                    "description": "NIK pengguna maksimal 6 karakter"
+                },
+                "sandi": {
+                    "type": "string",
+                    "example": "qwerty123",
+                    "description": "Kata sandi harus memiliki setidaknya 8 karakter dan maksimum 16 karakter dengan setidaknya satu huruf besar, setidaknya satu huruf kecil, setidaknya satu angka dan setidaknya satu karakter spesial"
+                }
+            },
+            "title": "Request Pengguna"
+        },
+        "Request Pengguna By Aplikasi dan Otoritas": {
+            "type": "object",
+            "required": [
+                "kodeaplikasi",
+                "kodeotoritas",
+                "nik"
+            ],
+            "properties": {
+                "kodeaplikasi": {
+                    "type": "string",
+                    "example": "PM",
+                    "description": "Kode maksimal 15 karakter"
+                },
+                "kodeotoritas": {
+                    "type": "string",
+                    "example": "PM",
+                    "description": "Kode maksimal 15 karakter"
+                },
+                "nik": {
+                    "type": "string",
+                    "example": 180144,
+                    "description": "NIK pengguna maksimal 6 karakter"
+                }
+            },
+            "title": "Request Pengguna By Aplikasi dan Otoritas"
+        },
+        "Request Sandi": {
+            "type": "object",
+            "required": [
+                "sandiBaru",
+                "sandiLama"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1,
+                    "description": "Diisi hanya saat proses ubah data"
+                },
+                "sandiBaru": {
+                    "type": "string",
+                    "example": "qwerty321",
+                    "description": "Kata sandi harus memiliki setidaknya 8 karakter dan maksimum 16 karakter dengan setidaknya satu huruf besar, setidaknya satu huruf kecil, setidaknya satu angka dan setidaknya satu karakter spesial"
+                },
+                "sandiLama": {
+                    "type": "string",
+                    "example": "qwerty123",
+                    "description": "Kata sandi harus memiliki setidaknya 8 karakter dan maksimum 16 karakter dengan setidaknya satu huruf besar, setidaknya satu huruf kecil, setidaknya satu angka dan setidaknya satu karakter spesial"
+                }
+            },
+            "title": "Request Sandi"
+        },
+        "Request Update Pengguna": {
+            "type": "object",
+            "required": [
+                "id",
+                "nik"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1
+                },
+                "nik": {
+                    "type": "string",
+                    "example": 180144,
+                    "description": "NIK pengguna maksimal 6 karakter"
+                }
+            },
+            "title": "Request Update Pengguna"
+        },
+        "Response Aplikasi": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "keterangan": {
+                    "type": "string"
+                },
+                "kode": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Aplikasi"
+        },
+        "Response File": {
+            "type": "object",
+            "properties": {
+                "direktori": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "idAplikasi": {
+                    "type": "string"
+                },
+                "kategori": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "tipe": {
+                    "type": "string"
+                },
+                "ukuran": {
+                    "type": "string"
+                },
+                "uri": {
+                    "type": "string"
+                }
+            },
+            "title": "Response File"
+        },
+        "Response Menu": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "idInduk": {
+                    "type": "string"
+                },
+                "keterangan": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "sidebar": {
+                    "type": "string"
+                },
+                "urutan": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Menu"
+        },
+        "Response Menu dalam bentuk Tree": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "keterangan": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "sidebar": {
+                    "type": "string"
+                },
+                "sub": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Response Menu dalam bentuk Tree"
+                    }
+                },
+                "urutan": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Menu dalam bentuk Tree"
+        },
+        "Response Modul": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "idaplikasi": {
+                    "type": "string"
+                },
+                "keterangan": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Modul"
+        },
+        "Response Otentikasi": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "kunci": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "string"
+                },
+                "otoritasPengguna": {
+                    "type": "string"
+                },
+                "sandi": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Otentikasi"
+        },
+        "Response Otoritas": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "keterangan": {
+                    "type": "string"
+                },
+                "kode": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Otoritas"
+        },
+        "Response Otoritas Aplikasi": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "aplikasi": {
+                    "$ref": "#/definitions/Response Aplikasi"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "otoritas": {
+                    "$ref": "#/definitions/Response Otoritas"
+                }
+            },
+            "title": "Response Otoritas Aplikasi"
+        },
+        "Response Otoritas Menu": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "menu": {
+                    "$ref": "#/definitions/Response Menu"
+                },
+                "otoritasAplikasi": {
+                    "$ref": "#/definitions/Response Otoritas Aplikasi"
+                }
+            },
+            "title": "Response Otoritas Menu"
+        },
+        "Response Otoritas Pengguna": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "otoritasAplikasi": {
+                    "$ref": "#/definitions/Response Otoritas Aplikasi"
+                },
+                "pengguna": {
+                    "$ref": "#/definitions/Response Pengguna"
+                }
+            },
+            "title": "Response Otoritas Pengguna"
+        },
+        "Response Pegawai": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "jabatan": {
+                    "type": "string",
+                    "enum": [
+                        "SPV",
+                        "MANAGER",
+                        "KADIV",
+                        "GM",
+                        "DIREKTUR"
+                    ]
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "namagelar": {
+                    "type": "string"
+                },
+                "namajabatan": {
+                    "type": "string"
+                },
+                "namaorganisasi": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "string"
+                },
+                "organisasi": {
+                    "type": "string"
+                },
+                "telepon": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Pegawai"
+        },
+        "Response Pengguna": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "jabatan": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "string"
+                },
+                "organisasi": {
+                    "type": "string"
+                },
+                "sandi": {
+                    "type": "string"
+                },
+                "telepon": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Pengguna"
+        },
+        "Response Pengguna By Aplikasi dan Otoritas": {
+            "type": "object",
+            "properties": {
+                "idotoritasmenu": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "idotoritaspengguna": {
+                    "type": "string"
+                },
+                "pengguna": {
+                    "$ref": "#/definitions/Response Pengguna"
+                },
+                "sandi": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Pengguna By Aplikasi dan Otoritas"
+        },
+        "Response Pengumuman": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "idAplikasi": {
+                    "type": "string"
+                },
+                "keterangan": {
+                    "type": "string"
+                },
+                "kode": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Pengumuman"
+        },
+        "Response Proyek": {
+            "type": "object",
+            "properties": {
+                "aktif": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "idlayanan": {
+                    "type": "string"
+                },
+                "idrefensi": {
+                    "type": "string"
+                },
+                "jenisaplikasi": {
+                    "type": "string"
+                },
+                "jenislayanan": {
+                    "type": "string"
+                },
+                "keterangan": {
+                    "type": "string"
+                },
+                "keteranganstatus": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "namauri": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tanggalstatus": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Proyek"
+        },
+        "Response Umum": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "message": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Umum"
+        }
+    }
+}
