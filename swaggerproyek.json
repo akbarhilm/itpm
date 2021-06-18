@@ -239,6 +239,54 @@
                 "deprecated": false
             }
         },
+        "/ubah": {
+            "put": {
+                "tags": [
+                    "Proyek"
+                ],
+                "summary": "Fungsi untuk mengubah Proyek",
+                "operationId": "editProyek",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Put Proyek",
+                        "description": "Format JSON untuk put proyek",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Proyek"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid value"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
         "/aplikasi": {
             "get": {
                 "tags": [
@@ -331,6 +379,24 @@
                 ],
                 "summary": "Fungsi untuk menampilkan Modul",
                 "operationId": "getAllModul",
+                "parameters": [
+                    {
+                        "name": "idmodul",
+                        "in": "query",
+                        "description": "Filter idmodul",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idaplikasi",
+                        "in": "query",
+                        "description": "Filter idaplikasi",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
                 "produces": [
                     "*/*"
                 ],
@@ -509,6 +575,56 @@
                 "deprecated": false
             }
         },
+        "/layanan/unused": {
+            "get": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Fungsi untuk menampilkan Layanan yang belum digunakan",
+                "operationId": "getUnusedLayanan",
+                "parameters": [
+                    {
+                        "name": "idproj",
+                        "in": "query",
+                        "description": "include layanan by idproyek",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Layanan"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
         "/layanan/tambah": {
             "post": {
                 "tags": [
@@ -579,14 +695,11 @@
                 "statusapl",
                 "jenislayanan",
                 "namaproj",
-                "statusproj",
-                "tglstatus",
-                "aktif",
                 "namauri",
                 "nikreq",
                 "nikpm",
-                "ketproj",
-                "ketstatus"
+                "ketproj"
+            
             ],
             "properties": {
                 "idlayanan": {
@@ -621,26 +734,7 @@
                     "example": "projek untuk bla bla bla bah",
                     "description": "Deskripsi projek"
                 },
-                "statusproj": {
-                    "type": "string",
-                    "example": "1",
-                    "description": "Status Project (0=project baru, 1=berjalan, 2=selesai, 9=pending)"
-                },
-                "ketstatus": {
-                    "type": "string",
-                    "example": "blah bla blah",
-                    "description": "Catatan Perubahan Status"
-                },
-                "tglstatus": {
-                    "type": "string",
-                    "example": "DD/MM/YYYY",
-                    "description": "Tanggal Perubahan status terakhir"
-                },
-                "aktif": {
-                    "type": "string",
-                    "example": "1",
-                    "description": "kode aktif"
-                },
+                
                 "namauri": {
                     "type": "string",
                     "example": "itpm",

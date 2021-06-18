@@ -3,7 +3,7 @@ const http = require('http');
 const port = process.env.HTTP_PORT || 3000
 const helmet = require('helmet');
 const morgan = require('morgan');
-const cors = require('cors')
+const cookieparsers = require('cookie-parser')
 const penggunaRoute = require('../../controller/pengguna');
 const menuRoute = require('../../controller/menu');
 const layananRoute = require('../../controller/layanan');
@@ -11,6 +11,7 @@ const aplikasiRoute = require('../../controller/aplikasi');
 const modulRoute = require('../../controller/modul')
 const proyekRoute = require('../../controller/proyek')
 const swaggerRoute = require('../../controller/swagger')
+const assignJwt = require('../../util/assign');
 var jwt = require('express-jwt');
 const fs = require('fs')
 var key = fs.readFileSync('D:\\Back-end\\iae\\profil\\jwtRS256.key.pub')
@@ -53,23 +54,34 @@ function init() {
             // Pass to next layer of middleware
             next();
           });
+        //app.use('/assign',assignJwt) //for assign to httpOnly
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
+        app.use('/',swaggerRoute)
         app.use(helmet());
         app.use(morgan('combined'));
         app.use(express.json());
-      //   app.use(jwt({secret:key,algorithms: ['RS256']}))
-      //  app.use(function (err, req, res, next) {
-      //   if (err.name === 'UnauthorizedError') {
-      //     res.status(401).json(["UnAuthorize!"]);
-      //   }
-      // });
+        app.use(cookieparsers())
+        app.use(jwt({secret:key,algorithms: ['RS256']}))
+
+        //app.use(jwt({secret:key,algorithms: ['RS256'],
+        //        getToken: (req)=> {return req.cookies.token}}))//from httpOnly cookie
+
+       app.use(function (err, req, res, next) {
+        
+        
+        if (err.name === 'UnauthorizedError') {
+          res.status(401).json(["UnAuthorize!"]);
+        
+      }
+      });
+        
         app.use('/api/profil', menuRoute)
         app.use('/api/profil', penggunaRoute)
         app.use('/api/proyek', layananRoute)
         app.use('/api/proyek', aplikasiRoute)
         app.use('/api/proyek',modulRoute)
         app.use('/api/proyek',proyekRoute)
-        app.use('/',swaggerRoute)
+        
        server =  http.createServer(app).listen(port)
             .on('listening', () => {
                 console.log('Starting on localhost:' + port)

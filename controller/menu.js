@@ -10,7 +10,7 @@ router.get('/menu/:id', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows[0]);
         } else {
-            res.status(404).send('Data tidak ditemukan');
+            res.status(200).send({});
         }
     } catch (err) {
         console.error(err)
@@ -25,7 +25,7 @@ router.get('/menu/proyek/nik/:id', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).send('Data tidak ditemukan');
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)
@@ -41,7 +41,7 @@ router.get('/menu', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).send('Data tidak ditemukan');
+            res.status(200).send([]);
         }
     } catch (err) {
         console.error(err)
@@ -53,8 +53,10 @@ router.post('/menu/tambah',async(req,res,next)=>{
     try{
        // console.dir(req.body)
         const rows = await menu.save(req.body)
-        if(rows==1){
-        res.status(200).send('Berhasil menambah data');
+        if (rows == 1) {
+            res.status(200).json({"code":200,"message":"berhasil tambah"});
+        } else {
+            res.json({});
         }
     }catch (err) {
         console.error(err)
