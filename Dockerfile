@@ -1,4 +1,4 @@
-FROM keymetrics/pm2:15-alpine
+FROM 10.1.94.254:8082/custom/pm2-oracleclient
 
 # Bundle APP files
 COPY conf conf/
