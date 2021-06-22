@@ -14,7 +14,7 @@ const swaggerRoute = require('../../controller/swagger')
 const assignJwt = require('../../util/assign');
 var jwt = require('express-jwt');
 const fs = require('fs')
-var key = fs.readFileSync('D:\\Back-end\\iae\\profil\\jwtRS256.key.pub')
+var key = fs.readFileSync('../../jwtRS256.key.pub')
 const swaggerUi = require('swagger-ui-express');
 
 
@@ -23,11 +23,11 @@ var options = {
     swaggerOptions: {
       urls: [
         {
-          url: 'http://10.10.40.141:5000/v2/profil',
+          url: 'http://'+process.env.HOST+':5000/v2/profil',
           name: 'profil'
         },
         {
-          url: 'http://10.10.40.141:5000/v2/proyek',
+          url: 'http://'+process.env.HOST+':5000/v2/proyek',
           name: 'proyek'
         }
       ]
