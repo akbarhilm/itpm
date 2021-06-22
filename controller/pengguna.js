@@ -7,9 +7,10 @@ router.get('/pengguna/nik', async (req, res, next) => {
        
         const rows = await pengguna.find({ nik: req.user.data.nik,nama:req.user.data.nama });
         if (rows.length !== 0) {
+           
             res.status(200).json(rows[0]);
         } else {
-            res.status(404).json({});
+            res.status(200).json({});
         }
     } catch (err) {
         console.error(err)
@@ -24,7 +25,7 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).json([]);
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)
@@ -41,7 +42,7 @@ router.get('/pengguna/otoritas/nik', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).json([]);
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)
@@ -55,7 +56,7 @@ router.get('/pengguna', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).json([]);
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)

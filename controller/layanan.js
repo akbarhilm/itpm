@@ -9,7 +9,7 @@ router.get('/layanan', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).json({});
+            res.status(200).json({});
         }
     } catch (err) {
         console.error(err)
@@ -17,6 +17,23 @@ router.get('/layanan', async (req, res, next) => {
     }
 })
 
+router.get('/layanan/unused',async (req,res,next)=>{
+    try{
+        const param ={}
+       
+            param.idproj = req.query.idproj || false
+        
+        const rows = await layanan.findUnsed(param);
+        if (rows.length !== 0) {
+            res.status(200).json(rows);
+        } else {
+            res.status(200).json({});
+        }
+    }catch (err) {
+        console.error(err)
+        next(err)
+    }
+})
 router.post('/layanan/tambah', async (req, res, next) => {
     try {
         const params = req.body

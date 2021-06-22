@@ -1,5 +1,5 @@
 const database = require('../conf/db/db')
-
+const oracledb = require('oracledb');
 async function find(params){
     
 let query=`select I_ITPM_APPL as idaplikasi,
@@ -31,15 +31,17 @@ async function add(params){
             :kodeapl,
             :namaapl,
             :ketapl,
-            :aktif,
+            1,
             :identry,
             sysdate)
+            returning i_itpm_appl into :idaplikasi
         `
 
-       // const param = {}
+       params.idaplikasi = {dir:oracledb.BIND_OUT}
         
-        const result = await database.exec(query,params)
-        return result.rowsAffected;
+        const result = await database.exec(query,params,{autoCommit:true})
+        params.idaplikasi = result.outBinds.idaplikasi[0];
+        return params
 }
 
 module.exports.add = add

@@ -9,7 +9,7 @@ router.get('/otoritas/:id', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows[0]);
         } else {
-            res.status(404).send('Data tidak ditemukan');
+            res.status(200).send('Data tidak ditemukan');
         }
     } catch (err) {
         console.error(err)
@@ -25,7 +25,7 @@ router.get('/otoritas', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).send('Data tidak ditemukan');
+            res.status(200).send('Data tidak ditemukan');
         }
     } catch (err) {
         console.error(err)
@@ -37,8 +37,10 @@ router.post('/otoritas/tambah',async(req,res,next)=>{
     try{
        // console.dir(req.body)
         const rows = await otoritas.save(req.body)
-        if(rows==1){
-        res.status(200).send('Berhasil menambah data');
+        if (rows == 1) {
+            res.status(200).json({"code":200,"message":"berhasil tambah"});
+        } else {
+            res.json({});
         }
     }catch (err) {
         console.error(err)

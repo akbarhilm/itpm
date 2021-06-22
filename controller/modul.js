@@ -4,12 +4,12 @@ const modul = require('../services/modul');
 
 router.get('/modul', async (req, res, next) => {
     try {
-       
-        const rows = await modul.find();
+      
+        const rows = await modul.find(req.query);
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).json({});
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)
@@ -24,7 +24,7 @@ router.get('/modul/:id', async (req, res, next) => {
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(404).json({});
+            res.status(200).json({});
         }
     } catch (err) {
         console.error(err)

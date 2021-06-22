@@ -1,0 +1,32 @@
+stages:
+  - init
+  - build
+  - staging
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+init:
+  stage: init
+  script:
+    - npm install
+  only:
+    - dev
+
+build_dev:
+  stage: build
+  script: 
+#    - npm run build
+#    - cp -f ~/project/wait/wait .
+    - docker build -t $DOCKER_REPOSITORY/dev-apps/itpm .
+  only:
+    - dev
+
+staging_dev:
+  stage: staging
+  script:
+    - docker push $DOCKER_REPOSITORY/dev-apps/itpm
+  only:
+    - dev

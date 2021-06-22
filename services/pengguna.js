@@ -35,7 +35,7 @@ async function findPenggunaProyek(params){
     let result = await database.exec(query,param)
     let list = {"list":result.rows}
     
-    if(otor.find(x=>x.C_ITPM_AUTH=='PMO')){
+    if(otor.find(x=>x.KODEAUTH=='PMO')){
         const status = {"PMO":true};
        list.otoritas = status
     return list

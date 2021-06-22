@@ -1,4 +1,5 @@
 const database = require('../conf/db/db')
+const oracledb = require('oracledb');
 // const aplikasi = require('./aplikasi');
 // const modul = require('./modul') 
 
@@ -39,11 +40,13 @@ async function find(params){
 }
 
 async function add(params){
+    
+    params.statusproj = "BARU"
     let query =`INSERT INTO DBADMIT.TMITPMPROJ 
-    (I_ITPM_SC,    C_ITPM_APPLSTAT, C_ITPM_SC,    N_ITPM_PROJ,
-    E_ITPM_PROJ,    C_ITPM_PROJSTAT,    E_ITPM_PROJSTATCHNG,    D_ITPM_PROJSTATCHNG,
+    (I_ITPM_SC,    C_ITPM_APPLSTAT, C_ITPM_SC,    N_ITPM_PROJ, E_ITPM_PROJ,
+        C_ITPM_PROJSTAT,   D_ITPM_PROJSTATCHNG,
     C_ITPM_ACTV,    N_ITPM_PROJURI,    I_EMP_REQ,    I_EMP_PM`
-    if(params.idpalikasi){
+    if(params.idaplikasi){
      query+=`,I_ITPM_APPL`
     }
     if(params.idmodul){
@@ -57,24 +60,94 @@ async function add(params){
     :namaproj,
     :ketproj,
     :statusproj,
-    :ketstatus,
-    to_date(:tglstatus,'dd/mm/yyyy'),
-    :aktif,
+    sysdate,
+    1,
     :namauri,
     :nikreq,
     :nikpm,`
-    if(params.idpalikasi){
-        query+=`:idpalikasi,`
+    if(params.idaplikasi){
+        query+=`:idaplikasi,`
+       }
+       else{
+           delete params.idaplikasi
        }
        if(params.idmodul){
         query+=` :idmodul,`
     }
+    else{
+        delete params.idmodul
+    }
     query+=`
     :identry,
     sysdate
-    )`
-    const result = await database.exec(query,params)
-    return result.rowsAffected
+    )
+    returning i_itpm_proj into :idproj`
+   params.idproj = {dir:oracledb.BIND_OUT}
+   // console.dir(query);
+    console.dir(params)  
+    const result = await database.seqexec(query,params,[],false)
+    
+    params.idproj = parseInt(result.outBinds.idproj[0]);
+
+    return params
+}
+
+async function edit(params){
+    let query=`UPDATE DBADMIT.TMITPMPROJ
+    set I_ITPM_SC = :idlayanan,
+    C_ITPM_APPLSTAT = :statusapl, 
+    C_ITPM_SC = :jenislayanan,    
+    N_ITPM_PROJ = :namaproj, 
+    E_ITPM_PROJ = :ketproj,
+    N_ITPM_PROJURI =:namauri,   
+    I_EMP_REQ = :nikreq,    
+    I_EMP_PM = :nikpm,
+    I_ITPM_APPL = :idaplikasi,
+    I_ITPM_MDL = :idmodul,
+    I_UPDATE = :idupdate,
+    D_UPDATE = sysdate
+    where i_itpm_proj = :idproj`
+    
+    const result = await database.exec(query,params,{autoCommit:true})
+    if(result.rowsAffected ==1){
+        return params
+    }else{
+    return result
+    }
+}
+
+async function addUser(params){
+    let query=`insert into dbadmit.tritpmuser (i_emp,c_itpm_actv,i_entry,d_entry,i_emp_email) 
+    select :nikpm,1,:identry,sysdate,:emailpm
+    from dual
+    where not exists(select * 
+                     from dbadmit.tritpmuser
+                     where i_emp =:nikpm)
+    union all
+    
+    select :nikreq,1,:identry,sysdate,:emailreq
+    from dual
+    where not exists(select * 
+                     from dbadmit.tritpmuser
+                     where i_emp =:nikreq)`
+
+        const result = await database.seqexec(query,params,[],false)
+        return result;
+}
+
+async function addUserAuth(params){
+    
+    let query=`insert into dbadmit.tritpmuserauth (i_emp,i_itpm_menuauth)
+    select i_emp,i_itpm_menuauth from(
+        select :nikpm as i_emp, b.i_itpm_menuauth from dbadmit.tritpmmenuauth b, dbadmit.tritpmauth c 
+        where  not exists(select * from dbadmit.tritpmuserauth a where a.i_emp = :nikpm and a.i_itpm_menuauth = b.i_itpm_menuauth and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'PM') and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'PM'
+        union all
+        select :nikreq as i_emp, b.i_itpm_menuauth from dbadmit.tritpmmenuauth b, dbadmit.tritpmauth c 
+        where  not exists(select * from dbadmit.tritpmuserauth a where a.i_emp = :nikreq and a.i_itpm_menuauth = b.i_itpm_menuauth and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'BPO') and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'BPO'
+        )
+        `
+    const result = await database.seqexec(query,params,{autoCommit:true},true)
+        return result;
 }
 
 async function stepper(params){
@@ -92,3 +165,6 @@ async function stepper(params){
 module.exports.find = find
 module.exports.add = add
 module.exports.stepper = stepper
+module.exports.edit = edit
+module.exports.addUser = addUser
+module.exports.addUserAuth = addUserAuth

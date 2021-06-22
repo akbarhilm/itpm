@@ -10,10 +10,20 @@ C_ITPM_ACTV as kodeaktif
     from   DBADMIT.TRITPMMDL
     `
     const param = {}
-    if(params){
-    
-    query+=`\n where I_ITPM_mdl = :id`
+    if(!Object.keys(params).length==0){
+       // console.dir(!!params)
+        query+=`\n where`
+        if(Object.keys(params).find(x=>x=='idmodul')){
+    query+=`\n I_ITPM_mdl = :idmodul`
+        }
+        if(Object.keys(params).length>1){
+            query+=` and`
+        }
+        if(Object.keys(params).find(x=>x=='idaplikasi')){
+            query+=`\n I_ITPM_APPL = :idaplikasi`
+        }
     }
+   console.dir(query)
     const result = await database.exec(query,params)
     return result.rows;
 }
@@ -30,14 +40,15 @@ async function add(params){
             :idapl,
             :namamodul,
             :ketmodul,
-            :aktif,
+            1,
             :identry,
             sysdate)
         `
 
        // const param = {}
         
-        const result = await database.exec(query,params)
+        const result = await database.exec(query,params,{autoCommit:true})
+        console.dir(result)
         return result.rowsAffected;
 }
 

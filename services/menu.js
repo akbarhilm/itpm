@@ -57,7 +57,7 @@ async function save(params){
         C_ITPM_ACTV,I_ENTRY,D_ENTRY)
         values (:id,:menuprint,:namamenu,:namauri,:keterangan,:sidebar,:idsort,:act,:ientry,:dentry)`
 
-    const result = await database.exec(query,params)
+    const result = await database.exec(query,params,{autoCommit:true})
     return result.rowsAffected;
 }
 
@@ -80,7 +80,7 @@ async function edit(params){
     D_UPDATE = :dbah 
     where I_ITPM_MENU = :id`
 
-    const result = await database.exec(query,params)
+    const result = await database.exec(query,params,{autoCommit:true})
     return result.rowsAffected;
 }
 

@@ -21,8 +21,9 @@ async function shutdown(e){
     let err = e
     console.dir('shutting down');
     try{
+        await database.closePool();
         await server.close(e);
-        await database.close();
+        
     }catch(e){
         console.error('error',e);
         err = err||e
