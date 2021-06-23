@@ -25,11 +25,11 @@ var options = {
     swaggerOptions: {
       urls: [
         {
-          url: `${os.hostname()}:5000/v2/profi`,
+          url: `http://10.1.94.235:5000/v2/profil`,
           name: 'profil'
         },
         {
-          url: `${os.hostname()}:5000/v2/proyek`,
+          url: `http://10.1.94.235:5000/v2/proyek`,
           name: 'proyek'
         }
       ]
