@@ -3,6 +3,7 @@ FROM 10.1.94.254:8082/custom/pm2-oracleclient
 # WORKDIR /itpm-app
 # Bundle APP files
 COPY . itpm-app/
+WORKDIR /itpm-app
 # COPY conf conf/
 # COPY controller controller/
 # COPY node_modules node_modules/
@@ -24,6 +25,6 @@ COPY . itpm-app/
 EXPOSE 5000
 
 # Show current folder structure in logs
-# RUN ls -al -R
+RUN ls -al -R
 
-CMD [ "pm2-runtime", "start", "/itpm-app/ecosystem.config.js" ]
+CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
