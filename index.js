@@ -1,10 +1,7 @@
 require ('custom-env').env('development')
 const server = require('./conf/server/server');
 const database = require('./conf/db/db')
-var SegfaultHandler = require('segfault-handler');
- 
-SegfaultHandler.registerHandler("crash.log");
-SegfaultHandler.causeSegfault();
+
 async function startup(){
     
  
