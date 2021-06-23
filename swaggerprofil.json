@@ -9,11 +9,11 @@
             "email": "ahilman@indonesian-aerospace.com"
         }
     },
-    "host": "10.10.40.141:5000",
+    "host": "10.1.94.235:5000",
     "basePath": "/api/profil",
     "externalDocs": {
         "description": "swagger json",
-        "url": "http://10.10.40.141:5000/v2/swagger"
+        "url": "http://10.1.94.235:5000/v2/swagger"
     },
     "tags": [
         {
