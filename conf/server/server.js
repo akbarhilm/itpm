@@ -15,7 +15,7 @@ const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
 const fs = require('fs')
-var key = fs.readFileSync('../../jwtRS256.key.pub')
+var key = fs.readFileSync('/itpm-app/jwtRS256.key.pub')
 
 const swaggerUi = require('swagger-ui-express');
 
