@@ -1,4 +1,4 @@
-require ('custom-env').env(true)
+require ('custom-env').env('development')
 const server = require('./conf/server/server');
 const database = require('./conf/db/db')
 async function startup(){

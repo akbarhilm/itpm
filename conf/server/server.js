@@ -12,22 +12,23 @@ const modulRoute = require('../../controller/modul')
 const proyekRoute = require('../../controller/proyek')
 const swaggerRoute = require('../../controller/swagger')
 const assignJwt = require('../../util/assign');
+const os = require('os')
 var jwt = require('express-jwt');
 const fs = require('fs')
-var key = fs.readFileSync('../../jwtRS256.key.pub')
+var key = fs.readFileSync('D:\\Back-end\\iae\\profil\\jwtRS256.key.pub')
 const swaggerUi = require('swagger-ui-express');
 
-
+console.dir(os.hostname())
 var options = {
     explorer: true,
     swaggerOptions: {
       urls: [
         {
-          url: `${window.location.host}/v2/profil`,
+          url: `${os.hostname()}:5000/v2/profi`,
           name: 'profil'
         },
         {
-          url: `${window.location.host}/v2/proyek`,
+          url: `${os.hostname()}:5000/v2/proyek`,
           name: 'proyek'
         }
       ]
