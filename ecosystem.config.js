@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: "itpm",
-    script: "/itpm-app/index.js",
+    script: "./index.js",
     instances : 2,
     exec_mode : "cluster",
     env: {
