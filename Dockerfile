@@ -6,7 +6,7 @@ COPY controller controller/
 COPY node_modules node_modules/
 COPY services services/
 COPY util util/
-COPY .env .
+COPY .env.development .
 COPY Dockerfile .
 COPY index.js .
 COPY jwtRS256.key.pub .
