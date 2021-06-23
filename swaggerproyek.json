@@ -13,7 +13,7 @@
     "basePath": "/api/proyek",
     "externalDocs": {
         "description": "swagger json",
-        "url": "http://'+process.env.HOST+':5000/v2/swagger"
+        "url": "http://"+process.env.HOST+":5000/v2/swagger"
     },
     "tags": [
         {
