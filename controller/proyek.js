@@ -6,7 +6,8 @@ const modul = require('../services/modul')
 const layanan = require('../services/layanan');
 const http = require('http');
 const url = require('url')
-router.get('/detail/:id', async (req, res, next) => {
+router.get('/detail/:id',  (req, res, next) => {
+     return new Promise(async(resolve,reject)=>{
     try {
         const resp = await proyek.find({id:req.params.id});
        console.dir("get proyek")
@@ -26,14 +27,16 @@ router.get('/detail/:id', async (req, res, next) => {
         obj.MODUL = resmod[0]||null
         if (obj.length !== 0) {
 
-            res.status(200).json(obj);
+            resolve(res.status(200).json(obj))
         } else {
-            res.status(200).json({});
+            resolve(res.status(200).json({}))
         }
     } catch (err) {
         console.error(err)
+        reject(err)
         next(err)
     }
+})
 })
 
 router.get('/', async (req, res, next) => {
