@@ -24,7 +24,7 @@ async function closePool(){
    
 }
 let seqconn
-async function exec(statement,bind=[],opt=[]){
+ function exec(statement,bind=[],opt=[]){
     return new Promise(async(resolve,reject)=>{
         let conn;
         let result
@@ -48,19 +48,19 @@ async function exec(statement,bind=[],opt=[]){
             reject(err);
            //next(err)
         }
-        // finally{
+        finally{
             
-        //         try{
-        //             if(conn){
-        //             await conn.close()
+                try{
+                    if(conn){
+                    await conn.close()
                     
-        //             console.dir('close')
-        //             }
-        //         }catch(err){
-        //             console.log(err);
-        //         }
+                    console.dir('close')
+                    }
+                }catch(err){
+                    console.log(err);
+                }
             
-        // }
+        }
     })
     .catch(e=>{
         console.dir(e)
