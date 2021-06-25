@@ -4,7 +4,8 @@ module.exports = {
     script: "./index.js",
 //    instances : 2,
 //    exec_mode : "cluster",
-    autorestart: false,
+    // autorestart: false,
+    max_memory_restart: '2G',
     env: {
       NODE_ENV: "development",
     },
