@@ -11,8 +11,12 @@ router.get('/detail/:id', async (req, res, next) => {
     function pro(){
             return new Promise(async (resolve,reject)=>{
                 try{
-               const res =  await proyek.find({id:req.params.id});
-               resolve(res)
+                const res =  await proyek.find({id:req.params.id});
+               const l = await layanan.find({id:res[0].IDLAYANAN});
+               const a =  await aplikasi.find({id:res[0].IDAPLIKASI});
+               const m = await modul.find({idmodul:res[0].IDMODUL});
+               const t = [res,l,a,m]
+               resolve(t)
                 }catch(e){
                     reject(e)
                 }
@@ -66,10 +70,8 @@ router.get('/detail/:id', async (req, res, next) => {
 
     try {
        const a =  await pro()
-       const b = await la(a[0].IDLAYANAN)
-       const c = await ap(a[0].IDAPLIKASI)
-       const d = await md(a[0].IDMODUL)
-       console.dir(d)
+       
+       console.dir(a)
     //     const resp = await proyek.find({id:req.params.id});
     //   console.dir("get proyek")
     //     const resla = await layanan.find({id:resp[0].IDLAYANAN})
@@ -78,20 +80,20 @@ router.get('/detail/:id', async (req, res, next) => {
     //     console.dir("get app")
     //     const resmod = await modul.find({idmodul:resp[0].IDMODUL});
     //     console.dir("get modul")
-         const obj = a[0]
+        //  const obj = a[0]
         
-        delete obj.IDLAYANAN
-        obj.LAYANAN = b[0]||null
-        delete obj.IDAPLIKASI
-        obj.APLIKASI = c[0]||null;
-        delete obj.IDMODUL
-        obj.MODUL = d[0]||null
-        if (obj.length !== 0) {
+        // delete obj.IDLAYANAN
+        // obj.LAYANAN = b[0]||null
+        // delete obj.IDAPLIKASI
+        // obj.APLIKASI = c[0]||null;
+        // delete obj.IDMODUL
+        // obj.MODUL = d[0]||null
+        //if (obj.length !== 0) {
 
-            res.status(200).json(obj)
-        } else {
-            res.status(200).json({})
-        }
+            res.status(200).json(a)
+        //} else {
+         //   res.status(200).json({})
+       // }
     } catch (err) {
         console.error(err)
         reject(err)
