@@ -19,12 +19,12 @@ router.get('/detail/:id', async (req, res, next) => {
         console.dir("get modul")
         const obj = resp[0]
         
-        delete obj.IDLAYANAN
-        obj.LAYANAN = resla[0]||null
-        delete obj.IDAPLIKASI
-        obj.APLIKASI = resapp[0]||null;
-        delete obj.IDMODUL
-        obj.MODUL = resmod[0]||null
+        // delete obj.IDLAYANAN
+        // obj.LAYANAN = resla[0]||null
+        // delete obj.IDAPLIKASI
+        // obj.APLIKASI = resapp[0]||null;
+        // delete obj.IDMODUL
+        // obj.MODUL = resmod[0]||null
         if (obj.length !== 0) {
 
             res.status(200).json(obj)
