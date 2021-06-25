@@ -1,7 +1,15 @@
 const database = require('../conf/db/db')
 const oracledb = require('oracledb');
-// const aplikasi = require('./aplikasi');
-// const modul = require('./modul') 
+ const aplikasi = require('./aplikasi');
+ const layanan = require('./layanan')
+ const modul = require('./modul') 
+
+async function getdetailbyid(param){
+   const pr = await find(param)
+   const la = await layanan.find({id:pr[0].IDLAYANAN})
+    const res = [pr,la]
+   return res
+}
 
 async function find(params){
     
@@ -168,3 +176,4 @@ module.exports.stepper = stepper
 module.exports.edit = edit
 module.exports.addUser = addUser
 module.exports.addUserAuth = addUserAuth
+module.exports.getdetailbyid = getdetailbyid
