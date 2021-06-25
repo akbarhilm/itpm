@@ -2,8 +2,9 @@ module.exports = {
   apps: [{
     name: "itpm",
     script: "./index.js",
-    instances : 2,
-    exec_mode : "cluster",
+//    instances : 2,
+//    exec_mode : "cluster",
+    autorestart: false,
     env: {
       NODE_ENV: "development",
     },
