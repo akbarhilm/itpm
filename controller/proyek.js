@@ -6,37 +6,37 @@ const modul = require('../services/modul')
 const layanan = require('../services/layanan');
 const http = require('http');
 const url = require('url')
-router.get('/detail/:id',  (req, res, next) => {
-     return new Promise(async(resolve,reject)=>{
+router.get('/detail/:id', async (req, res, next) => {
+     
     try {
         const resp = await proyek.find({id:req.params.id});
        console.dir("get proyek")
-        //const resla = await layanan.find({id:resp[0].IDLAYANAN})
+        const resla = await layanan.find({id:resp[0].IDLAYANAN})
        console.dir("get layanan")
-       // const resapp = await aplikasi.find({id:resp[0].IDAPLIKASI});
+        const resapp = await aplikasi.find({id:resp[0].IDAPLIKASI});
         console.dir("get app")
-       // const resmod = await modul.find({idmodul:resp[0].IDMODUL});
+        const resmod = await modul.find({idmodul:resp[0].IDMODUL});
         console.dir("get modul")
         const obj = resp[0]
         
-       // delete obj.IDLAYANAN
-      //  obj.LAYANAN = resla[0]||null
-       // delete obj.IDAPLIKASI
-      //  obj.APLIKASI = resapp[0]||null;
-      //  delete obj.IDMODUL
-      //  obj.MODUL = resmod[0]||null
+        delete obj.IDLAYANAN
+        obj.LAYANAN = resla[0]||null
+        delete obj.IDAPLIKASI
+        obj.APLIKASI = resapp[0]||null;
+        delete obj.IDMODUL
+        obj.MODUL = resmod[0]||null
         if (obj.length !== 0) {
 
-            resolve(res.status(200).json(obj))
+            res.status(200).json(obj)
         } else {
-            resolve(res.status(200).json({}))
+            res.status(200).json({})
         }
     } catch (err) {
         console.error(err)
         reject(err)
         next(err)
     }
-})
+
 })
 
 router.get('/', async (req, res, next) => {
