@@ -4,7 +4,7 @@ const proyek = require('../services/proyek');
 const aplikasi = require('../services/aplikasi');
 const modul = require('../services/modul') 
 const layanan = require('../services/layanan');
-const http = require('http');
+const http = require('https');
 const url = require('url')
 router.get('/detail/:id', async (req, res, next) => {
   
