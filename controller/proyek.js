@@ -8,23 +8,84 @@ const http = require('http');
 const url = require('url')
 router.get('/detail/:id', async (req, res, next) => {
      
+    function pro(){
+            return new Promise(async (resolve,reject)=>{
+                try{
+               const res =  await proyek.find({id:req.params.id});
+               resolve(res)
+                }catch(e){
+                    reject(e)
+                }
+            })
+            .catch(e=>{
+                console.dir(e)
+            })
+        }
+
+        function la(id){
+            return new Promise(async (resolve,reject)=>{
+                try{
+               const res =  await layanan.find({id:id})
+               resolve(res)
+                }catch(e){
+                    reject(e)
+                }
+            })
+            .catch(e=>{
+                console.dir(e)
+            })
+        }
+
+        function ap(id){
+            return new Promise(async (resolve,reject)=>{
+                try{
+               const res =  await aplikasi.find({id:id})
+               resolve(res)
+                }catch(e){
+                    reject(e)
+                }
+            })
+            .catch(e=>{
+                console.dir(e)
+            })
+        }
+
+        function md(id){
+            return new Promise(async (resolve,reject)=>{
+                try{
+               const res =  await modul.find({idmodul:id})
+               resolve(res)
+                }catch(e){
+                    reject(e)
+                }
+            })
+            .catch(e=>{
+                console.dir(e)
+            })
+        }
+
     try {
-        const resp = await proyek.find({id:req.params.id});
-       console.dir("get proyek")
-        const resla = await layanan.find({id:resp[0].IDLAYANAN})
-       console.dir("get layanan")
-        const resapp = await aplikasi.find({id:resp[0].IDAPLIKASI});
-        console.dir("get app")
-        const resmod = await modul.find({idmodul:resp[0].IDMODUL});
-        console.dir("get modul")
-        const obj = resp[0]
+       const a =  await pro()
+       const b = await la(a[0].IDLAYANAN)
+       const c = await ap(a[0].IDAPLIKASI)
+       const d = await md(a[0].IDMODUL)
+       console.dir(d)
+    //     const resp = await proyek.find({id:req.params.id});
+    //   console.dir("get proyek")
+    //     const resla = await layanan.find({id:resp[0].IDLAYANAN})
+    //   console.dir("get layanan")
+    //     const resapp = await aplikasi.find({id:resp[0].IDAPLIKASI});
+    //     console.dir("get app")
+    //     const resmod = await modul.find({idmodul:resp[0].IDMODUL});
+    //     console.dir("get modul")
+         const obj = a[0]
         
         delete obj.IDLAYANAN
-        obj.LAYANAN = resla[0]||null
+        obj.LAYANAN = b[0]||null
         delete obj.IDAPLIKASI
-        obj.APLIKASI = resapp[0]||null;
+        obj.APLIKASI = c[0]||null;
         delete obj.IDMODUL
-        obj.MODUL = resmod[0]||null
+        obj.MODUL = d[0]||null
         if (obj.length !== 0) {
 
             res.status(200).json(obj)
