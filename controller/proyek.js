@@ -8,68 +8,68 @@ const http = require('http');
 const url = require('url')
 router.get('/detail/:id', async (req, res, next) => {
      
-    function pro(){
-            return new Promise(async (resolve,reject)=>{
-                try{
-                const res =  await proyek.find({id:req.params.id});
-               const l = await layanan.find({id:res[0].IDLAYANAN});
-               const a =  await aplikasi.find({id:res[0].IDAPLIKASI});
-               const m = await modul.find({idmodul:res[0].IDMODUL});
-               const t = [res,l,a,m]
-               resolve(t)
-                }catch(e){
-                    reject(e)
-                }
-            })
-            .catch(e=>{
-                console.dir(e)
-            })
-        }
+    // function pro(){
+    //         return new Promise(async (resolve,reject)=>{
+    //             try{
+    //             const res =  await proyek.find({id:req.params.id});
+    //           const l = await layanan.find({id:res[0].IDLAYANAN});
+    //           const a =  await aplikasi.find({id:res[0].IDAPLIKASI});
+    //           const m = await modul.find({idmodul:res[0].IDMODUL});
+    //           const t = [res,l,a,m]
+    //           resolve(t)
+    //             }catch(e){
+    //                 reject(e)
+    //             }
+    //         })
+    //         .catch(e=>{
+    //             console.dir(e)
+    //         })
+    //     }
 
-        function la(id){
-            return new Promise(async (resolve,reject)=>{
-                try{
-               const res =  await layanan.find({id:id})
-               resolve(res)
-                }catch(e){
-                    reject(e)
-                }
-            })
-            .catch(e=>{
-                console.dir(e)
-            })
-        }
+    //     function la(id){
+    //         return new Promise(async (resolve,reject)=>{
+    //             try{
+    //           const res =  await layanan.find({id:id})
+    //           resolve(res)
+    //             }catch(e){
+    //                 reject(e)
+    //             }
+    //         })
+    //         .catch(e=>{
+    //             console.dir(e)
+    //         })
+    //     }
 
-        function ap(id){
-            return new Promise(async (resolve,reject)=>{
-                try{
-               const res =  await aplikasi.find({id:id})
-               resolve(res)
-                }catch(e){
-                    reject(e)
-                }
-            })
-            .catch(e=>{
-                console.dir(e)
-            })
-        }
+    //     function ap(id){
+    //         return new Promise(async (resolve,reject)=>{
+    //             try{
+    //           const res =  await aplikasi.find({id:id})
+    //           resolve(res)
+    //             }catch(e){
+    //                 reject(e)
+    //             }
+    //         })
+    //         .catch(e=>{
+    //             console.dir(e)
+    //         })
+    //     }
 
-        function md(id){
-            return new Promise(async (resolve,reject)=>{
-                try{
-               const res =  await modul.find({idmodul:id})
-               resolve(res)
-                }catch(e){
-                    reject(e)
-                }
-            })
-            .catch(e=>{
-                console.dir(e)
-            })
-        }
+    //     function md(id){
+    //         return new Promise(async (resolve,reject)=>{
+    //             try{
+    //           const res =  await modul.find({idmodul:id})
+    //           resolve(res)
+    //             }catch(e){
+    //                 reject(e)
+    //             }
+    //         })
+    //         .catch(e=>{
+    //             console.dir(e)
+    //         })
+    //     }
 
     try {
-       const a =  await pro()
+       const a =  await proyek.find({id:req.params.id})
        
        console.dir(a)
     //     const resp = await proyek.find({id:req.params.id});
