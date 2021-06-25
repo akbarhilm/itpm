@@ -7,33 +7,21 @@ const layanan = require('../services/layanan');
 const http = require('http');
 const url = require('url')
 router.get('/detail/:id', async (req, res, next) => {
+  
     try {
-        const resp = await proyek.find({id:req.params.id});
+       const a =  await proyek.getdetailbyid({id:req.params.id})
        
-        const resla = await layanan.find({id:resp[0].IDLAYANAN})
-       
-        const resapp = await aplikasi.find({id:resp[0].IDAPLIKASI});
-        console.dir(resapp)
-        const resmod = await modul.find({idmodul:resp[0].IDMODUL});
+       console.dir(a)
+    
 
-        const obj = resp[0]
-        
-        delete obj.IDLAYANAN
-        obj.LAYANAN = resla[0]||null
-        delete obj.IDAPLIKASI
-        obj.APLIKASI = resapp[0]||null;
-        delete obj.IDMODUL
-        obj.MODUL = resmod[0]||null
-        if (obj.length !== 0) {
-
-            res.status(200).json(obj);
-        } else {
-            res.status(200).json({});
-        }
+            res.status(200).json(a)
+      
     } catch (err) {
         console.error(err)
+        reject(err)
         next(err)
     }
+
 })
 
 router.get('/', async (req, res, next) => {
