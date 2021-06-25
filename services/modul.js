@@ -23,7 +23,7 @@ C_ITPM_ACTV as kodeaktif
             query+=`\n I_ITPM_APPL = :idaplikasi`
         }
     }
-   console.dir(query)
+   
     const result = await database.exec(query,params)
     return result.rows;
 }
