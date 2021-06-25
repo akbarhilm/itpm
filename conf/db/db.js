@@ -6,7 +6,7 @@ const conf = {
     connectString:process.env.CONNECTIONSTRING,
     poolMin:32,
     poolMax:32,
-    //poolIncrement:1,
+    poolIncrement:0,
     poolPingInterval:60,
     poolTimeout: 60,
     maxRows:1000
@@ -39,27 +39,28 @@ async function exec(statement,bind=[],opt=[]){
                 conn = await oracle.getConnection();
             result = await conn.execute(statement,bind,opt);
            
-            console.dir(result);
+            //console.dir(result);
             resolve(result);
-            return result
+           // return result
         }catch(err){
             
             console.log(err)
             reject(err);
-           next(err)
-        }finally{
-            
-                try{
-                    if(conn ){
-                    await conn.close()
-                    
-                    console.dir('close')
-                    }
-                }catch(err){
-                    console.log(err);
-                }
-            
+           //next(err)
         }
+        // finally{
+            
+        //         try{
+        //             if(conn){
+        //             await conn.close()
+                    
+        //             console.dir('close')
+        //             }
+        //         }catch(err){
+        //             console.log(err);
+        //         }
+            
+        // }
     })
     .catch(e=>{
         console.dir(e)
