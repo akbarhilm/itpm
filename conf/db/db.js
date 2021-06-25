@@ -4,9 +4,9 @@ const conf = {
     user:process.env.USER,
     password:process.env.PASSWORD,
     connectString:process.env.CONNECTIONSTRING,
-    poolMin:1,
+    poolMin:32,
     poolMax:32,
-    poolIncrement:1,
+    //poolIncrement:1,
     poolPingInterval:60,
     poolTimeout: 60,
     maxRows:1000
