@@ -14,14 +14,14 @@ async function getdetailbyid(param){
    
    const md = await modul.find({idmodul:pr[0].IDMODUL})
 
-    const res = pr[0]
-    delete res.IDLAYANAN
-    res.LAYANAN = la[0]||null
-    delete res.IDAPLIKASI
-    res.APLIKASI = ap[0]||null
-    delete res.IDMODUL
-    res.MODUL = md[0]||null
-
+    // const res = pr[0]
+    // delete res.IDLAYANAN
+    // res.LAYANAN = la[0]||null
+    // delete res.IDAPLIKASI
+    // res.APLIKASI = ap[0]||null
+    // delete res.IDMODUL
+    // res.MODUL = md[0]||null
+const res = [pr,la,ap,md]
    return res
 }
 
