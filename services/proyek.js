@@ -10,9 +10,9 @@ async function getdetailbyid(param){
 
    const la = await layanan.find({id:pr[0].IDLAYANAN})
 
-   const ap = await aplikasi.find({id:pr[0].IDAPLIKASI})
+  // const ap = await aplikasi.find({id:pr[0].IDAPLIKASI})
    
-   const md = await modul.find({idmodul:pr[0].IDMODUL})
+   //const md = await modul.find({idmodul:pr[0].IDMODUL})
 
     // const res = pr[0]
     // delete res.IDLAYANAN
@@ -21,7 +21,7 @@ async function getdetailbyid(param){
     // res.APLIKASI = ap[0]||null
     // delete res.IDMODUL
     // res.MODUL = md[0]||null
-const res = [pr,la,ap,md]
+const res = [pr,la]
    return res
 }
 
