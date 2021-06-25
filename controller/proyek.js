@@ -9,13 +9,13 @@ const url = require('url')
 router.get('/detail/:id', async (req, res, next) => {
     try {
         const resp = await proyek.find({id:req.params.id});
-       
+       console.dir("get proyek")
         const resla = await layanan.find({id:resp[0].IDLAYANAN})
-       
+       console.dir("get layanan")
         const resapp = await aplikasi.find({id:resp[0].IDAPLIKASI});
-        console.dir(resapp)
+        console.dir("get app")
         const resmod = await modul.find({idmodul:resp[0].IDMODUL});
-
+        console.dir("get modul")
         const obj = resp[0]
         
         delete obj.IDLAYANAN
