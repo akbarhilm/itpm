@@ -24,8 +24,8 @@ async function closePool(){
    
 }
 let seqconn
-function exec(statement,bind=[],opt=[]){
-    return new Promise(async(resolve,reject)=>{
+async function exec(statement,bind=[],opt=[]){
+    //return new Promise(async(resolve,reject)=>{
         let conn;
         let result
         opt.outFormat = oracle.OBJECT;
@@ -40,11 +40,13 @@ function exec(statement,bind=[],opt=[]){
             result = await conn.execute(statement,bind,opt);
            
             console.dir(result);
-            resolve(result);
+            //resolve(result);
+            return result
         }catch(err){
             
             console.log(err)
-            reject(err);
+           // reject(err);
+           next(err)
         }finally{
             
                 try{
@@ -58,7 +60,7 @@ function exec(statement,bind=[],opt=[]){
                 }
             
         }
-    });
+    //});
 }
 
 function seqexec(statement,bind=[],opt=[],last){
