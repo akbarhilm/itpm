@@ -25,11 +25,11 @@ var options = {
     swaggerOptions: {
       urls: [
         {
-          url: `http://'+process.env.HOST+':5000/v2/profil`,
+          url: 'http://'+process.env.HOST+':5000/v2/profil',
           name: 'profil'
         },
         {
-          url: `http://'+process.env.HOST+':5000/v2/proyek`,
+          url: 'http://'+process.env.HOST+':5000/v2/proyek',
           name: 'proyek'
         }
       ]
