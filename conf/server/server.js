@@ -1,5 +1,5 @@
 const express = require('express');
-const errorhandler = require('errorHandler');
+const errorhandler = require('errorhandler');
 const http = require('http');
 const port = process.env.HTTP_PORT || 3000
 const helmet = require('helmet');
