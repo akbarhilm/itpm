@@ -28,4 +28,3 @@ EXPOSE 5000
 
 CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
 #CMD [ "node", "index.js" ]
-ENTRYPOINT ["tail", "-f", "/dev/null"]
