@@ -26,5 +26,6 @@ EXPOSE 5000
 # Show current folder structure in logs
 # RUN ls -al -R
 
-# CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
-CMD [ "node", "index.js" ]
+CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
+#CMD [ "node", "index.js" ]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
