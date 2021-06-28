@@ -4,8 +4,8 @@ const oracledb = require('oracledb');
  const layanan = require('./layanan')
  const modul = require('./modul') 
 
-async function getdetailbyid(param){
-    return new Promise((resolve,reject)=>{
+ function getdetailbyid(param){
+    return new Promise(async(resolve,reject)=>{
     try{
    const pr  = await find(param)
 
