@@ -6,7 +6,7 @@ const oracledb = require('oracledb');
 
 async function getdetailbyid(param){
 
-   const pr = await find(param)
+   const pr  = await find(param).then((as)=>{await layanan.find({id:as[0].IDLAYANAN})})
 
    //const la = await layanan.find({id:pr[0].IDLAYANAN})
 
