@@ -5,11 +5,18 @@ const oracledb = require('oracledb');
  const modul = require('./modul') 
 
 async function getdetailbyid(param){
+    return new Promise((resolve,reject)=>{
+    try{
+   const pr  = await find(param)
 
-   const pr  = await find(param).catch((e)=>console.error(e))
-
-   const la = await layanan.find({id:pr[0].IDLAYANAN}).catch((e)=>console.error(e))
-
+   const la = await layanan.find({id:pr[0].IDLAYANAN})
+    const res = [pr,la]
+    resolve(res)
+    }catch(e){
+        console.error(e)
+        reject(e)
+    }
+    })
   // const ap = await aplikasi.find({id:pr[0].IDAPLIKASI})
    
    //const md = await modul.find({idmodul:pr[0].IDMODUL})
@@ -21,8 +28,8 @@ async function getdetailbyid(param){
     // res.APLIKASI = ap[0]||null
     // delete res.IDMODUL
     // res.MODUL = md[0]||null
-const res = [pr,la]
-   return res
+//const res = [pr,la]
+  // return res
 }
 
 
