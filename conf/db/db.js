@@ -35,31 +35,34 @@ function exec(statement,bind=[],opt=[]){
           
          
         
-           console.dir(conn)
-           console.dir(statement)
+           //console.dir(conn)
+           //console.dir(statement)
            
                 conn = await oracle.getConnection();
             result = await conn.execute(statement,bind,opt);
            
-            //console.dir(result);
+            console.dir(result);
             resolve(result);
+            await conn.close()
         }catch(err){
             
             console.log(err)
             reject(err);
-        }finally{
-            
-                try{
-                    if(conn){
-                    await conn.close()
-                    
-                    console.dir('close')
-                    }
-                }catch(err){
-                    console.log(err);
-                }
-            
+             await conn.close()
         }
+        // finally{
+            
+        //         try{
+        //             if(conn){
+                    
+                    
+        //             console.dir('close')
+        //             }
+        //         }catch(err){
+        //             console.log(err);
+        //         }
+            
+        // }
     });
 }
 
