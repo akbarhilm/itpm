@@ -4,9 +4,9 @@ const conf = {
     user:process.env.USER,
     password:process.env.PASSWORD,
     connectString:process.env.CONNECTIONSTRING,
-    poolMin:1,
-    poolMax:32,
-    poolIncrement:1,
+    poolMin:4,
+    poolMax:4,
+    poolIncrement:0,
     poolPingInterval:60,
     poolTimeout: 60,
     maxRows:1000
@@ -26,15 +26,16 @@ async function closePool(){
 let seqconn
 function exec(statement,bind=[],opt=[]){
     return new Promise(async(resolve,reject)=>{
-        let conn;
-        let result
+        
         opt.outFormat = oracle.OBJECT;
         opt.autoCommit = true;
 
         try{
           
-          
-           
+          let conn =''
+        let result
+           console.dir(conn)
+           console.dir(statement)
            
                 conn = await oracle.getConnection();
             result = await conn.execute(statement,bind,opt);
