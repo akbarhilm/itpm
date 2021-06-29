@@ -37,9 +37,12 @@ function exec(statement,bind=[],opt=[]){
         
            //console.dir(conn)
            //console.dir(statement)
-           
+                if(!conn){
+                    console.dir("assign conn")
                 conn = await oracle.getConnection();
-            result = await conn.execute(statement,bind,opt);
+                }
+                console.dir(conn)
+            result = await conn.execute(statement,bind,opt)
            
             console.dir(result);
             resolve(result);
