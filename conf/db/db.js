@@ -26,14 +26,15 @@ async function closePool(){
 let seqconn
 function exec(statement,bind=[],opt=[]){
     return new Promise(async(resolve,reject)=>{
-        
+         let conn =''
+         let result
         opt.outFormat = oracle.OBJECT;
         opt.autoCommit = true;
 
         try{
           
-          let conn =''
-        let result
+         
+        
            console.dir(conn)
            console.dir(statement)
            
@@ -49,7 +50,7 @@ function exec(statement,bind=[],opt=[]){
         }finally{
             
                 try{
-                    if(conn ){
+                    if(conn){
                     await conn.close()
                     
                     console.dir('close')
