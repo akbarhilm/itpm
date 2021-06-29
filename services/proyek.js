@@ -7,8 +7,10 @@ const oracledb = require('oracledb');
  function getdetailbyid(param){
     return new Promise(async(resolve,reject)=>{
     try{
+        console.dir("fecth proyek")
    const pr  = await find(param)
-
+    console.dir(pr)
+    console.dir("fetch layanan")
    const la = await layanan.find({id:pr[0].IDLAYANAN})
     const res = [pr,la]
     resolve(res)

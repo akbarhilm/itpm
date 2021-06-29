@@ -39,7 +39,7 @@ function exec(statement,bind=[],opt=[]){
                 conn = await oracle.getConnection();
             result = await conn.execute(statement,bind,opt);
            
-            console.dir(result);
+            //console.dir(result);
             resolve(result);
         }catch(err){
             
