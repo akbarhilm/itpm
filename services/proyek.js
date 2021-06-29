@@ -12,6 +12,7 @@ const oracledb = require('oracledb');
     console.dir(pr)
     console.dir("fetch layanan")
    const la = await layanan.find({id:pr[0].IDLAYANAN})
+   console.dir(la)
     const res = [pr,la]
     resolve(res)
     }catch(e){
