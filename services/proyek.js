@@ -170,4 +170,3 @@ module.exports.stepper = stepper
 module.exports.edit = edit
 module.exports.addUser = addUser
 module.exports.addUserAuth = addUserAuth
-module.exports.getdetailbyid = getdetailbyid
