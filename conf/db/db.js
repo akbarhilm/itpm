@@ -4,8 +4,8 @@ const conf = {
     user:process.env.USER,
     password:process.env.PASSWORD,
     connectString:process.env.CONNECTIONSTRING,
-    poolMin:4,
-    poolMax:4,
+    poolMin:32,
+    poolMax:32,
     poolIncrement:0,
     poolPingInterval:60,
     poolTimeout: 60,
@@ -35,37 +35,35 @@ function exec(statement,bind=[],opt=[]){
           
          
         
-           //console.dir(conn)
-           //console.dir(statement)
-                if(!conn){
+          
                     console.dir("assign conn")
                 conn = await oracle.getConnection();
-                }
-                console.dir(conn)
+                
+                
             result = await conn.execute(statement,bind,opt)
            
-            console.dir(result);
+           
             resolve(result);
-            await conn.close()
+            
         }catch(err){
             
             console.log(err)
             reject(err);
-             await conn.close()
+             
         }
-        // finally{
+        finally{
             
-        //         try{
-        //             if(conn){
+                try{
+                    if(conn){
                     
                     
-        //             console.dir('close')
-        //             }
-        //         }catch(err){
-        //             console.log(err);
-        //         }
+                    console.dir('close')
+                    }
+                }catch(err){
+                    console.log(err);
+                }
             
-        // }
+        }
     });
 }
 
@@ -85,7 +83,7 @@ function seqexec(statement,bind=[],opt=[],last){
              reject(err);
          }finally{
 
-            if(seqconn && last ){
+            if(seqconn && last){
                  try{
                      
                      await seqconn.close()

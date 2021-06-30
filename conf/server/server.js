@@ -1,5 +1,5 @@
 const express = require('express');
-const errorhandler = require('errorhandler');
+
 const http = require('http');
 const port = process.env.HTTP_PORT || 3000
 const helmet = require('helmet');
@@ -38,7 +38,7 @@ var options = {
     validatorUrl: null
   }
 const app = express();
-app.use(errorhandler({dumpExecption:true,showStack:true}));
+
 let server;
 //const nik = jwt({secret:key,algorithms: ['RS256']})
 function init() {

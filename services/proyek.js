@@ -1,39 +1,8 @@
 const database = require('../conf/db/db')
 const oracledb = require('oracledb');
- const aplikasi = require('./aplikasi');
- const layanan = require('./layanan')
- const modul = require('./modul') 
-
- function getdetailbyid(param){
-    return new Promise(async(resolve,reject)=>{
-    try{
-        console.dir("fecth proyek")
-   const pr  = await find(param)
-    console.dir(pr)
-    console.dir("fetch layanan")
-   const la = await layanan.find({id:pr[0].IDLAYANAN})
-   console.dir(la)
-    const res = [pr,la]
-    resolve(res)
-    }catch(e){
-        console.error(e)
-        reject(e)
-    }
-    })
-  // const ap = await aplikasi.find({id:pr[0].IDAPLIKASI})
-   
-   //const md = await modul.find({idmodul:pr[0].IDMODUL})
-
-    // const res = pr[0]
-    // delete res.IDLAYANAN
-    // res.LAYANAN = la[0]||null
-    // delete res.IDAPLIKASI
-    // res.APLIKASI = ap[0]||null
-    // delete res.IDMODUL
-    // res.MODUL = md[0]||null
-//const res = [pr,la]
-  // return res
-}
+//  const aplikasi = require('./aplikasi');
+//  const layanan = require('./layanan')
+//  const modul = require('./modul') 
 
 
 async function find(params){

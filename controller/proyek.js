@@ -9,12 +9,24 @@ const url = require('url')
 router.get('/detail/:id', async (req, res, next) => {
   
     try {
-       const a =  await proyek.getdetailbyid({id:req.params.id})
+       const rpro =  await proyek.find({id:req.params.id})
+       const rla = await layanan.find({id:rpro[0].IDLAYANAN})
+       const rapp = await aplikasi.find({id:rpro[0].IDAPLIKASI})
+       const rmod = await modul.find({idmodul:rpro[0].IDMODUL})
        
-       console.dir(a)
+       const robj = rpro[0]
+
+       delete robj.IDLAYANAN
+       robj.LAYANAN = rla[0]||null;
+
+       delete robj.IDAPLIKASI
+       robj.APLIKASI = rapp[0]||null
+
+       delete robj.IDMODUL
+       robj.MODUL = rmod[0]||null
     
 
-            res.status(200).json(a)
+        res.status(200).json(robj)
       
     } catch (err) {
         console.error(err)

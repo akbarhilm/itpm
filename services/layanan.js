@@ -1,7 +1,7 @@
 const database = require('../conf/db/db')
 
 async function find(params){
-    console.dir("layanan fetch")
+   
 let query=`select I_ITPM_SC as idlayanan, I_ITPM_SCNBR as nolayanan ,I_EMP_REQ as nikreq,
     C_ITPM_SC as kodelayanan,
     N_ITPM_APPL as namaaplikasi,
