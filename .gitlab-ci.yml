@@ -20,7 +20,6 @@ build_dev:
   script: 
 #    - npm run build
 #    - cp -f ~/project/wait/wait .
-    - docker rmi 10.1.94.254:8082/custom/pm2-oracleclient
     - docker build -t $DOCKER_REPOSITORY/dev-apps/itpm .
   only:
     - dev
