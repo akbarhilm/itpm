@@ -52,16 +52,17 @@ function exec(statement,bind=[],opt=[]){
              
         }
         finally{
-            
+            if(conn){
                 try{
-                    if(conn){
                     
                     
+                    await conn.close()
                     console.dir('close')
-                    }
+                    
                 }catch(err){
                     console.log(err);
                 }
+            }
             
         }
     });
