@@ -48,4 +48,5 @@ async function add(params){
         return params
 }
 
+module.exports.add = add
 module.exports.find = find

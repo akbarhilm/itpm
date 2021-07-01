@@ -31,6 +31,10 @@
         {
             "name": "Proyek",
             "description": "Pengelolaan Proyek"
+        },
+        {
+            "name": "Charter",
+            "description": "Pengelolaan Charter"
         }
     ],
     "paths": {
@@ -287,6 +291,102 @@
                 "deprecated": false
             }
         },
+        "/charter": {
+            "get": {
+                "tags": [
+                    "Charter"
+                ],
+                "summary": "Fungsi untuk menampilkan charter",
+                "operationId": "getAllCharter",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Filter idcharter",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Charter"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Charter tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+         "/charter/tambah": {
+            "post": {
+                "tags": [
+                    "Charter"
+                ],
+                "summary": "Fungsi untuk menambah Charter",
+                "operationId": "AddCharter",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Post Charter",
+                        "description": "Format JSON untuk post Charter",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Charter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid value"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+       
         "/aplikasi": {
             "get": {
                 "tags": [
@@ -842,6 +942,69 @@
                 }
             },
             "title": "Response Proyek"
+        },
+        "Request Charter": {
+            "type": "object",
+            "required": [
+                "idproj",
+                "nocharter",
+                "tglmulai",
+                "tglselesai",
+                "kodeapprove"
+            ],
+            "properties": {
+                "idproj": {
+                    "type": "string",
+                    "example": "1",
+                    "description": "id proyek"
+                },
+                "nocharter": {
+                    "type": "string",
+                    "example": "1/23/456/ITxxx",
+                    "description": "Nomer Charter"
+                },
+                "tglmulai": {
+                    "type": "string",
+                    "example": "dd/mm/yyyy",
+                    "description": "tanggal mulai"
+                },
+                "tglselesai": {
+                    "type": "string",
+                    "example": "dd/mm/yyyy",
+                    "description": "tanggal selesai"
+                },
+                "kodeapprove":{
+                    "type":"string",
+                    "example":"1",
+                    "description":"kode approve"
+                }
+
+            },
+            "title": "Request Charter"
+        },
+        "Response Charter": {
+            "type": "object",
+            "properties": {
+                "IDCHARTER": {
+                    "type": "integer"
+                },
+                "IDPROYEK": {
+                    "type": "string"
+                },
+                "TGLMULAI": {
+                    "type": "string"
+                },
+                "TGLSELESAI": {
+                    "type": "string"
+                },
+                "KODEAKTIF": {
+                    "type": "string"
+                },
+                "KODEAPPROVE":{
+                    "type":"string"
+                }
+            },
+            "title": "Response Charter"
         },
         "Request Aplikasi": {
             "type": "object",
