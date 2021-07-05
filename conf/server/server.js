@@ -16,7 +16,8 @@ const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
 const fs = require('fs')
-var key = fs.readFileSync('/itpm-app/jwtRS256.key.pub')
+var key = fs.readFileSync('D:\\Back-end\\iae\\profil\\jwtRS256.key.pub')
+//var key = fs.readFileSync(process.env.KEY)
 
 const swaggerUi = require('swagger-ui-express');
 
@@ -58,21 +59,22 @@ function init() {
             // Pass to next layer of middleware
             next();
           });
-        //app.use('/assign',assignJwt) //for assign to httpOnly
+       
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
+        app.use('/api/jwt',assignJwt) //for assign to httpOnly
         app.use(helmet());
         app.use(morgan('combined'));
         app.use(express.json());
         app.use(cookieparsers())
-        app.use(jwt({secret:key,algorithms: ['RS256']}))
+       // app.use(jwt({secret:key,algorithms: ['RS256']}))
 
-        //app.use(jwt({secret:key,algorithms: ['RS256'],
-        //        getToken: (req)=> {return req.cookies.token}}))//from httpOnly cookie
+        app.use(jwt({secret:key,algorithms: ['RS256'],
+               getToken: (req)=> req.cookies.token}))//from httpOnly cookie
 
        app.use(function (err, req, res, next) {
         
-        
+        //console.dir(req.cookies.token)
         if (err.name === 'UnauthorizedError') {
           res.status(401).json(["UnAuthorize!"]);
         
