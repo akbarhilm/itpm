@@ -28,5 +28,6 @@ staging_dev:
   stage: staging
   script:
     - docker push $DOCKER_REPOSITORY/dev-apps/itpm
+    - docker rmi $DOCKER_REPOSITORY/dev-apps/itpm
   only:
     - dev
