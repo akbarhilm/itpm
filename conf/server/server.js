@@ -12,7 +12,7 @@ const aplikasiRoute = require('../../controller/aplikasi');
 const modulRoute = require('../../controller/modul')
 const proyekRoute = require('../../controller/proyek')
 const swaggerRoute = require('../../controller/swagger')
-const assignJwt = require('../../util/assign');
+//const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
 const fs = require('fs')
@@ -65,12 +65,12 @@ function init() {
           app.use(cookieparsers())
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
-        app.use('/api/jwt',assignJwt) //for assign to httpOnly
+       // app.use('/api/jwt',assignJwt) //for assign to httpOnly
       
-       // app.use(jwt({secret:key,algorithms: ['RS256']}))
+        app.use(jwt({secret:key,algorithms: ['RS256']}))
 
-        app.use(jwt({secret:key,algorithms: ['RS256'],
-               getToken: (req)=> req.cookies.token}))//from httpOnly cookie
+        // app.use(jwt({secret:key,algorithms: ['RS256'],
+        //        getToken: (req)=> req.cookies.token}))//from httpOnly cookie
 
        app.use(function (err, req, res, next) {
         
