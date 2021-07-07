@@ -3,9 +3,9 @@ const router = express.Router();
 const cookie = require('cookie')
 router.post('/set',(req,res,next)=>{
     try{
-        console.log("asd")
+       
         res
-        .setHeader('Set-Cookie', cookie.serialize('token',req.body,{
+        .setHeader('Set-Cookie', cookie.serialize('token',req.body.token,{
             httpOnly:true,
             secure:false,
             path:'/'
