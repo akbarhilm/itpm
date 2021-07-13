@@ -34,7 +34,7 @@ async function findMenuProyekByPengguna(params){
                 from DBADMIT.TMITPMPROJ where to_char(i_itpm_proj) = :id  or n_itpm_projuri = :id))`
                 }
     else{
-        console.dir("asd")
+        
         query +=`select i_itpm_menu as idmenu,n_itpm_menu as namaMenu,n_itpm_menuuri as namaUri,e_itpm_menu as ketMenu,
         c_itpm_menusdbar as kodeSidebar,i_itpm_menusort as idSort
                 from DBADMIT.TRITPMMENU where i_itpm_menu in (

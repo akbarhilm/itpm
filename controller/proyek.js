@@ -30,7 +30,6 @@ router.get('/detail/:id', async (req, res, next) => {
       
     } catch (err) {
         console.error(err)
-        reject(err)
         next(err)
     }
 
