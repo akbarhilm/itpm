@@ -59,9 +59,9 @@ function seqexec(statement, bind = [], opt = [], last) {
             if (!seqconn) {
                 seqconn = await oracle.getConnection();
             }
-            //console.dir(bind)
+            console.dir(bind)
             const result = await seqconn.execute(statement, bind, opt);
-            //console.dir(result);
+            console.dir(result);
             resolve(result);
         } catch (err) {
             console.log(err);

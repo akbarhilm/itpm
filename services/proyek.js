@@ -1,5 +1,6 @@
 const database = require('../conf/db/db')
 const oracledb = require('oracledb');
+const nomer = require('./nomer')
 //  const aplikasi = require('./aplikasi');
 //  const layanan = require('./layanan')
 //  const modul = require('./modul') 
@@ -94,6 +95,22 @@ async function add(params){
     return params
 }
 
+async function addNumber(params){
+
+    const res = await nomer.getNomer(params)
+
+    let query=`UPDATE DBADMIT.TMITPMPROJ
+    set I_ITPM_`+params.field+`NBR = :nomer
+    where i_itpm_proj = :idproj`
+    const param = {}
+    param.nomer = res[0]
+    param.idproj = params.idproj 
+
+    const result = await database.seqexec(query,param,{autoCommit:true},true)
+    return res[0]
+
+}
+
 async function edit(params){
     let query=`UPDATE DBADMIT.TMITPMPROJ
     set I_ITPM_SC = :idlayanan,
@@ -170,3 +187,4 @@ module.exports.stepper = stepper
 module.exports.edit = edit
 module.exports.addUser = addUser
 module.exports.addUserAuth = addUserAuth
+module.exports.addNumber = addNumber
