@@ -67,7 +67,7 @@ function init() {
           app.use(cookieparsers())
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
-         app.use(helmet());
+        // app.use(helmet());
        // app.use('/api/jwt',assignJwt) //for assign to httpOnly
       
         app.use(jwt({secret:key,algorithms: ['RS256']}))
