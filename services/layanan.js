@@ -94,8 +94,7 @@ async function add(params){
 
     return params
         
-        const result = await database.exec(query,params,{autoCommit:true})
-        return result.rowsAffected;
+        
 }
 
 module.exports.add = add
