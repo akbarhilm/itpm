@@ -75,15 +75,24 @@ async function add(params){
             :newordev,
             :namaapl,
             :ketapl,
-            :aktif,
+            1,
             :namamodul,
             :ketlayanan,
             :nikpm,
             :identry,
             sysdate)
+            returning into :idlayanan
         `
 
        // const param = {}
+       params.idlayanan = {dir:oracledb.BIND_OUT}
+   // console.dir(query);
+    //console.dir(params)  
+    const result = await database.exec(query,params)
+    
+    params.idlayanan = parseInt(result.outBinds.idlayanan[0]);
+
+    return params
         
         const result = await database.exec(query,params,{autoCommit:true})
         return result.rowsAffected;

@@ -1120,7 +1120,6 @@
                 "newordev",
                 "namaapl",
                 "ketapl",
-                "aktif",
                 "namamodul",
                 "ketlayanan",
                 "nikpm"
@@ -1150,11 +1149,6 @@
                     "type": "string",
                     "example": "Aplikasi untuk bla bla bla bah",
                     "description": "Deskripsi Aplikasi yang diminta"
-                },
-                "aktif": {
-                    "type": "string",
-                    "example": "1",
-                    "description": "Kode Aktif"
                 },
                 "namamodul": {
                     "type": "string",
