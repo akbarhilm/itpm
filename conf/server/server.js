@@ -61,12 +61,13 @@ function init() {
             // Pass to next layer of middleware
             next();
           });
-          app.use(helmet());
+         
           app.use(morgan('combined'));  
           app.use(express.json());
           app.use(cookieparsers())
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
+         app.use(helmet());
        // app.use('/api/jwt',assignJwt) //for assign to httpOnly
       
         app.use(jwt({secret:key,algorithms: ['RS256']}))
