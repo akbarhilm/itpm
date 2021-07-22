@@ -10,20 +10,22 @@ async function find(params) {
          N_ITPM_USECASE   usecase,
         C_ITPM_ACTV          kodeaktif
          from dbadmit.tmitpmureq`;
-
-    if (!Object.keys(params).length == 0) {
+    const param = {}
+    if (Object.keys(params).some(function(k) {return params[k];})) {
         // console.dir(!!params)
         query += `\n where`;
         if (Object.keys(params).find((x) => x == "idproj")) {
             query += `\n I_ITPM_PROJ = :idproj`;
+            param.idproj = params.idproj
         }
 
         if (Object.keys(params).find((x) => x == "idureq")) {
             query += `\n I_ITPM_UREQ = :idureq`;
+            param.idureq = params.idureq
         }
     }
 
-    const result = await database.exec(query, params);
+    const result = await database.exec(query, param);
     return result.rows;
 }
 

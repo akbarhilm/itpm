@@ -1,5 +1,5 @@
 const database = require('../conf/db/db')
-
+const oracledb = require('oracledb');
 async function find(params){
    
 let query=`select I_ITPM_SC as idlayanan, I_ITPM_SCNBR as nolayanan ,I_EMP_REQ as nikreq,
