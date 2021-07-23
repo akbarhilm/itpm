@@ -81,7 +81,7 @@ async function add(params){
             :nikpm,
             :identry,
             sysdate)
-            returning into :idlayanan
+            returning i_itpm_sc into :idlayanan
         `
 
        // const param = {}
