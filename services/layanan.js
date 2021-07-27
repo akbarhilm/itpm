@@ -57,6 +57,7 @@ SELECT A.I_ITPM_SC as idlayanan, A.I_ITPM_SCNBR as nolayanan ,A.I_EMP_REQ as nik
 }
 
 async function add(params){
+    const nomer = await getNomerLayanan()
     let query=`insert into DBADMIT.TMITPMSC (
         I_ITPM_SCNBR,
         I_EMP_REQ,
@@ -70,7 +71,7 @@ async function add(params){
         i_entry,
         d_entry)
         values(
-            :nolayanan,
+            :nomorlayanan,
             :nikreq,
             :newordev,
             :namaapl,
@@ -83,20 +84,40 @@ async function add(params){
             sysdate)
             returning i_itpm_sc into :idlayanan
         `
+         
+        const param = {}
+        param.nomorlayanan = nomer
+        param.nikreq = params.nikreq
+        param.newordev = params.newordev
+        param.namaapl = params.namaapl
+        param.ketapl = params.ketapl
+        param.namamodul = params.namamodul
+        param.ketlayanan = params.ketlayanan
+        param.nikpm = params.nikpm
+        param.identry = params.identry
 
-       // const param = {}
-       params.idlayanan = {dir:oracledb.BIND_OUT}
+       param.idlayanan = {dir:oracledb.BIND_OUT}
    // console.dir(query);
-    //console.dir(params)  
-    const result = await database.exec(query,params)
+    //console.dir(param)  
+    const result = await database.exec(query,param)
     
-    params.idlayanan = parseInt(result.outBinds.idlayanan[0]);
+    param.idlayanan = parseInt(result.outBinds.idlayanan[0]);
 
-    return params
+    return param
         
         
+}
+
+async function getNomerLayanan(){
+    let query=`(select trim(to_char(nvl(nomer,'1'),'000'))||'/APL/IT000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nomer from(
+                select trim(to_char(max(substr(i_itpm_scnbr ,0,3))+1,'000')) as nomer from dbadmit.tmitpmsc where substr(i_itpm_scnbr,-4) = to_char(sysdate,'yyyy')
+                ))`
+
+                const result = await database.exec(query,[])        
+                return result.rows[0].NOMER
 }
 
 module.exports.add = add
 module.exports.find = find
 module.exports.findUnsed = findUnsed
+//module.exports.getNomerLayanan = getNomerLayanan
