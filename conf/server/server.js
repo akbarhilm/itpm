@@ -14,6 +14,7 @@ const proyekRoute = require('../../controller/proyek')
 const charterRoute = require('../../controller/charter')
 const ureqRoute = require('../../controller/ureq')
 const riskRoute = require('../../controller/risk')
+const planrealRoute = require('../../controller/planreal')
 const swaggerRoute = require('../../controller/swagger')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
@@ -94,6 +95,7 @@ function init() {
         app.use('/api/proyek',charterRoute)
         app.use('/api/proyek',ureqRoute)
         app.use('/api/proyek', riskRoute)
+        app.use('/api/proyek',planrealRoute)
         
        server =  http.createServer(app).listen(port)
             .on('listening', () => {

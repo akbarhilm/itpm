@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const ureq = require('../services/ureq');
+const pr = require('../services/planreal');
 const proj = require('../services/proyek')
+const map = require('../util/errorHandling')
 
-router.get('/ureq', async (req, res, next) => {
+
+router.get('/planreal', async (req, res, next) => {
     try {
 
-        const rows = await ureq.find({
-            idureq: req.query.id
+        const rows = await pr.find({
+            idplanreal: req.query.id
         });
         if (rows.length !== 0) {
             res.status(200).json(rows);
@@ -20,10 +22,10 @@ router.get('/ureq', async (req, res, next) => {
     }
 })
 
-router.get('/ureq/:id', async (req, res, next) => {
+router.get('/planreal/:id', async (req, res, next) => {
     try {
 
-        const rows = await ureq.find({
+        const rows = await pr.find({
             idproj: req.params.id
         });
         if (rows.length !== 0) {
@@ -37,22 +39,22 @@ router.get('/ureq/:id', async (req, res, next) => {
     }
 })
 
-router.post('/ureq/tambah',async(req,res,next)=>{
+router.post('/planreal/tambah',async(req,res,next)=>{
     try{
 
-        const paramureq = req.body
-        paramureq.identry = req.user.data.nik
+        const parampr = req.body
+        parampr.identry = req.user.data.nik
 
         const paramproj = {}
-        paramproj.table = 'ureq'
-        paramproj.field = 'ureq'
+        paramproj.table = 'planreal'
+        paramproj.field = 'plan'
         paramproj.idproj = req.body.idproj
 
        
 
-        const resq = await ureq.add(paramureq)
+        const resq = await pr.add(parampr)
         const resp = await proj.addNumber(paramproj)
-        resq.noureq = resp
+        resq.norisk = resp
         res.status(200).json(resq)
 
     }catch(err){
