@@ -1,0 +1,392 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Dokumentasi API Service Profil",
+        "version": "1.0.0",
+        "title": "Service Profil",
+        "contact": {
+            "name": "Akbar",
+            "email": "ahilman@indonesian-aerospace.com"
+        }
+    },
+    "host": "10.1.94.235:5000",
+    "basePath": "/api/profil",
+    "externalDocs": {
+        "description": "swagger json",
+        "url": "http://10.1.94.235:5000/v2/swagger"
+    },
+    "tags": [
+        {
+            "name": "Pengguna",
+            "description": "Pengelolaan pengguna"
+        },
+        {
+            "name": "Menu",
+            "description": "Pengelolaan menu"
+        }
+    ],
+    "paths": {
+        "/pengguna": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna",
+                "operationId": "getAllPengguna",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Pengguna"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/nik": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan pengguna",
+                "description": "Berdasarkan nik pengguna",
+                "operationId": "getPenggunaByNik",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Pengguna"
+                        }
+                    },
+                    "400": {
+                        "description": "NIK tidak valid"
+                    },
+                    "404": {
+                        "description": "Pengguna tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/proyek/nik": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan proyek yang dimiliki pengguna",
+                "description": "Berdasarkan nik pengguna",
+                "operationId": "getPenggunaProyek",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Proyek"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "nik tidak valid"
+                    },
+                    "404": {
+                        "description": "Proyek tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/pengguna/otoritas/nik": {
+            "get": {
+                "tags": [
+                    "Pengguna"
+                ],
+                "summary": "Fungsi untuk menampilkan otoritas yang dimiliki pengguna",
+                "description": "Berdasarkan nik",
+                "operationId": "getPenggunaOtoritas",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Otoritas"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "nik tidak valid"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/menu/proyek/nik/{id}": {
+            "get": {
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "Fungsi untuk menampilkan menu proyek yang dimiliki pengguna",
+                "description": "Berdasarkan proyek dan pengguna",
+                "operationId": "getMenuPenggunaProyek",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "uri atau id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Menu Proyek"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "id atau nik tidak valid"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Response Pengguna": {
+            "type": "object",
+            "properties": {
+                "I_EMP": {
+                    "type": "integer"
+                },
+                "I_EMP_EMAIL": {
+                    "type": "string"
+                },
+                "C_ITPM_ACTV": {
+                    "type": "integer"
+                }
+            },
+            "title": "Response Pengguna"
+        },
+        "Response Proyek": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "object",
+                    "properties": {
+                            "I_ITPM_PROJ": {
+                                "type": "integer"
+                            },
+                            "I_ITPM_SC": {
+                                "type": "integer"
+                            },
+                            "C_ITPM_APPLSTAT": {
+                                "type": "string"
+                            },
+                            "C_ITPM_SC": {
+                                "type": "string"
+                            },
+                            "N_ITPM_PROJ": {
+                                "type": "string"
+                            },
+                            "E_ITPM_PROJ": {
+                                "type": "string"
+                            },
+                            "C_ITPM_PROJSTAT": {
+                                "type": "string"
+                            },
+                            "E_ITPM_PROJSTATCHNG": {
+                                "type": "string"
+                            },
+                            "D_ITPM_PROJSTATCHNG": {
+                                "type": "string"
+                            },
+                            "C_ITPM_ACTV": {
+                                "type": "string"
+                            },
+                            "N_ITPM_PROJURI": {
+                                "type": "string"
+                            },
+                            "I_EMP_REQ": {
+                                "type": "string"
+                            },
+                            "I_EMP_PM": {
+                                "type": "string"
+                            },
+                            "I_ITPM_RISKNBR": {
+                                "type": "string"
+                            },
+                            "I_ITPM_PLANNBR": {
+                                "type": "string"
+                            },
+                            "I_ITPM_RESRCNBR": {
+                                "type": "string"
+                            },
+                            "I_ITPM_REALNBR": {
+                                "type": "string"
+                            },
+                            "I_ITPM_BANBR": {
+                                "type": "string"
+                            },
+                            "D_ITPM_BA": {
+                                "type": "string"
+                            },
+                            "C_ITPM_BAAPPRV": {
+                                "type": "string"
+                            },
+                            "D_ITPM_BAAPPRV": {
+                                "type": "string"
+                            },
+                            "I_ITPM_UREQNBR": {
+                                "type": "string"
+                            },
+                            "I_ITPM_APPL": {
+                                "type": "string"
+                            },
+                            "I_ITPM_MDL": {
+                                "type": "string"
+                            }
+                        
+                    }
+                },
+                "otortias": {
+                    "type": "object",
+                    "properties": {
+                        "PMO": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            },
+            "title": "Response Proyek"
+        },
+        "Response Menu Proyek": {
+            "type": "object",
+            "properties": {
+                "I_ITPM_MENU": {
+                    "type": "integer"
+                },
+                "N_ITPM_MENU": {
+                    "type": "string"
+                },
+                "N_ITPM_MENUURI": {
+                    "type": "string"
+                },
+                "E_ITPM_MENU": {
+                    "type": "string"
+                },
+                "C_ITPM_MENUSDBAR": {
+                    "type": "string"
+                },
+                "I_ITPM_MENUSORT": {
+                    "type": "integer"
+                }
+            },
+            "title": "Response Menu Proyek"
+        },
+        "Response Otoritas": {
+            "type": "object",
+            "properties": {
+                "I_ITPM_AUTH": {
+                    "type": "integer"
+                },
+                "C_ITPM_AUTH": {
+                    "type": "string"
+                },
+                "N_ITPM_AUTH": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Otoritas"
+        }
+    }
+}

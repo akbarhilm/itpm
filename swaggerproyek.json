@@ -1,0 +1,1216 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Dokumentasi API Service Proyek",
+        "version": "1.0.0",
+        "title": "Service Proyek",
+        "contact": {
+            "name": "Akbar",
+            "email": "ahilman@indonesian-aerospace.com"
+        }
+    },
+    "host": "10.1.94.235:5000",
+    "basePath": "/api/proyek",
+    "externalDocs": {
+        "description": "swagger json",
+        "url": "http://10.1.94.235:5001/v2/swagger"
+    },
+    "tags": [
+        {
+            "name": "Aplikasi",
+            "description": "Pengelolaan Aplikasi"
+        },
+        {
+            "name": "Modul",
+            "description": "Pengelolaan modul"
+        },
+        {
+            "name": "Layanan",
+            "description": "Pengelolaan layanan"
+        },
+        {
+            "name": "Proyek",
+            "description": "Pengelolaan Proyek"
+        },
+        {
+            "name": "Charter",
+            "description": "Pengelolaan Charter"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "Proyek"
+                ],
+                "summary": "Fungsi untuk menampilkan proyek",
+                "operationId": "getAllProyek",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Proyek"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Proyek tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/detail/{id}": {
+            "get": {
+                "tags": [
+                    "Proyek"
+                ],
+                "summary": "Fungsi untuk menampilkan proyek",
+                "description": "Berdasarkan id atau uri proyek",
+                "operationId": "getAllProyekById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id atau URI proyek",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Proyek"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Value"
+                    },
+                    "404": {
+                        "description": "Proyek tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/stepper/{id}": {
+            "get": {
+                "summary": "Fungsi untuk menampilkan status",
+                "description": "Berdasarkan id atau uri proyek",
+                "operationId": "getstepper",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id atau URI proyek",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "I_ITPM_RISKNBR": {
+                                    "type": "boolean"
+                                },
+                                "I_ITPM_PLANNBR": {
+                                    "type": "boolean"
+                                },
+                                "I_ITPM_RESRCNBR": {
+                                    "type": "boolean"
+                                },
+                                "I_ITPM_REALNBR": {
+                                    "type": "boolean"
+                                },
+                                "I_ITPM_BANBR": {
+                                    "type": "boolean"
+                                },
+                                "I_ITPM_UREQNBR": {
+                                    "type": "boolean"
+                                },
+                                "I_ITPM_CHARTERNBR": {
+                                    "type": "boolean"
+                                },
+                                "I_ITPM_UATNBR": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Value"
+                    },
+                    "404": {
+                        "description": "Proyek tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/tambah": {
+            "post": {
+                "tags": [
+                    "Proyek"
+                ],
+                "summary": "Fungsi untuk menambah Proyek",
+                "operationId": "AddProyek",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Post Proyek",
+                        "description": "Format JSON untuk post proyek",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Proyek"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid value"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/ubah": {
+            "put": {
+                "tags": [
+                    "Proyek"
+                ],
+                "summary": "Fungsi untuk mengubah Proyek",
+                "operationId": "editProyek",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Put Proyek",
+                        "description": "Format JSON untuk put proyek",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Proyek"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid value"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/charter": {
+            "get": {
+                "tags": [
+                    "Charter"
+                ],
+                "summary": "Fungsi untuk menampilkan charter",
+                "operationId": "getAllCharter",
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Filter idcharter",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Charter"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Charter tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+         "/charter/tambah": {
+            "post": {
+                "tags": [
+                    "Charter"
+                ],
+                "summary": "Fungsi untuk menambah Charter",
+                "operationId": "AddCharter",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Post Charter",
+                        "description": "Format JSON untuk post Charter",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Charter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid value"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+       
+        "/aplikasi": {
+            "get": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menampilkan Aplikasi",
+                "operationId": "getAllAplikasi",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Aplikasi"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Aplikasi tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/aplikasi/tambah": {
+            "post": {
+                "tags": [
+                    "Aplikasi"
+                ],
+                "summary": "Fungsi untuk menambah Aplikasi",
+                "operationId": "AddAplikasi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Post Aplikasi",
+                        "description": "Format JSON untuk post aplikasi",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Aplikasi"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "$ref": "#/definitions/Response Post"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid value"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/modul": {
+            "get": {
+                "tags": [
+                    "Modul"
+                ],
+                "summary": "Fungsi untuk menampilkan Modul",
+                "operationId": "getAllModul",
+                "parameters": [
+                    {
+                        "name": "idmodul",
+                        "in": "query",
+                        "description": "Filter idmodul",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    },
+                    {
+                        "name": "idaplikasi",
+                        "in": "query",
+                        "description": "Filter idaplikasi",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Modul"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "id Aplikasi tidak valid"
+                    },
+                    "404": {
+                        "description": "Aplikasi tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/modul/{id}": {
+            "get": {
+                "tags": [
+                    "Modul"
+                ],
+                "summary": "Fungsi untuk menampilkan Modul Aplikasi",
+                "description": "Berdasarkan id Aplikasi",
+                "operationId": "getModulByIdAplikasi",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id Aplikasi",
+                        "required": true,
+                        "type": "integer",
+                        "x-example": "1"
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Modul"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "id Aplikasi tidak valid"
+                    },
+                    "404": {
+                        "description": "Modul tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/modul/tambah": {
+            "post": {
+                "tags": [
+                    "Modul"
+                ],
+                "summary": "Fungsi untuk menambah Modul",
+                "operationId": "addModul",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Post Modul",
+                        "description": "Format JSON untuk post Modul",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Modul"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Post"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid value"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/layanan": {
+            "get": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Fungsi untuk menampilkan Layanan",
+                "operationId": "getAllLayanan",
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Layanan"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/layanan/unused": {
+            "get": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Fungsi untuk menampilkan Layanan yang belum digunakan",
+                "operationId": "getUnusedLayanan",
+                "parameters": [
+                    {
+                        "name": "idproj",
+                        "in": "query",
+                        "description": "include layanan by idproyek",
+                        "required": false,
+                        "type": "string",
+                        "allowEmptyValue": false
+                    }
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Layanan"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        },
+        "/layanan/tambah": {
+            "post": {
+                "tags": [
+                    "Layanan"
+                ],
+                "summary": "Fungsi untuk menambah Layanan",
+                "operationId": "addLayanan",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "*/*"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Post Layanan",
+                        "description": "Format JSON untuk post layanan",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/Request Layanan"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Response Post"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid value"
+                    },
+                    "404": {
+                        "description": "Data tidak ditemukan"
+                    },
+                    "401": {
+                        "description": "UnAuthorize"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": [
+                            "global"
+                        ]
+                    }
+                ],
+                "deprecated": false
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Request Proyek": {
+            "type": "object",
+            "required": [
+                "idlayanan",
+                "statusapl",
+                "jenislayanan",
+                "namaproj",
+                "namauri",
+                "nikreq",
+                "nikpm",
+                "ketproj"
+            
+            ],
+            "properties": {
+                "idlayanan": {
+                    "type": "integer",
+                    "example": "1",
+                    "description": "id dari Layanan"
+                },
+                "statusapl": {
+                    "type": "string",
+                    "enum":[
+                        "SAP",
+                        "NON_SAP"
+                    ],
+                    "example": "SAP"
+                },
+                "jenislayanan": {
+                    "type": "string",
+                    "example": "PENGEMBANGAN",
+                    "enum":[
+                        "PENGEMBANGAN",
+                        "PERUBAHAN"
+                    ]
+                    
+                },
+                "namaproj": {
+                    "type": "string",
+                    "example": "Projek xxxxx",
+                    "description": "Nama Project"
+                },
+                "ketproj": {
+                    "type": "string",
+                    "example": "projek untuk bla bla bla bah",
+                    "description": "Deskripsi projek"
+                },
+                
+                "namauri": {
+                    "type": "string",
+                    "example": "itpm",
+                    "description": "URI Project"
+                },
+                "nikreq": {
+                    "type": "string",
+                    "example": "18xxxx",
+                    "description": "Karyawan Peminta Layanan"
+                },
+                "nikpm": {
+                    "type": "string",
+                    "example": "18xxxx",
+                    "description": "NIK Karyawan Project Manager"
+                },
+                "idaplikasi": {
+                    "type": "integer",
+                    "required": false,
+                    "example": "1 (remove this key if not used)",
+                    "description": "id aplikasi"
+                },
+                "idmodul": {
+                    "type": "integer",
+                    "required": false,
+                    "example": "1 (remove this key if not used)",
+                    "description": "id modul dari aplikasi"
+                }
+            },
+            "title": "Request Layanan"
+        },
+        "Response Proyek": {
+            "type": "object",
+            "properties": {
+                "I_ITPM_PROJ": {
+                    "type": "integer"
+                },
+                "I_ITPM_SC": {
+                    "type": "integer"
+                },
+                "C_ITPM_APPLSTAT": {
+                    "type": "string"
+                },
+                "C_ITPM_SC": {
+                    "type": "string"
+                },
+                "N_ITPM_PROJ": {
+                    "type": "string"
+                },
+                "E_ITPM_PROJ": {
+                    "type": "string"
+                },
+                "C_ITPM_PROJSTAT": {
+                    "type": "string"
+                },
+                "E_ITPM_PROJSTATCHNG": {
+                    "type": "string"
+                },
+                "D_ITPM_PROJSTATCHNG": {
+                    "type": "string"
+                },
+                "C_ITPM_ACTV": {
+                    "type": "string"
+                },
+                "N_ITPM_PROJURI": {
+                    "type": "string"
+                },
+                "I_EMP_REQ": {
+                    "type": "string"
+                },
+                "I_EMP_PM": {
+                    "type": "string"
+                },
+                "I_ITPM_RISKNBR": {
+                    "type": "string"
+                },
+                "I_ITPM_PLANNBR": {
+                    "type": "string"
+                },
+                "I_ITPM_RESRCNBR": {
+                    "type": "string"
+                },
+                "I_ITPM_REALNBR": {
+                    "type": "string"
+                },
+                "I_ITPM_BANBR": {
+                    "type": "string"
+                },
+                "D_ITPM_BA": {
+                    "type": "string"
+                },
+                "C_ITPM_BAAPPRV": {
+                    "type": "string"
+                },
+                "D_ITPM_BAAPPRV": {
+                    "type": "string"
+                },
+                "I_ITPM_UREQNBR": {
+                    "type": "string"
+                },
+                "I_ITPM_APPL": {
+                    "type": "string"
+                },
+                "I_ITPM_MDL": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Proyek"
+        },
+        "Request Charter": {
+            "type": "object",
+            "required": [
+                "idproj",
+                "nocharter",
+                "tglmulai",
+                "tglselesai",
+                "kodeapprove"
+            ],
+            "properties": {
+                "idproj": {
+                    "type": "string",
+                    "example": "1",
+                    "description": "id proyek"
+                },
+                "nocharter": {
+                    "type": "string",
+                    "example": "1/23/456/ITxxx",
+                    "description": "Nomer Charter"
+                },
+                "tglmulai": {
+                    "type": "string",
+                    "example": "dd/mm/yyyy",
+                    "description": "tanggal mulai"
+                },
+                "tglselesai": {
+                    "type": "string",
+                    "example": "dd/mm/yyyy",
+                    "description": "tanggal selesai"
+                },
+                "kodeapprove":{
+                    "type":"string",
+                    "example":"1",
+                    "description":"kode approve"
+                }
+
+            },
+            "title": "Request Charter"
+        },
+        "Response Charter": {
+            "type": "object",
+            "properties": {
+                "IDCHARTER": {
+                    "type": "integer"
+                },
+                "IDPROYEK": {
+                    "type": "string"
+                },
+                "TGLMULAI": {
+                    "type": "string"
+                },
+                "TGLSELESAI": {
+                    "type": "string"
+                },
+                "KODEAKTIF": {
+                    "type": "string"
+                },
+                "KODEAPPROVE":{
+                    "type":"string"
+                }
+            },
+            "title": "Response Charter"
+        },
+        "Request Aplikasi": {
+            "type": "object",
+            "required": [
+                "kodeapl",
+                "namaapl",
+                "ketapl",
+                "aktif"
+            ],
+            "properties": {
+                "kodeapl": {
+                    "type": "string",
+                    "example": "apl",
+                    "description": "Kode Aplikasi"
+                },
+                "namaapl": {
+                    "type": "string",
+                    "example": "Aplikasi xxxx",
+                    "description": "Nama Aplikasi"
+                },
+                "ketapl": {
+                    "type": "string",
+                    "example": "Aplikasi untuk xxxxxxx",
+                    "description": "Keterangan dari aplikasi"
+                },
+                "aktif": {
+                    "type": "string",
+                    "example": "1",
+                    "description": "Kode Aktif"
+                }
+            },
+            "title": "Request Aplikasi"
+        },
+        "Response Aplikasi": {
+            "type": "object",
+            "properties": {
+                "I_ITPM_APPL": {
+                    "type": "integer"
+                },
+                "C_ITPM_APPL": {
+                    "type": "string"
+                },
+                "N_ITPM_APPL": {
+                    "type": "string"
+                },
+                "E_ITPM_APPL": {
+                    "type": "string"
+                },
+                "C_ITPM_ACTV": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Layanan"
+        },
+        "Request Modul": {
+            "type": "object",
+            "required": [
+                "idapl",
+                "namamodul",
+                "ketmodul",
+                "aktif"
+            ],
+            "properties": {
+                "idapl": {
+                    "type": "integer",
+                    "example": "123456",
+                    "description": "ID Aplikasi"
+                },
+                "namamodul": {
+                    "type": "string",
+                    "example": "Modul xxxx",
+                    "description": "Nama Modul dari aplikasi"
+                },
+                "ketmodul": {
+                    "type": "string",
+                    "example": "Modul untuk xxxxxxx",
+                    "description": "Keterangan Modul dari aplikasi"
+                },
+                "aktif": {
+                    "type": "string",
+                    "example": "1",
+                    "description": "Kode Aktif"
+                }
+            },
+            "title": "Request Modul"
+        },
+        "Response Modul": {
+            "type": "object",
+            "properties": {
+                "I_ITPM_MDL": {
+                    "type": "integer"
+                },
+                "I_ITPM_APPL": {
+                    "type": "integer"
+                },
+                "N_ITPM_MDL": {
+                    "type": "string"
+                },
+                "E_ITPM_MDL": {
+                    "type": "string"
+                },
+                "C_ITPM_ACTV": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Layanan"
+        },
+        "Request Layanan": {
+            "type": "object",
+            "required": [
+                "nolayanan",
+                "nikreq",
+                "newordev",
+                "namaapl",
+                "ketapl",
+                "namamodul",
+                "ketlayanan",
+                "nikpm"
+            ],
+            "properties": {
+                "nolayanan": {
+                    "type": "string",
+                    "example": "0xx/xxx/ITxxxx/xx/xxxx or whatever",
+                    "description": "No Layanan"
+                },
+                "nikreq": {
+                    "type": "string",
+                    "example": "180xxx",
+                    "description": "NIK Karyawan Peminta Layanan"
+                },
+                "newordev": {
+                    "type": "string",
+                    "example": "0",
+                    "description": "Kode Jenis Layanan (0=pengembangan, 1=perubahan)"
+                },
+                "namaapl": {
+                    "type": "string",
+                    "example": "Aplikasi 1",
+                    "description": "Kode Aktif"
+                },
+                "ketapl": {
+                    "type": "string",
+                    "example": "Aplikasi untuk bla bla bla bah",
+                    "description": "Deskripsi Aplikasi yang diminta"
+                },
+                "namamodul": {
+                    "type": "string",
+                    "example": "Modul xxxx",
+                    "description": "Nama Modul dari aplikasi yang diminta"
+                },
+                "ketlayanan": {
+                    "type": "string",
+                    "example": "Layanan permintaan blah blah blah",
+                    "description": "Uraian Layanan"
+                },
+                "nikpm": {
+                    "type": "string",
+                    "example": "NIK Karyawan Project Manager",
+                    "description": "Uraian Layanan"
+                }
+            },
+            "title": "Request Layanan"
+        },
+        "Response Layanan": {
+            "type": "object",
+            "properties": {
+                "I_ITPM_SCNBR": {
+                    "type": "string"
+                },
+                "I_EMP_REQ": {
+                    "type": "string"
+                },
+                "C_ITPM_SC": {
+                    "type": "string"
+                },
+                "N_ITPM_APPL": {
+                    "type": "string"
+                },
+                "E_ITPM_APPL": {
+                    "type": "string"
+                },
+                "C_ITPM_ACTV": {
+                    "type": "string"
+                },
+                "N_ITPM_MDL": {
+                    "type": "string"
+                },
+                "E_ITPM_SC": {
+                    "type": "string"
+                },
+                "I_EMP_PM": {
+                    "type": "string"
+                }
+            },
+            "title": "Response Layanan"
+        },
+        "Response Post": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

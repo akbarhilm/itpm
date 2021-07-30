@@ -1,0 +1,64 @@
+stages:
+  - init
+  - build
+  - staging
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+init:
+  stage: init
+  script:
+    - npm install
+  only:
+    - dev
+    - test
+
+build_dev:
+  stage: build
+  script:
+    - docker build -t $DOCKER_REPOSITORY/dev-apps/itpm .
+  only:
+    - dev
+
+staging_dev:
+  stage: staging
+  script:
+    - docker push $DOCKER_REPOSITORY/dev-apps/itpm
+    - docker rmi $DOCKER_REPOSITORY/dev-apps/itpm
+  only:
+    - dev
+
+deploy_dev:
+  stage: deploy
+  script:
+    - ssh $USER@$HOST_DEV "cd ~/project/itpm && ./shutdown"
+    - ssh $USER@$HOST_DEV "cd ~/project/itpm && ./startup"
+  only:
+    - dev
+
+build_test:
+  stage: build
+  script:
+    - cp $PATH_KEY_TEST jwtRS256.key.pub
+    - docker build -t $DOCKER_REPOSITORY/test-apps/itpm .
+  only:
+    - test
+
+staging_test:
+  stage: staging
+  script:
+    - docker push $DOCKER_REPOSITORY/test-apps/itpm
+    - docker rmi $DOCKER_REPOSITORY/test-apps/itpm
+  only:
+    - test
+
+deploy_test:
+  stage: deploy
+  script:
+    - ssh $USER@$HOST_TEST "cd ~/project/itpm && ./shutdown"
+    - ssh $USER@$HOST_TEST "cd ~/project/itpm && ./startup"
+  only:
+    - test
