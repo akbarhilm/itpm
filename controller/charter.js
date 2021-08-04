@@ -6,11 +6,15 @@ const map = require('../util/errorHandling')
 router.get('/charter', async (req, res, next) => {
     try {
 
-        const rows = await charter.find({
+        const rowspar = await charter.find({
             idcharter: req.query.id
         });
-        if (rows.length !== 0) {
-            res.status(200).json(rows);
+        const rowsch = await charter.findChild({idcharter:rowspar[0].IDCHARTER})
+
+        rowspar[0].LISTDETAIL = rowsch||null
+
+        if (rowspar.length !== 0) {
+            res.status(200).json(rowspar[0]);
         } else {
             res.status(200).json({});
         }
@@ -23,11 +27,15 @@ router.get('/charter', async (req, res, next) => {
 router.get('/charter/:id', async (req, res, next) => {
     try {
 
-        const rows = await charter.find({
+        const rowspar = await charter.find({
             idproj: req.params.id
         });
-        if (rows.length !== 0) {
-            res.status(200).json(rows);
+        const rowsch = await charter.findChild({idcharter:rowspar[0].IDCHARTER})
+
+        rowspar[0].LISTDETAIL = rowsch||null
+
+        if (rowspar.length !== 0) {
+            res.status(200).json(rowspar[0]);
         } else {
             res.status(200).json({});
         }
@@ -80,7 +88,7 @@ router.put('/charter/ubah', async(req,res,next)=>{
         const params = req.body
         params.idubah = req.user.data.nik
         const respar = await charter.editParent(params);
-        const del = await charter.deleteChild(params.idcharter)
+        const del = await charter.deleteChild(params)
         const resdetail = []
 
         const dtl = params.listdetail.map(async (el, i, array) => {
