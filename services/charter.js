@@ -83,8 +83,8 @@ async function addParent(params) {
 }
 
 async function noCharter(){
-    let query=`select trim(to_char(nvl(nomer,'1'),'0000'))||'/PRC/IT000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nocharter from(
-        select trim(to_char(max(substr(i_itpm_charternbr ,0,4))+1,'0000')) as nomer, null as tahun from dbadmit.tmitpmcharter where substr(i_itpm_charternbr,-4) = to_char(sysdate,'yyyy')
+    let query=`select trim(to_char(nvl(nomer,'1'),'000'))||'/PRC/IT0000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nocharter from(
+        select trim(to_char(max(substr(i_itpm_charternbr ,0,3))+1,'000')) as nomer, null as tahun from dbadmit.tmitpmcharter where substr(i_itpm_charternbr,-4) = to_char(sysdate,'yyyy')
         )
     `
     const result = await database.exec(query)
