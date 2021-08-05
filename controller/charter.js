@@ -9,11 +9,14 @@ router.get('/charter', async (req, res, next) => {
         const rowspar = await charter.find({
             idcharter: req.query.id
         });
-        const rowsch = await charter.findChild({idcharter:rowspar[0].IDCHARTER})
+
+        if (rowspar.length !== 0) {
+            
+        const rowsch =  await charter.findChild({idcharter:rowspar[0].IDCHARTER}) 
 
         rowspar[0].LISTDETAIL = rowsch||null
 
-        if (rowspar.length !== 0) {
+       
             res.status(200).json(rowspar[0]);
         } else {
             res.status(200).json({});
@@ -30,11 +33,13 @@ router.get('/charter/:id', async (req, res, next) => {
         const rowspar = await charter.find({
             idproj: req.params.id
         });
-        const rowsch = await charter.findChild({idcharter:rowspar[0].IDCHARTER})
+
+        if (rowspar.length !== 0) {
+
+        const rowsch =   await charter.findChild({idcharter:rowspar[0].IDCHARTER})
 
         rowspar[0].LISTDETAIL = rowsch||null
 
-        if (rowspar.length !== 0) {
             res.status(200).json(rowspar[0]);
         } else {
             res.status(200).json({});
