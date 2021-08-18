@@ -115,11 +115,32 @@ router.put('/charter/ubah', async(req,res,next)=>{
             res.status(200).json(respar)
         })
 
-    }catch(e){
-        console.error(e)
-        next(e)
+    }catch (err) {
+        const { errorNum } = err;
+        const message = await map.map(errorNum)
+        res.status(500).json({"code":errorNum,"message":message});
+        next(err)
     }
 
+})
+
+router.put('/charter/approve',async(req,res,next)=>{
+    try{
+        const param = req.body
+        param.idubah = req.user.data.nik
+
+        const result = await charter.approve(param)
+        if(result == 1){
+            res.status(200).json({"code":200,"message":"Berhasil Approve"})
+        }else{
+            res.status(200).json({"code":200,"message":"Tidak Berhasil Approve"})
+        }
+    }catch (err) {
+        const { errorNum } = err;
+        const message = await map.map(errorNum)
+        res.status(500).json({"code":errorNum,"message":message});
+        next(err)
+    }
 })
 
 module.exports = router

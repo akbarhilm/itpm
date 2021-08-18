@@ -153,6 +153,23 @@ async function deleteChild(params) {
 
 }
 
+async function approve(params){
+
+    let query=`update dbadmit.tmitpmcharter
+    set c_itpm_apprv = (1 - c_itpm_apprv),
+     i_update = :idubah,
+     d_update = sysdate
+    where i_itpm_charter = :idcharter`
+
+    const param = {}
+    param.idcharter = params.idcharter
+    param.idubah = params.idubah
+    const result  = await database.exec(query,param)
+    return result.rowsAffected
+}
+
+
+module.exports.approve = approve
 module.exports.findChild = findChild
 module.exports.deleteChild = deleteChild
 module.exports.editParent = editParent
