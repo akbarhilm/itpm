@@ -172,7 +172,7 @@ async function addUserAuth(params){
 
 async function stepper(params){
 
-    let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,c.i_itpm_uatnbr as nouat, a.c_itpm_baapprv as approveba, b.c_itpm_apprv as approvecharter
+    let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,c.i_itpm_uatnbr as nouat, to_number(a.c_itpm_baapprv) as approveba, to_number(b.c_itpm_apprv) as approvecharter
     from dbadmit.tmitpmproj a
     full outer join DBADMIT.TMITPMCHARTER b on a.i_itpm_proj = b.i_itpm_proj
     full outer join DBADMIT.TMITPMUAT c on c.i_itpm_proj = b.i_itpm_proj
