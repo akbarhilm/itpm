@@ -12,6 +12,7 @@ const map = require('../util/errorHandling')
 router.get('/detail/:id', async (req, res, next) => {
   
     try {
+      
        const rpro =  await proyek.find({id:req.params.id})
        const rla = await layanan.find({id:rpro[0].IDLAYANAN})
        const rapp = await aplikasi.find({id:rpro[0].IDAPLIKASI})

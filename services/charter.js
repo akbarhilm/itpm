@@ -44,7 +44,7 @@ async function findChild(params){
     return result.rows;
 }
 
-async function addParent(params) {
+async function addParent(params,commit,conn) {
     const nocharter = await noCharter()
     console.dir(nocharter[0].NOCHARTER)
     let query = `insert into dbadmit.tmitpmcharter (
@@ -77,7 +77,7 @@ async function addParent(params) {
 
     param.idcharter = { dir: oracledb.BIND_OUT }
 
-    const result = await database.seqexec(query, param, [], false)
+    const result = await database.seqexec(query, param, commit,conn)
     param.idcharter = result.outBinds.idcharter[0];
     return param
 }
@@ -91,7 +91,7 @@ async function noCharter(){
     return result.rows
 }
 
-async function addChild(params, commit, last) {
+async function addChild(params, commit, conn) {
     let query = `INSERT INTO dbadmit.tmitpmcharterdtl
     (
         I_ITPM_CHARTER,
@@ -114,12 +114,12 @@ async function addChild(params, commit, last) {
 
     param.iddetail = { dir: oracledb.BIND_OUT }
 
-    const result = await database.seqexec(query, param, commit, last)
+    const result = await database.seqexec(query, param, commit, conn)
     param.iddetail = result.outBinds.iddetail[0];
     return param
 }
 
-async function editParent(params) {
+async function editParent(params,commit,conn) {
     console.dir("edit")
     const res = []
     let query = `update dbadmit.tmitpmcharter 
@@ -139,16 +139,16 @@ async function editParent(params) {
 
 
 
-    const result = await database.seqexec(query, param, [], false)
+    const result = await database.seqexec(query, param, commit, conn)
     return param
 }
 
-async function deleteChild(params) {
+async function deleteChild(params,commit,conn) {
     console.dir("del")
     let query = `delete dbadmit.tmitpmcharterdtl where i_itpm_charter = :idcharter`
     const param ={}
     param.idcharter = params.idcharter
-    const result = await database.seqexec(query, param, [], false)
+    const result = await database.seqexec(query, param, commit, conn)
     return result.rowsAffected
 
 }
