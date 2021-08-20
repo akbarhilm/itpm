@@ -14,6 +14,7 @@ async function getNomer(param,conn) {
             break;
         case 'othrresrc':
             code = 'KSD'
+            break;
         case 'risk':
             code = 'RSM'
             break;

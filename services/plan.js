@@ -16,12 +16,12 @@ async function find(params){
         // console.dir(!!params)
         query += `\n where`;
         if (Object.keys(params).find((x) => x == "idproj")) {
-            query += `\n I_ITPM_PROJ = :idproj`;
+            query += `\n I_ITPM_PROJ = :idproj and c_itpm_planreal='PLAN' `;
             param.idproj = params.idproj
         }
 
         if (Object.keys(params).find((x) => x == "idplanreal")) {
-            query += `\n I_ITPM_planreal = :idplanreal`;
+            query += `\n I_ITPM_planreal = :idplanreal and c_itpm_planreal='PLAN'`;
             param.idplanreal = params.idplanreal
         }
     }
@@ -30,7 +30,7 @@ async function find(params){
     return result.rows;
 }
 
-async function add(params){
+async function addPlan(params,commit,conn){
     let query=`insert into dbadmit.tmitpmplanreal(
         i_itpm_proj,
         i_itpm_acty,
@@ -42,28 +42,42 @@ async function add(params){
         d_entry)values(
         :idproj, 
         :idkegiatan, 
-        :kodeplanreal, 
-        :nikpelaksana, 
+        'PLAN', 
+        :nik, 
         to_date(:tglmulai,'dd/mm/yyyy'), 
         to_date(:tglselesai,'dd/mm/yyyy'),
         :identry,
-        sysdate) returning i_itpm_planreal into :idplanreal `
+         sysdate)`
         
         const param={}
         param.idproj = params.idproj
         param.idkegiatan = params.idkegiatan
-        param.kodeplanreal = params.kodeplanreal
-        param.nikpelaksana = params.nikpelaksana
+        param.nik = params.nik
         param.tglmulai = params.tglmulai
         param.tglselesai = params.tglselesai
         param.identry = params.identry
 
-        param.idplanreal = { dir: oracledb.BIND_OUT }
-
-        const result = await database.seqexec(query, param, [], false)
-        param.idplanreal = result.outBinds.idplanreal[0];
-        return param
+        //param.idplanreal = { dir: oracledb.BIND_OUT }
+          //  console.dir(params)
+        //const result = await database.execmany(query, params) //exec many
+        const result = await database.seqexec(query, param,commit,conn)
+       // param.idplanreal = result.outBinds.idplanreal[0];
+        return result
 }
 
-module.exports.add = add
+
+
+async function delplan(param,commit,conn){
+    let query=`delete dbadmit.tmitpmplanreal
+    where i_itpm_proj = :idproj
+    and c_itpm_planreal = 'PLAN'`
+
+
+    const result = await database.seqexec(query,param,commit,conn)
+    return result.rowsAffected
+}
+
+module.exports.delplan = delplan
+module.exports.addReal = addReal
+module.exports.addPlan = addPlan
 module.exports.find = find

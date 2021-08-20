@@ -95,7 +95,7 @@ async function add(params){
     return params
 }
 
-async function addNumber(params,conn){
+async function addNumber(params,commit,conn){
 
     const res = await nomer.getNomer(params,conn)
 
@@ -107,7 +107,7 @@ async function addNumber(params,conn){
     param.nomer = res[0]
     param.idproj = params.idproj 
 
-    const result = await database.seqexec(query,param,{autoCommit:true},conn)
+    const result = await database.seqexec(query,param,commit,conn)
     return res[0]
 
 }

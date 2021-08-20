@@ -29,8 +29,8 @@ async function find(params) {
     return result.rows;
 }
 
-async function add(params){
-    console.dir("add")
+async function add(params,commit,conn){
+   
     let query=`insert into dbadmit.tmitpmureq(
         I_ITPM_PROJ,
          N_ITPM_UREQ,
@@ -61,11 +61,50 @@ async function add(params){
 
     param.idureq = { dir: oracledb.BIND_OUT }
 
-    const result = await database.seqexec(query, param, [], false)
+    const result = await database.seqexec(query, param, commit,conn)
     param.idureq = result.outBinds.idureq[0];
     return param
 }
 
+async function del(params,commit,conn){
 
+    let query=`delete dbadmit.tmitpmureq where i_itpm_proj = :idproj`
+    const param = {}
+    param.idproj = params.idproj
+    const result = await database.seqexec(query,param,commit,conn)
+    return result.rowsAffected
+}
+
+async function edit(params){
+
+    let query=`update dbadmit.tmitpmureq set
+    N_ITPM_UREQ = :namaureq,
+         E_ITPM_UREQ = :ketureq,
+         I_ITPM_UREQPRTY = :prioritas,
+         N_ITPM_USECASE = :usecase,
+         I_update = :idubah,
+         d_update = sysdate
+         where i_itpm_ureq = :idureq
+    `
+
+    const param = {}
+    param.idureq = params.idureq
+    param.namaureq = params.namaureq
+    param.ketureq = params.ketureq
+    param.prioritas = params.prioritas
+    param.usecase = params.usecase
+    param.idubah = params.idubah
+
+    const result = await database.exec(query,param)
+    if(result.rowsAffected ==1){
+      return  find({idureq:param.idureq})
+    }else{
+    return result
+    }
+
+}
+
+module.exports.del = del
+module.exports.edit = edit
 module.exports.find = find
 module.exports.add = add
