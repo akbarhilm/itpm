@@ -6,7 +6,7 @@ const map = require('../util/errorHandling')
 const oracle = require("oracledb");
 
 
-router.get('/planreal', async (req, res, next) => {
+router.get('/plan', async (req, res, next) => {
     try {
 
         const rows = await plan.find({
@@ -25,7 +25,7 @@ router.get('/planreal', async (req, res, next) => {
     }
 })
 
-router.get('/planreal/:id', async (req, res, next) => {
+router.get('/plan/:id', async (req, res, next) => {
     try {
 
         const rows = await plan.find({
@@ -44,7 +44,7 @@ router.get('/planreal/:id', async (req, res, next) => {
     }
 })
 
-router.post('/planreal/tambah',async(req,res,next)=>{
+router.post('/plan/tambah',async(req,res,next)=>{
     const conn = await oracle.getConnection()
     try{
        const idproj = req.body.idproj.toString()
@@ -116,7 +116,7 @@ router.post('/planreal/tambah',async(req,res,next)=>{
    
 })
 
-router.put('/planreal/ubah',async(req,res,next)=>{
+router.put('/plan/ubah',async(req,res,next)=>{
     const conn = await oracle.getConnection()
     try{
        const idproj = req.body.idproj.toString()
