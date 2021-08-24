@@ -26,12 +26,26 @@ router.get('/ureq', async (req, res, next) => {
 
 router.get('/ureq/:id', async (req, res, next) => {
     try {
+        let data = {}
+        const idproj = req.params.id.toString()
 
         const rows = await ureq.find({
-            idproj: req.params.id
+            idproj: idproj
         });
-        if (rows.length !== 0) {
-            res.status(200).json(rows);
+        
+         const resnr = await proj.stepper({id:idproj})
+         
+         if(rows.length != 0 || resnr.length != 0) {
+
+            if(resnr[0].NOUREQ){
+            data.NOUREQ= resnr[0].NOUREQ
+         
+            data.listdetail = rows
+            
+            res.status(200).json(data);
+            }else{
+                res.status(200).json({}); 
+            }
         } else {
             res.status(200).json({});
         }

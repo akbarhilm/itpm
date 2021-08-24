@@ -28,11 +28,25 @@ router.get('/plan', async (req, res, next) => {
 router.get('/plan/:id', async (req, res, next) => {
     try {
 
+        const idproj = req.params.id.toString()
+        let data = {}
         const rows = await plan.find({
             idproj: req.params.id
         });
-        if (rows.length !== 0) {
-            res.status(200).json(rows);
+        console.dir(rows)
+        const resnr = await proj.stepper({id:idproj})
+        console.dir(resnr)
+        if (rows.length != 0 || resnr.length != 0 ) {
+            
+            if(resnr[0].NOPLAN){
+            data.NOPLAN=resnr[0].NOPLAN
+            data.listdetail = rows
+
+        
+            res.status(200).json(data);
+            }else{
+                res.status(200).json({});
+            }
         } else {
             res.status(200).json({});
         }
