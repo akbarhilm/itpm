@@ -40,7 +40,7 @@ router.get('/plan/:id', async (req, res, next) => {
 
             if(resnr[0].NOPLAN){
             data.NOPLAN=resnr[0].NOPLAN
-            data.listdetail = rows
+            data.LISTDETAIL = rows
 
         
             res.status(200).json(data);
@@ -105,7 +105,7 @@ router.post('/plan/tambah',async(req,res,next)=>{
             const find = await plan.find({idproj:req.body.idproj})
             const resnr = await proj.stepper({id:idproj})
             reselect.NOPLAN=resnr[0].NOPLAN
-            reselect.listdetail = find
+            reselect.LISTDETAIL = find
            
 
             res.status(200).json(reselect)

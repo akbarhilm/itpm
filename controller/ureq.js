@@ -40,7 +40,7 @@ router.get('/ureq/:id', async (req, res, next) => {
             if(resnr[0].NOUREQ){
             data.NOUREQ= resnr[0].NOUREQ
          
-            data.listdetail = rows
+            data.LISTDETAIL = rows
             
             res.status(200).json(data);
             }else{
@@ -91,7 +91,7 @@ router.post('/ureq/tambah',async(req,res,next)=>{
             const resnr = await proj.stepper({id:idproj})
             reselect.NOUREQ=resnr[0].NOUREQ
 
-            reselect.listdetail = find
+            reselect.LISTDETAIL = find
            
             res.status(200).json(reselect)
             await conn.close()
@@ -144,7 +144,7 @@ router.put('/ureq/ubah',async(req,res,next)=>{
             //console.dir(resnr[0].NOUREQ)
             reselect.NOUREQ=resnr[0].NOUREQ
 
-            reselect.listdetail = find
+            reselect.LISTDETAIL = find
 
             res.status(200).json(reselect)
             await conn.close()
