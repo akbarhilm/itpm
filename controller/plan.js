@@ -103,6 +103,7 @@ router.post('/plan/tambah',async(req,res,next)=>{
         //
          return Promise.all(batch).then(async() => {
             const find = await plan.find2({idproj:idproj})
+            find.map((el)=>el.REALISASI = !!el.REALISASI)
             const resnr = await proj.stepper({id:idproj})
             reselect.NOPLAN=resnr[0].NOPLAN
             reselect.LISTDETAIL = find
@@ -176,6 +177,7 @@ router.put('/plan/ubah',async(req,res,next)=>{
         //
          return Promise.all(batch).then(async() => {
             const find = await plan.find2({idproj:idproj})
+            find.map((el)=>el.REALISASI = !!el.REALISASI)
             const resnr = await proj.stepper({id:idproj})
             reselect.NOPLAN=resnr[0].NOPLAN
             reselect.listdetail = find
