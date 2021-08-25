@@ -30,6 +30,47 @@ async function find(params) {
     return result.rows;
 }
 
+
+async function find2(params){
+    let query=`select idplanreal,idproj, idkegiatan,  kodeplanreal, nikpelaksana, tglmulai, tglselesai,sum(REALISASI) as REALISASI 
+    from (
+        select i_itpm_planreal as idplanreal, 
+            i_itpm_proj as idproj, 
+            i_itpm_acty as idkegiatan, 
+            c_itpm_planreal as kodeplanreal, 
+            i_emp_actyassign as nikpelaksana, 
+            to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
+            to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
+            1 as REALISASI
+                from dbadmit.tmitpmplanreal a
+                where i_itpm_proj = :idproj and c_itpm_planreal='PLAN'
+                and  exists ( select *
+                from dbadmit.tmitpmplanreal b
+                where i_itpm_proj = :idproj and c_itpm_planreal='REALISASI' and a.i_ITPM_ACTY = b.i_ITPM_ACTY)
+     
+        union all
+
+        select i_itpm_planreal as idplanreal, 
+            i_itpm_proj as idproj, 
+            i_itpm_acty as idkegiatan, 
+            c_itpm_planreal as kodeplanreal, 
+            i_emp_actyassign as nikpelaksana, 
+            to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
+            to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
+            0 as REALISASI
+                from dbadmit.tmitpmplanreal
+                where i_itpm_proj = :idproj and c_itpm_planreal='PLAN'
+     )
+     group by   idplanreal, idproj,  idkegiatan, kodeplanreal, 
+                nikpelaksana, tglmulai, tglselesai
+    order by 1`
+
+    const param = {};
+    param.idproj = params.idproj
+    const result = await database.exec(query, param);
+    return result.rows;
+}
+
 async function addPlan(params, commit, conn) {
     let query = `insert into dbadmit.tmitpmplanreal(
         i_itpm_proj,
@@ -80,3 +121,4 @@ async function delplan(param, commit, conn) {
 module.exports.delplan = delplan;
 module.exports.addPlan = addPlan;
 module.exports.find = find;
+module.exports.find2 = find2

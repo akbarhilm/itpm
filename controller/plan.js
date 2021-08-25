@@ -30,14 +30,14 @@ router.get('/plan/:id', async (req, res, next) => {
 
         const idproj = req.params.id.toString()
         let data = {}
-        const rows = await plan.find({
-            idproj: req.params.id
+        const rows = await plan.find2({
+            idproj: idproj
         });
-       
+      
         const resnr = await proj.stepper({id:idproj})
         
         if (rows.length != 0 || resnr.length != 0 ) {
-
+            rows.map((el)=>el.REALISASI = !!el.REALISASI)
             if(resnr[0].NOPLAN){
             data.NOPLAN=resnr[0].NOPLAN
             data.LISTDETAIL = rows
