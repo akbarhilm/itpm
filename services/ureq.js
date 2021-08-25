@@ -2,7 +2,7 @@ const database = require("../conf/db/db");
 const oracledb = require("oracledb");
 
 async function find(params) {
-    let query = `select I_ITPM_UREQ   idcharter,
+    let query = `select I_ITPM_UREQ   idureq,
         I_ITPM_PROJ       idproj,
          N_ITPM_UREQ  namaureq,
          E_ITPM_UREQ  ketureq,
