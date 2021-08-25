@@ -15,6 +15,7 @@ const charterRoute = require('../../controller/charter')
 const ureqRoute = require('../../controller/ureq')
 const riskRoute = require('../../controller/risk')
 const planRoute = require('../../controller/plan')
+const kegiatanRoute = require('../../controller/kegiatan')
 const swaggerRoute = require('../../controller/swagger')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
@@ -95,6 +96,7 @@ function init() {
         
         app.use('/api/profil', menuRoute)
         app.use('/api/profil', penggunaRoute)
+        app.use('/api/proyek',kegiatanRoute);
         app.use('/api/proyek', layananRoute)
         app.use('/api/proyek', aplikasiRoute)
         app.use('/api/proyek',modulRoute)

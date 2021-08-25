@@ -2,7 +2,7 @@ const database = require('../conf/db/db')
 const oracledb = require('oracledb');
 
 async function find(params){
-    let query=` select  as idkegiatan,
+    let query=` select  i_itpm_acty as idkegiatan,
     n_itpm_acty as namakegiatan,
     n_itpm_actytarget as namatarget,
     c_itpm_actv kodeaktif
@@ -21,6 +21,7 @@ async function find(params){
              param.idpidkegiatanlanreal = params.idkegiatan
          }
      }
+     console.dir(query)
  
      const result = await database.exec(query,param)
      return result.rows;

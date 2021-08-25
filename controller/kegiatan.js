@@ -68,3 +68,5 @@ router.delete('/kegiatan/hapus',async (req,res,next)=>{
         console.error(e)
     }
 })
+
+module.exports = router
