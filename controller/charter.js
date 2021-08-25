@@ -132,7 +132,7 @@ router.put('/charter/ubah', async(req,res,next)=>{
         
             }
            
-            res.status(200).json(reselect)
+            res.status(200).json(reselect[0])
             await conn.close()
         })
 
