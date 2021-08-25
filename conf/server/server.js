@@ -69,7 +69,14 @@ function init() {
           app.use(cookieparsers())
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
-        // app.use(helmet());
+        //test helmet
+        // const cspDefaults = helmet.contentSecurityPolicy.getDefaultDirectives();
+        // delete cspDefaults['upgrade-insecure-requests'];
+        
+        // app.use(helmet({
+        //     contentSecurityPolicy: { directives: cspDefaults }
+        // }));
+//===========================================================================//
        // app.use('/api/jwt',assignJwt) //for assign to httpOnly
       
         app.use(jwt({secret:key,algorithms: ['RS256']}))

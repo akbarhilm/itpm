@@ -85,7 +85,7 @@ router.post('/charter/tambah', async (req, res, next) => {
                 reselect[0].LISTDETAIL = rowsch||null
         
             }
-            res.status(200).json(reselect)
+            res.status(200).json(reselect[0])
            await conn.close()
         })
 
