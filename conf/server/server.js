@@ -14,6 +14,8 @@ const proyekRoute = require('../../controller/proyek')
 const charterRoute = require('../../controller/charter')
 const ureqRoute = require('../../controller/ureq')
 const riskRoute = require('../../controller/risk')
+const planRoute = require('../../controller/plan')
+const kegiatanRoute = require('../../controller/kegiatan')
 const swaggerRoute = require('../../controller/swagger')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
@@ -68,7 +70,14 @@ function init() {
           app.use(cookieparsers())
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
-        // app.use(helmet());
+        //test helmet
+        // const cspDefaults = helmet.contentSecurityPolicy.getDefaultDirectives();
+        // delete cspDefaults['upgrade-insecure-requests'];
+        
+        // app.use(helmet({
+        //     contentSecurityPolicy: { directives: cspDefaults }
+        // }));
+//===========================================================================//
        // app.use('/api/jwt',assignJwt) //for assign to httpOnly
       
         app.use(jwt({secret:key,algorithms: ['RS256']}))
@@ -87,6 +96,7 @@ function init() {
         
         app.use('/api/profil', menuRoute)
         app.use('/api/profil', penggunaRoute)
+        app.use('/api/proyek',kegiatanRoute);
         app.use('/api/proyek', layananRoute)
         app.use('/api/proyek', aplikasiRoute)
         app.use('/api/proyek',modulRoute)
@@ -94,6 +104,7 @@ function init() {
         app.use('/api/proyek',charterRoute)
         app.use('/api/proyek',ureqRoute)
         app.use('/api/proyek', riskRoute)
+        app.use('/api/proyek',planRoute)
         
        server =  http.createServer(app).listen(port)
             .on('listening', () => {

@@ -55,9 +55,11 @@ router.post('/risk/tambah',async(req,res,next)=>{
         resq.norisk = resp
         res.status(200).json(resq)
 
-    }catch(e){
-        console.error(e)
-        next(e)
+    }catch(err){
+        const { errorNum } = err;
+        const message = await map.map(errorNum)
+        res.status(500).json({"code":errorNum,"message":message});
+        next(err)
     }
 })
 

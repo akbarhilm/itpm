@@ -6,9 +6,13 @@ const modul = require('../services/modul')
 const layanan = require('../services/layanan');
 const http = require('https');
 const url = require('url')
+const map = require('../util/errorHandling')
+
+
 router.get('/detail/:id', async (req, res, next) => {
   
     try {
+      
        const rpro =  await proyek.find({id:req.params.id})
        const rla = await layanan.find({id:rpro[0].IDLAYANAN})
        const rapp = await aplikasi.find({id:rpro[0].IDAPLIKASI})
@@ -164,7 +168,9 @@ router.post('/tambah', async (req, res, next) => {
        //console.dir(resuser)
         res.status(200).json(rows);
     } catch (err) {
-        console.error(err)
+        const { errorNum } = err;
+        const message = await map.map(errorNum)
+        res.status(500).json({"code":errorNum,"message":message});
         next(err)
     }
 })

@@ -28,7 +28,23 @@ async function find(params) {
     return result.rows;
 }
 
-async function addParent(params) {
+async function findChild(params){
+    let query =`  select i_itpm_charterdtl as iddetail,
+    i_itpm_charter as idcharter,
+    c_itpm_charterdtl as kodedetail,
+    i_itpm_charterdtlsort as kodesort,
+    e_itpm_charterdtl as keterangan,
+    c_itpm_targetstat as targetstatus from dbadmit.tmitpmcharterdtl
+    where i_itpm_charter = :idcharter`
+
+    const param = {}
+    param.idcharter  = params.idcharter
+
+    const result = await database.exec(query, param)
+    return result.rows;
+}
+
+async function addParent(params,commit,conn) {
     const nocharter = await noCharter()
     console.dir(nocharter[0].NOCHARTER)
     let query = `insert into dbadmit.tmitpmcharter (
@@ -61,13 +77,13 @@ async function addParent(params) {
 
     param.idcharter = { dir: oracledb.BIND_OUT }
 
-    const result = await database.seqexec(query, param, [], false)
+    const result = await database.seqexec(query, param, commit,conn)
     param.idcharter = result.outBinds.idcharter[0];
     return param
 }
 
 async function noCharter(){
-    let query=`select trim(to_char(nvl(nomer,'1'),'000'))||'/PRC/IT000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nocharter from(
+    let query=`select trim(to_char(nvl(nomer,'1'),'000'))||'/PRC/IT0000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nocharter from(
         select trim(to_char(max(substr(i_itpm_charternbr ,0,3))+1,'000')) as nomer, null as tahun from dbadmit.tmitpmcharter where substr(i_itpm_charternbr,-4) = to_char(sysdate,'yyyy')
         )
     `
@@ -75,7 +91,7 @@ async function noCharter(){
     return result.rows
 }
 
-async function addChild(params, commit, last) {
+async function addChild(params, commit, conn) {
     let query = `INSERT INTO dbadmit.tmitpmcharterdtl
     (
         I_ITPM_CHARTER,
@@ -90,14 +106,20 @@ async function addChild(params, commit, last) {
         :keterangan,
         0
     )returning i_itpm_charterdtl into :iddetail`
-    params.iddetail = { dir: oracledb.BIND_OUT }
+    const param = {}
+    param.idcharter = params.idcharter
+    param.kodedetail = params.kodedetail
+    param.kodesort = params.kodesort
+    param.keterangan = params.keterangan
 
-    const result = await database.seqexec(query, params, commit, last)
-    params.iddetail = result.outBinds.iddetail[0];
-    return params
+    param.iddetail = { dir: oracledb.BIND_OUT }
+
+    const result = await database.seqexec(query, param, commit, conn)
+    param.iddetail = result.outBinds.iddetail[0];
+    return param
 }
 
-async function editParent(params) {
+async function editParent(params,commit,conn) {
     console.dir("edit")
     const res = []
     let query = `update dbadmit.tmitpmcharter 
@@ -117,20 +139,38 @@ async function editParent(params) {
 
 
 
-    const result = await database.seqexec(query, param, [], false)
+    const result = await database.seqexec(query, param, commit, conn)
     return param
 }
 
-async function deleteChild(params) {
+async function deleteChild(params,commit,conn) {
     console.dir("del")
-    let query = `delete dbadmit.tmitpmcharter where i_itpm_charter = :idcharter`
+    let query = `delete dbadmit.tmitpmcharterdtl where i_itpm_charter = :idcharter`
     const param ={}
     param.idcharter = params.idcharter
-    const result = await database.seqexec(query, param, [], false)
+    const result = await database.seqexec(query, param, commit, conn)
     return result.rowsAffected
 
 }
 
+async function approve(params){
+
+    let query=`update dbadmit.tmitpmcharter
+    set c_itpm_apprv = (1 - c_itpm_apprv),
+     i_update = :idubah,
+     d_update = sysdate
+    where i_itpm_charter = :idcharter`
+
+    const param = {}
+    param.idcharter = params.idcharter
+    param.idubah = params.idubah
+    const result  = await database.exec(query,param)
+    return result.rowsAffected
+}
+
+
+module.exports.approve = approve
+module.exports.findChild = findChild
 module.exports.deleteChild = deleteChild
 module.exports.editParent = editParent
 module.exports.addChild = addChild

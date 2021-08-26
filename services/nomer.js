@@ -1,6 +1,6 @@
 const database = require('../conf/db/db')
 
-async function getNomer(param) {
+async function getNomer(param,conn) {
 
     let code =''
 
@@ -14,6 +14,7 @@ async function getNomer(param) {
             break;
         case 'othrresrc':
             code = 'KSD'
+            break;
         case 'risk':
             code = 'RSM'
             break;
@@ -21,11 +22,11 @@ async function getNomer(param) {
             break;
     }
 
-    let query=`select trim(to_char(nvl(nomer,'1'),'000'))||'/${code}/IT000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nomer from(
+    let query=`select trim(to_char(nvl(nomer,'1'),'000'))||'/${code}/IT0000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nomer from(
         select trim(to_char(max(substr(i_itpm_${param.field}nbr ,0,3))+1,'000')) as nomer from dbadmit.tmitpmproj where substr(i_itpm_${param.field}nbr,-4) = to_char(sysdate,'yyyy')
         )
 `
-        const result = await database.seqexec(query,[],[],false)
+        const result = await database.seqexec(query,[],[],conn)
         return result.rows[0]
 
 }

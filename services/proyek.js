@@ -7,7 +7,6 @@ const nomer = require('./nomer')
 
 
 async function find(params){
-    
     let query =`select I_ITPM_PROJ as idproyek,
     I_ITPM_SC as idlayanan,
     C_ITPM_APPLSTAT as kodeaplikasi,
@@ -38,7 +37,8 @@ async function find(params){
 
     query+=`\n  where to_char(i_itpm_proj) = :id or n_itpm_projuri =:id`;
     }   
-    const result = await database.exec(query,params)
+    const result = await database.exec(query,param)
+    console.dir(result)
     return result.rows
 }
 
@@ -95,18 +95,19 @@ async function add(params){
     return params
 }
 
-async function addNumber(params){
+async function addNumber(params,commit,conn){
 
-    const res = await nomer.getNomer(params)
+    const res = await nomer.getNomer(params,conn)
 
     let query=`UPDATE DBADMIT.TMITPMPROJ
-    set I_ITPM_`+params.field+`NBR = :nomer
-    where i_itpm_proj = :idproj`
+    set I_ITPM_`+params.field+`NBR = nvl(I_ITPM_`+params.field+`NBR,:nomer)
+    where i_itpm_proj = :idproj
+    and I_ITPM_`+params.field+`NBR is null`
     const param = {}
     param.nomer = res[0]
     param.idproj = params.idproj 
 
-    const result = await database.seqexec(query,param,{autoCommit:true},true)
+    const result = await database.seqexec(query,param,commit,conn)
     return res[0]
 
 }
@@ -171,7 +172,7 @@ async function addUserAuth(params){
 
 async function stepper(params){
 
-    let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,c.i_itpm_uatnbr as nouat
+    let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,c.i_itpm_uatnbr as nouat, to_number(a.c_itpm_baapprv) as approveba, to_number(b.c_itpm_apprv) as approvecharter
     from dbadmit.tmitpmproj a
     full outer join DBADMIT.TMITPMCHARTER b on a.i_itpm_proj = b.i_itpm_proj
     full outer join DBADMIT.TMITPMUAT c on c.i_itpm_proj = b.i_itpm_proj
