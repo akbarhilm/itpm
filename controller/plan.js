@@ -180,7 +180,7 @@ router.put('/plan/ubah',async(req,res,next)=>{
             find.map((el)=>el.REALISASI = !!el.REALISASI)
             const resnr = await proj.stepper({id:idproj})
             reselect.NOPLAN=resnr[0].NOPLAN
-            reselect.listdetail = find
+            reselect.LISTDETAIL = find
            
 
             res.status(200).json(reselect)
