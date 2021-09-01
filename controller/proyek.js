@@ -7,6 +7,7 @@ const layanan = require('../services/layanan');
 const http = require('https');
 const url = require('url')
 const map = require('../util/errorHandling')
+const oracle = require("oracledb");
 
 
 router.get('/detail/:id', async (req, res, next) => {
@@ -134,6 +135,7 @@ router.put('/ubah', async (req,res,next)=>{
 })
 
 router.post('/tambah', async (req, res, next) => {
+    const conn = await oracle.getConnection()
     try {
 
         //=============param add proyek==============//
@@ -160,11 +162,11 @@ router.post('/tambah', async (req, res, next) => {
         //================end=============//
         
        
-        const rows = await proyek.add(paramsproyek);
+        const rows = await proyek.add(paramsproyek,{},conn);
        
-        const resuser = await proyek.addUser(paramuser);
+        const resuser = await proyek.addUser(paramuser,{},conn);
 
-        const resuserauth = await proyek.addUserAuth(paramuserauth)
+        const resuserauth = await proyek.addUserAuth(paramuserauth,{autoCommit:true},conn)
        //console.dir(resuser)
         res.status(200).json(rows);
     } catch (err) {

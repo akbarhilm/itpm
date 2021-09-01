@@ -42,7 +42,7 @@ async function find(params){
     return result.rows
 }
 
-async function add(params){
+async function add(params,commit,conn){
     
     params.statusproj = "BARU"
     let query =`INSERT INTO DBADMIT.TMITPMPROJ 
@@ -88,7 +88,7 @@ async function add(params){
    params.idproj = {dir:oracledb.BIND_OUT}
    // console.dir(query);
     console.dir(params)  
-    const result = await database.seqexec(query,params,[],false)
+    const result = await database.seqexec(query,params,commit,conn)
     
     params.idproj = parseInt(result.outBinds.idproj[0]);
 
@@ -136,7 +136,7 @@ async function edit(params){
     }
 }
 
-async function addUser(params){
+async function addUser(params,commit,conn){
     let query=`insert into dbadmit.tritpmuser (i_emp,c_itpm_actv,i_entry,d_entry,i_emp_email) 
     select :nikpm,1,:identry,sysdate,:emailpm
     from dual
@@ -151,11 +151,11 @@ async function addUser(params){
                      from dbadmit.tritpmuser
                      where i_emp =:nikreq)`
 
-        const result = await database.seqexec(query,params,[],false)
+        const result = await database.seqexec(query,params,commit,conn)
         return result;
 }
 
-async function addUserAuth(params){
+async function addUserAuth(params,commit,conn){
     
     let query=`insert into dbadmit.tritpmuserauth (i_emp,i_itpm_menuauth)
     select i_emp,i_itpm_menuauth from(
@@ -166,7 +166,7 @@ async function addUserAuth(params){
         where  not exists(select * from dbadmit.tritpmuserauth a where a.i_emp = :nikreq and a.i_itpm_menuauth = b.i_itpm_menuauth and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'BPO') and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'BPO'
         )
         `
-    const result = await database.seqexec(query,params,{autoCommit:true},true)
+    const result = await database.seqexec(query,params,commit,conn)
         return result;
 }
 
