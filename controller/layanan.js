@@ -28,7 +28,7 @@ router.get('/layanan/unused',async (req,res,next)=>{
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(200).json({});
+            res.status(200).json([]);
         }
     }catch (err) {
         console.error(err)
