@@ -1,6 +1,7 @@
 const database = require("../conf/db/db");
 const oracledb = require("oracledb");
 
+
 async function find(params){
 
     let query=`select i_itpm_risk as idrisk, i_itpm_proj as idproj,
@@ -16,17 +17,17 @@ async function find(params){
             param.idproj = params.idproj
         }
 
-        if (Object.keys(params).find((x) => x == "idrisk" && !!x.idrisk)) {
+        if (Object.keys(params).find((x) => x == "idureq")) {
             query += `\n I_ITPM_risk = :idrisk`;
-            param.idrisk = params.idrisk
+            param.risk = params.risk
         }
     }
-    console.dir(query)
+    //console.dir(query)
     const result = await database.exec(query, param);
     return result.rows;
 }
 
-async function add(params){
+async function add(params,commit,conn){
 
     let query=`insert into dbadmit.tmitpmrisk(
         i_itpm_proj,
@@ -52,11 +53,20 @@ async function add(params){
 
          param.idrisk = { dir: oracledb.BIND_OUT }
 
-         const result = await database.seqexec(query, param, [], false)
+         const result = await database.seqexec(query, param, commit,conn)
          param.idrisk = result.outBinds.idrisk[0];
          return param
      
 }
 
+async function delrisk(params,commit,conn){
+    let query=`delete dbadmit.tmitpmrisk where i_itpm_proj = :idproj`
+    const param={}
+    param.idproj = params.idproj
+    const result = await database.seqexec(query, param, commit,conn)
+    return result.rowsAffected
+}
+
+module.exports.delrisk = delrisk
 module.exports.find = find
 module.exports.add = add
