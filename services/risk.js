@@ -4,7 +4,7 @@ const oracledb = require("oracledb");
 
 async function find(params){
 
-    let query=`select i_itpm_risk as idrisk, i_itpm_proj as idproj,
+    let query=`select i_itpm_riskprnt as idparent, i_itpm_risk as idrisk, i_itpm_proj as idproj,
     n_itpm_riskfctr as namafactor, c_itpm_risklikelihood as kodemungkin,
     c_itpm_riskimpact as kodeimpact
     from dbadmit.tmitpmrisk`
@@ -34,6 +34,7 @@ async function add(params,commit,conn){
         n_itpm_riskfctr,
         c_itpm_risklikelihood,
         c_itpm_riskimpact,
+        i_itpm_riskprnt,
         i_entry,
         d_entry
         )values(
@@ -41,6 +42,7 @@ async function add(params,commit,conn){
          :namafactor,
          :kodemungkin,
          :kodeimpact,
+         :parent,
          :identry,
          sysdate) returning i_itpm_risk into :idrisk`
         
@@ -50,7 +52,7 @@ async function add(params,commit,conn){
          param.kodemungkin = params.kodemungkin
          param.kodeimpact = params.kodeimpact
          param.identry = params.identry
-
+        param.parent = params.parent
          param.idrisk = { dir: oracledb.BIND_OUT }
 
          const result = await database.seqexec(query, param, commit,conn)

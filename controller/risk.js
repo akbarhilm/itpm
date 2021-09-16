@@ -61,32 +61,56 @@ router.post('/risk/tambah',async(req,res,next)=>{
     const conn = await oracle.getConnection()
     try{
         const idproj = req.body.idproj.toString()
-        const paramureq = req.body.listdetail
+        const paramriskpr = req.body.listdetail.faktor
+        const paramriskdt = req.body.listdetail.penanganan
         //paramureq.identry = req.user.data.nik
 
         const paramproj = {}
         paramproj.table = 'risk'
         paramproj.field = 'risk'
         paramproj.idproj = req.body.idproj
-
+        let rest = []
         let reselect = {}
-        const batch =  paramureq.map(async (el, i, array) => {
+       
+    const batch1 = paramriskpr.map(async (el, i, array) => {
+        
             el.identry = req.user.data.nik
             el.idproj = idproj
-            if (i == array.length - 1) {
-                
-                const res = await risk.add(el, {
-                } ,conn)
-                const nr = await proj.addNumber(paramproj,{autoCommit:true},conn)
-               
-            } else {
+          
                 const res = await risk.add(el, {},conn)
-                //rest.push(res)
-            }
+               //rest.push(res)
+               return res
+          // console.dir(rest)
 
         })
+        
 
-        return Promise.all(batch).then(async() => {
+
+        
+
+         return Promise.all(batch1).then((rt) => {
+             
+            Promise.all(paramriskdt.map(async (el, i, array) => {
+                el.identry = req.user.data.nik
+                el.idproj = idproj
+               rt.map(({idrisk,namafactor})=>namafactor==el.parent?el.parent = idrisk:null)
+                if (i == array.length - 1) {
+                    
+                    const res = await risk.add(el, {
+                    } ,conn)
+                    const nr = await proj.addNumber(paramproj,{autoCommit:true},conn)
+                   
+                } else {
+                    
+                    const res = await risk.add(el, {},conn)
+                   
+                    //rest.push(res)
+                }
+    
+            })
+            ).then(async()=>{
+
+
             const find =  await risk.find({idproj:req.body.idproj})
             const resnr = await proj.stepper({id:idproj})
             reselect.NORISK=resnr[0].NORISK
@@ -94,12 +118,16 @@ router.post('/risk/tambah',async(req,res,next)=>{
             reselect.LISTDETAIL = find
            
             res.status(200).json(reselect)
-            await conn.close()
+            // await conn.close()
             
         }).catch((e)=>{
             console.dir(e)
             //conn.close()
         })
+
+    }).catch((e)=>{
+        console.dir(e)
+    })
 
     }catch(err){
         const { errorNum } = err;
