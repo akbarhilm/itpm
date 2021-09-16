@@ -118,11 +118,11 @@ router.post('/risk/tambah',async(req,res,next)=>{
             reselect.LISTDETAIL = find
            
             res.status(200).json(reselect)
-            // await conn.close()
+             await conn.close()
             
         }).catch((e)=>{
             console.dir(e)
-            //conn.close()
+            conn.close()
         })
 
     }).catch((e)=>{
