@@ -37,7 +37,7 @@ router.get('/risk/:id', async (req, res, next) => {
          
          if(rows.length != 0 || resnr.length != 0) {
 
-            if(resnr[0].NOUREQ){
+            if(resnr[0].NORISK){
             data.NORISK= resnr[0].NORISK
          
             data.LISTDETAIL = rows
