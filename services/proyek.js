@@ -170,7 +170,7 @@ async function addUserAuth(params,commit,conn){
         return result;
 }
 
-async function stepper(params){
+async function stepper(params,commit,conn){
 
     let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,c.i_itpm_uatnbr as nouat, to_number(a.c_itpm_baapprv) as approveba, to_number(b.c_itpm_apprv) as approvecharter
     from dbadmit.tmitpmproj a
@@ -182,6 +182,17 @@ async function stepper(params){
     return result.rows
 }
 
+async function updateStatus(params,commit,conn){
+    let query=`update dbadmit.tmitpmproj set c_itpm_projstat = 'BERJALAN'
+    where i_itpm_proj = :idproj`
+
+    const param={}
+    param.idproj = params.idproj
+
+    const result = await database.seqexec(query,param,commit,conn)
+    return result.rows
+}
+
 module.exports.find = find
 module.exports.add = add
 module.exports.stepper = stepper
@@ -189,3 +200,4 @@ module.exports.edit = edit
 module.exports.addUser = addUser
 module.exports.addUserAuth = addUserAuth
 module.exports.addNumber = addNumber
+module.exports.updateStatus = updateStatus
