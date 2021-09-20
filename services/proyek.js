@@ -42,7 +42,7 @@ async function find(params){
     return result.rows
 }
 
-async function add(params){
+async function add(params,commit,conn){
     
     params.statusproj = "BARU"
     let query =`INSERT INTO DBADMIT.TMITPMPROJ 
@@ -88,7 +88,7 @@ async function add(params){
    params.idproj = {dir:oracledb.BIND_OUT}
    // console.dir(query);
     console.dir(params)  
-    const result = await database.seqexec(query,params,[],false)
+    const result = await database.seqexec(query,params,commit,conn)
     
     params.idproj = parseInt(result.outBinds.idproj[0]);
 
@@ -136,7 +136,7 @@ async function edit(params){
     }
 }
 
-async function addUser(params){
+async function addUser(params,commit,conn){
     let query=`insert into dbadmit.tritpmuser (i_emp,c_itpm_actv,i_entry,d_entry,i_emp_email) 
     select :nikpm,1,:identry,sysdate,:emailpm
     from dual
@@ -151,11 +151,11 @@ async function addUser(params){
                      from dbadmit.tritpmuser
                      where i_emp =:nikreq)`
 
-        const result = await database.seqexec(query,params,[],false)
+        const result = await database.seqexec(query,params,commit,conn)
         return result;
 }
 
-async function addUserAuth(params){
+async function addUserAuth(params,commit,conn){
     
     let query=`insert into dbadmit.tritpmuserauth (i_emp,i_itpm_menuauth)
     select i_emp,i_itpm_menuauth from(
@@ -166,11 +166,11 @@ async function addUserAuth(params){
         where  not exists(select * from dbadmit.tritpmuserauth a where a.i_emp = :nikreq and a.i_itpm_menuauth = b.i_itpm_menuauth and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'BPO') and b.i_itpm_auth = c.i_itpm_auth and c.c_itpm_auth = 'BPO'
         )
         `
-    const result = await database.seqexec(query,params,{autoCommit:true},true)
+    const result = await database.seqexec(query,params,commit,conn)
         return result;
 }
 
-async function stepper(params){
+async function stepper(params,commit,conn){
 
     let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,c.i_itpm_uatnbr as nouat, to_number(a.c_itpm_baapprv) as approveba, to_number(b.c_itpm_apprv) as approvecharter
     from dbadmit.tmitpmproj a
@@ -182,6 +182,17 @@ async function stepper(params){
     return result.rows
 }
 
+async function updateStatus(params,commit,conn){
+    let query=`update dbadmit.tmitpmproj set c_itpm_projstat = 'BERJALAN'
+    where i_itpm_proj = :idproj`
+
+    const param={}
+    param.idproj = params.idproj
+
+    const result = await database.seqexec(query,param,commit,conn)
+    return result.rows
+}
+
 module.exports.find = find
 module.exports.add = add
 module.exports.stepper = stepper
@@ -189,3 +200,4 @@ module.exports.edit = edit
 module.exports.addUser = addUser
 module.exports.addUserAuth = addUserAuth
 module.exports.addNumber = addNumber
+module.exports.updateStatus = updateStatus

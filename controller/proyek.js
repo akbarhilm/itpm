@@ -7,6 +7,8 @@ const layanan = require('../services/layanan');
 const http = require('https');
 const url = require('url')
 const map = require('../util/errorHandling')
+const oracle = require("oracledb");
+const smail = require('../services/email')
 
 
 router.get('/detail/:id', async (req, res, next) => {
@@ -134,6 +136,7 @@ router.put('/ubah', async (req,res,next)=>{
 })
 
 router.post('/tambah', async (req, res, next) => {
+    const conn = await oracle.getConnection()
     try {
 
         //=============param add proyek==============//
@@ -144,13 +147,14 @@ router.post('/tambah', async (req, res, next) => {
         //============param add user==============//
         const paramuser = {}
         const pm = await getinfonik(req.body.nikpm)
-        
+      
         const bpo = await getinfonik(req.body.nikreq)
         paramuser.nikpm = req.body.nikpm
         paramuser.identry = req.user.data.nik
-        paramuser.emailpm = pm.data.email
+        paramuser.emailpm = pm.data[0].email
         paramuser.nikreq = req.body.nikreq
-        paramuser.emailreq = bpo.data.email
+        paramuser.emailreq = bpo.data[0].email
+        
         //==================end==============//
 
         //===========param user auth========//
@@ -159,13 +163,35 @@ router.post('/tambah', async (req, res, next) => {
         paramuserauth.nikreq = req.body.nikreq
         //================end=============//
         
+       //======param email==========//
+       const mailpm = {}
+       mailpm.email = pm.data[0].email.split('@')[0]
+       mailpm.proyek = req.body.namaproj
+       mailpm.role = "PM"
        
-        const rows = await proyek.add(paramsproyek);
-       
-        const resuser = await proyek.addUser(paramuser);
+       const mailbpo = {}
+       mailbpo.email = bpo.data[0].email.split('@')[0]
+       mailbpo.proyek = req.body.namaproj
+       mailbpo.role = "BPO"
+       const cc = []
+       const to = [mailpm,mailbpo]
 
-        const resuserauth = await proyek.addUserAuth(paramuserauth)
-       //console.dir(resuser)
+       const parammail = {}
+       parammail.cc = cc
+       parammail.code = "addproyek"
+       parammail.to = to
+       //============end================================//
+
+        const rows = await proyek.add(paramsproyek,{},conn);
+       
+        const resuser = await proyek.addUser(paramuser,{},conn);
+
+        const resuserauth = await proyek.addUserAuth(paramuserauth,{autoCommit:true},conn)
+        //console.dir(parammail)
+       // console.dir("testst")
+        const mail = await smail.mail(parammail)
+
+       //console.dir(mail)
         res.status(200).json(rows);
     } catch (err) {
         const { errorNum } = err;

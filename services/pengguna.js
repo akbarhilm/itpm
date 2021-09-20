@@ -25,13 +25,15 @@ async function findPenggunaProyek(params){
     N_ITPM_PROJURI as namauri,
     C_ITPM_PROJSTAT as statusproyek
 
-    from dbadmit.tmitpmproj`;
+    from dbadmit.tmitpmproj
+    `;
     const param ={}
     if(!otor.find(x=>x.KODEAUTH=='PMO')){
     param.nik = params.nik
 
     query+=`\n  where :nik in (i_emp_req,i_emp_pm)`;
     }
+    query+=`order by d_entry desc`;
     let result = await database.exec(query,param)
     let list = {"list":result.rows}
     

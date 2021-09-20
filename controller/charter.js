@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const charter = require('../services/charter');
+const proj = require('../services/proyek')
 const map = require('../util/errorHandling')
+const smail = require('../services/email')
 const oracle = require("oracledb");
 
 router.get('/charter', async (req, res, next) => {
@@ -58,15 +60,33 @@ router.post('/charter/tambah', async (req, res, next) => {
         const params = req.body
         params.identry = req.user.data.nik
         const respar = await charter.addParent(params,{},conn);
+        const datapro = await proj.find({id:idproj});
+        const mail = await smail.getmail({nik:datapro[0].NIKREQ})
+
+        //=================parammail==================//
+        const mailbpo = {}
+       mailbpo.email = mail[0].EMAIL.split('@')[0]
+       mailbpo.proyek = datapro[0].NAMAPROYEK
+       mailbpo.role = "BPO"
+       const cc = []
+       const to = [mailbpo]
+
+       const parammail = {}
+       parammail.cc = cc
+       parammail.code = "addcharter"
+       parammail.to = to
+       //================================end======================//
+
         let reselect
         //const resdetail = []
 
         const dtl = params.listdetail.map(async (el, i, array) => {
             el.idcharter = respar.idcharter
             if (i == array.length - 1) {
-                const res = await charter.addChild(el, {
+                const res = await charter.addChild(el, [], conn)
+                const updatestatus = await proj.updateStatus({idproj:idproj},{
                     autoCommit: true
-                }, conn)
+                },conn)
                 //resdetail.push(res)
                 
             } else {
@@ -85,6 +105,8 @@ router.post('/charter/tambah', async (req, res, next) => {
                 reselect[0].LISTDETAIL = rowsch||null
         
             }
+            const resmail = await smail.mail(parammail)
+            console.dir(resmail)
             res.status(200).json(reselect[0])
            await conn.close()
         })
