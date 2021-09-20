@@ -25,7 +25,8 @@ async function findPenggunaProyek(params){
     N_ITPM_PROJURI as namauri,
     C_ITPM_PROJSTAT as statusproyek
 
-    from dbadmit.tmitpmproj`;
+    from dbadmit.tmitpmproj
+    order by d_entry desc`;
     const param ={}
     if(!otor.find(x=>x.KODEAUTH=='PMO')){
     param.nik = params.nik

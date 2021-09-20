@@ -1,6 +1,7 @@
-// const express = require('express');
-// const router = express.Router();
+const database = require('../conf/db/db')
+const oracledb = require('oracledb');
 const axios = require('axios')
+
 
 
 function  mail(params){
@@ -41,6 +42,16 @@ var postData = JSON.stringify(params)
     })
   
 }
-module.exports.mail = mail
 
+async function getmail(params){
+  let query='select i_emp_email as email from dbadmit.tritpmuser where i_emp = :nik'
+
+  const param = {}
+  param.nik = params.nik
+
+  const result = await database.exec(query,param)
+  return result.rows;
+}
+module.exports.mail = mail
+module.exports.getmail = getmail
 //module.exports = router
