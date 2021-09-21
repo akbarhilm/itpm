@@ -78,7 +78,8 @@ router.get('/stepper/:id', async (req, res, next) => {
     return new Promise(async(resolve,reject)=>{
     
     let rawData = ''
-        const options = new URL(`https://helpdesk-api.indonesian-aerospace.com/general/employee?nik=${params}`);
+        //const options = new URL(`https://helpdesk-api.indonesian-aerospace.com/general/employee?nik=${params}`);
+        const options = new URL(process.env.NIK_INFO+params)
         await http.get(options, (res) => {
         const { statusCode } = res;
         const contentType = res.headers['content-type'];
