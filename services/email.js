@@ -20,11 +20,12 @@ var postData = JSON.stringify(params)
     //       }
     //     ]
     //   }
-
+    console.dir("masuk mail")
+console.dir(process.env.ITPM_MAIL)
 
     axios
     //.post('http://10.1.94.235:8025/send', postData,
-    .post(process.env.MAIL, postData,
+    .post(process.env.ITPM_MAIL, postData,
     {headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
