@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const plan = require('../services/plan');
+const real = require('../services/real');
 const proj = require('../services/proyek')
 const map = require('../util/errorHandling')
 const oracle = require("oracledb");
 
 
-router.get('/plan', async (req, res, next) => {
+router.get('/real', async (req, res, next) => {
     try {
 
-        const rows = await plan.find({
+        const rows = await real.find({
             idplanreal: req.query.id
         });
         if (rows.length !== 0) {
@@ -25,21 +25,20 @@ router.get('/plan', async (req, res, next) => {
     }
 })
 
-router.get('/plan/:id', async (req, res, next) => {
+router.get('/real/:id', async (req, res, next) => {
     try {
 
         const idproj = req.params.id.toString()
         let data = {}
-        const rows = await plan.find2({
+        const rows = await real.find({
             idproj: idproj
         });
       
         const resnr = await proj.stepper({id:idproj})
         
         if (rows.length != 0 || resnr.length != 0 ) {
-            rows.map((el)=>el.REALISASI = !!el.REALISASI)
-            if(resnr[0].NOPLAN){
-            data.NOPLAN=resnr[0].NOPLAN
+            if(resnr[0].NOREAL){
+            data.NOREAL=resnr[0].NOREAL
             data.LISTDETAIL = rows
 
         
@@ -58,7 +57,7 @@ router.get('/plan/:id', async (req, res, next) => {
     }
 })
 
-router.post('/plan/tambah',async(req,res,next)=>{
+router.post('/real/tambah',async(req,res,next)=>{
     const conn = await oracle.getConnection()
     try{
        const idproj = req.body.idproj.toString()
@@ -66,10 +65,10 @@ router.post('/plan/tambah',async(req,res,next)=>{
         const formap = {}
         formap.idproj = req.body.idproj
         formap.identry = req.user.data.nik
-        const paramnoplan = {}
-        paramnoplan.table = 'plan'
-        paramnoplan.field = 'plan'
-        paramnoplan.idproj = req.body.idproj
+        const paramnoreal = {}
+        paramnoreal.table = 'real'
+        paramnoreal.field = 'real'
+        paramnoreal.idproj = req.body.idproj
 
         const paramnoresc = {}
         paramnoresc.table = 'othrresrc'
@@ -79,7 +78,7 @@ router.post('/plan/tambah',async(req,res,next)=>{
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
         const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai})))
         
-       // const rest = await plan.addPlan(mapdata)
+       // const rest = await real.addPlan(mapdata)
         
         //console.dir(mapdata)
         let reselect ={}
@@ -88,13 +87,13 @@ router.post('/plan/tambah',async(req,res,next)=>{
             el.identry = req.user.data.nik
             if (i == array.length - 1) {
                 
-                const res = await plan.addPlan(el, {
+                const res = await real.addReal(el, {
                 } ,conn)
-                const nr = await proj.addNumber(paramnoplan,{},conn)
-                const nr2 = await proj.addNumber(paramnoresc,{autoCommit:true},conn)
+                const nr = await proj.addNumber(paramnoreal,{autoCommit:true},conn)
+          
                
             } else {
-                const res = await plan.addPlan(el, {},conn)
+                const res = await real.addReal(el, {},conn)
                
             }
 
@@ -102,10 +101,9 @@ router.post('/plan/tambah',async(req,res,next)=>{
         //res.status(200).json(rest)
         //
          return Promise.all(batch).then(async() => {
-            const find = await plan.find2({idproj:idproj})
-            find.map((el)=>el.REALISASI = !!el.REALISASI)
+            const find = await real.find({idproj:idproj})
             const resnr = await proj.stepper({id:idproj})
-            reselect.NOPLAN=resnr[0].NOPLAN
+            reselect.NOREAL=resnr[0].NOREAL
             reselect.LISTDETAIL = find
            
 
@@ -131,7 +129,7 @@ router.post('/plan/tambah',async(req,res,next)=>{
    
 })
 
-router.put('/plan/ubah',async(req,res,next)=>{
+router.put('/real/ubah',async(req,res,next)=>{
     const conn = await oracle.getConnection()
     try{
        const idproj = req.body.idproj.toString()
@@ -140,20 +138,17 @@ router.put('/plan/ubah',async(req,res,next)=>{
         formap.idproj = req.body.idproj
         formap.identry = req.user.data.nik
         const paramproj = {}
-        paramproj.table = 'plan'
-        paramproj.field = 'plan'
+        paramproj.table = 'real'
+        paramproj.field = 'real'
         paramproj.idproj = req.body.idproj
 
-        const paramnoresc = {}
-        paramnoresc.table = 'othrresrc'
-        paramnoresc.field = 'resrc'
-        paramnoresc.idproj = req.body.idproj
+        
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
         const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai})))
         
-       // const rest = await plan.addPlan(mapdata)
-        const del = await plan.delplan({idproj:idproj},{},conn)
+       // const rest = await real.addPlan(mapdata)
+        const del = await real.delreal({idproj:idproj},{},conn)
         //console.dir(mapdata)
         let reselect ={}
         const batch =  mapdata.map(async (el, i, array) => {
@@ -161,14 +156,14 @@ router.put('/plan/ubah',async(req,res,next)=>{
             el.identry = req.user.data.nik
             if (i == array.length - 1) {
                 
-                const res = await plan.addPlan(el, {
+                const res = await real.addReal(el, {
                 } ,conn)
-                const nr = await proj.addNumber(paramproj,{},conn)
-                const nr2 = await proj.addNumber(paramnoresc,{autoCommit:true},conn)
+                const nr = await proj.addNumber(paramproj,{autoCommit:true},conn)
+                
                
                
             } else {
-                const res = await plan.addPlan(el, {},conn)
+                const res = await real.addReal(el, {},conn)
                
             }
 
@@ -176,10 +171,9 @@ router.put('/plan/ubah',async(req,res,next)=>{
         //res.status(200).json(rest)
         //
          return Promise.all(batch).then(async() => {
-            const find = await plan.find2({idproj:idproj})
-            find.map((el)=>el.REALISASI = !!el.REALISASI)
+            const find = await real.find({idproj:idproj})
             const resnr = await proj.stepper({id:idproj})
-            reselect.NOPLAN=resnr[0].NOPLAN
+            reselect.NOREAL=resnr[0].NOREAL
             reselect.LISTDETAIL = find
            
 
