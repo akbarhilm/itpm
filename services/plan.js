@@ -15,7 +15,7 @@ async function find(params) {
     const param = {};
     if (Object.keys(params).some(function (k) { return params[k]; })) {
         // console.dir(!!params)
-        query += `\n where`;
+        query += `\n and`;
         if (Object.keys(params).find((x) => x == "idproj")) {
             query += `\n I_ITPM_PROJ = :idproj `;
             param.idproj = params.idproj;
