@@ -87,3 +87,5 @@ deploy_prod:
     - ssh $USER@$HOST_PROD "cd ~/project/itpm && ./startup"
   only:
     - /-RELEASE$/
+  environment:
+    name: produksi
