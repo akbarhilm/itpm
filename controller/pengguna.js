@@ -70,7 +70,7 @@ function getinfonik(){
     return new Promise(async(resolve,reject)=>{
     
     let rawData = ''
-        const options = new URL(`https://helpdesk-api.indonesian-aerospace.com/general/employee`);
+        const options = new URL(process.env.NIK_INFO+`?org=%IT%`)
         await http.get(options, (res) => {
         const { statusCode } = res;
         const contentType = res.headers['content-type'];
