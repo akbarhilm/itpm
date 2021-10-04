@@ -15,6 +15,7 @@ init:
   only:
     - dev
     - test
+    - /-RELEASE$/
 
 build_dev:
   stage: build
@@ -62,3 +63,29 @@ deploy_test:
     - ssh $USER@$HOST_TEST "cd ~/project/itpm && ./startup"
   only:
     - test
+
+build_prod:
+  stage: build
+  script:
+    - cp $PATH_KEY_PROD jwtRS256.key.pub
+    - docker build -t $DOCKER_REPOSITORY/prod-apps/itpm .
+  only:
+    - /-RELEASE$/
+
+staging_prod:
+  stage: staging
+  script:
+    - docker push $DOCKER_REPOSITORY/prod-apps/itpm
+    - docker rmi $DOCKER_REPOSITORY/prod-apps/itpm
+  only:
+    - /-RELEASE$/
+
+deploy_prod:
+  stage: deploy
+  script:
+    - ssh $USER@$HOST_PROD "cd ~/project/itpm && ./shutdown"
+    - ssh $USER@$HOST_PROD "cd ~/project/itpm && ./startup"
+  only:
+    - /-RELEASE$/
+  environment:
+    name: produksi
