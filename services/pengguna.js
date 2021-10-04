@@ -16,6 +16,12 @@ async function find(params){
     return result.rows;
 }
 
+async function useremail(params){
+    let query=`select i_emp_email as email from dbadmit.tritpmuser where i_emp = :nik `
+    const result = await database.exec(query,params)
+    return result.rows;
+}
+
 async function findPenggunaProyek(params){
     const otor = await findPenggunaOtoritas(params);
     let query =`select I_ITPM_PROJ as idproyek,
@@ -115,5 +121,6 @@ async function findPenggunaOtoritas(params){
 module.exports.find = find
 module.exports.findPenggunaProyek = findPenggunaProyek
 module.exports.findPenggunaOtoritas = findPenggunaOtoritas
+module.exports.useremail = useremail
 
 // module.exports.save = save
