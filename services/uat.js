@@ -159,10 +159,10 @@ async function approveuser(params){
      d_itpm_useraprv = sysdate,
      i_update = :idubah,
      d_update = sysdate
-    where i_itpm_uat = :iduat`
+    where i_itpm_proj = :idproj`
 
     const param = {}
-    param.iduat = params.iduat
+    param.idproj = params.idproj
     param.kodeaprove = params.kodeaprove
     param.ketaprove = params.ketaprove
     param.idubah = params.idubah
@@ -178,11 +178,11 @@ async function approveqa(params){
          d_itpm_qaaprv = sysdate,
          i_update = :idubah,
      d_update = sysdate
-    where i_itpm_uat = :iduat`
+    where i_itpm_proj = :idproj`
 
     const param ={}
     param.idubah = params.idubah
-    param.iduat = params.iduat
+    param.idproj = params.idproj
 
     const result  = await database.exec(query,param)
     return result.rowsAffected

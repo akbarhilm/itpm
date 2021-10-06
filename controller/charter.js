@@ -177,7 +177,7 @@ router.put('/charter/approve',async(req,res,next)=>{
         if(result == 1){
             res.status(200).json({"code":200,"message":"Berhasil Approve"})
         }else{
-            res.status(200).json({"code":200,"message":"Tidak Berhasil Approve"})
+            res.status(500).json({"code":500,"message":"Tidak Berhasil Approve"})
         }
     }catch (err) {
         const { errorNum } = err;

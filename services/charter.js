@@ -159,10 +159,10 @@ async function approve(params){
     set c_itpm_apprv = (1 - c_itpm_apprv),
      i_update = :idubah,
      d_update = sysdate
-    where i_itpm_charter = :idcharter`
+    where i_itpm_idproj = :idproj`
 
     const param = {}
-    param.idcharter = params.idcharter
+    param.idproj = params.idproj
     param.idubah = params.idubah
     const result  = await database.exec(query,param)
     return result.rowsAffected

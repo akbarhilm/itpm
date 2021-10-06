@@ -34,7 +34,7 @@ router.post('/ba/tambah',async(req,res,next)=>{
         if(rest==1){
             res.status(200).json({"code":200,"message":"berhasil Simpan"})
         }else{
-            res.status(200).json({})
+            res.status(500).json({"code":500,"message":"TIdak berhasil Simpan"})
         }
     }catch(err){
         const { errorNum } = err;
@@ -52,7 +52,7 @@ router.post('/ba/approve',async(req,res,next)=>{
         if(rest==1){
             res.status(200).json({"code":200,"message":"berhasil Approve"})
         }else{
-            res.status(200).json({})
+            res.status(500).json({"code":500,"message":"TIdak berhasil Approve"})
         }
 
     }catch(err){

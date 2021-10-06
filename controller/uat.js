@@ -226,9 +226,9 @@ router.put('/uat/approveuser',async(req,res,next)=>{
 
         const result = await uat.approveuser(param)
         if(result == 1){
-            res.status(200).json({"code":200,"message":"Berhasil"})
+            res.status(200).json({"code":200,"message":"Berhasil Approve"})
         }else{
-            res.status(200).json({"code":200,"message":"Tidak Berhasil"})
+            res.status(500).json({"code":500,"message":"Tidak Berhasil Approve"})
         }
     }catch (err) {
         const { errorNum } = err;
@@ -247,7 +247,7 @@ router.put('/uat/approveqa',async(req,res,next)=>{
         if(result == 1){
             res.status(200).json({"code":200,"message":"Berhasil Approve"})
         }else{
-            res.status(200).json({"code":200,"message":"Tidak Berhasil Approve"})
+            res.status(500).json({"code":500,"message":"Tidak Berhasil Approve"})
         }
     }catch (err) {
         const { errorNum } = err;
