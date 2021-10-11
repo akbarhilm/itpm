@@ -26,6 +26,7 @@ async function find(params) {
             query += `\n I_ITPM_UAT = :iduat`
         }
     }
+    query+=`order by d_entry desc`
 
     const result = await database.exec(query, params)
     return result.rows;
@@ -159,10 +160,10 @@ async function approveuser(params){
      d_itpm_useraprv = sysdate,
      i_update = :idubah,
      d_update = sysdate
-    where i_itpm_proj = :idproj`
+    where i_itpm_uat = :iduat`
 
     const param = {}
-    param.idproj = params.idproj
+    param.iduat = params.iduat
     param.kodeaprove = params.kodeaprove
     param.ketaprove = params.ketaprove
     param.idubah = params.idubah
@@ -178,11 +179,11 @@ async function approveqa(params){
          d_itpm_qaaprv = sysdate,
          i_update = :idubah,
      d_update = sysdate
-    where i_itpm_proj = :idproj`
+    where i_itpm_uat = :iduat`
 
     const param ={}
     param.idubah = params.idubah
-    param.idproj = params.idproj
+    param.iduat = params.iduat
 
     const result  = await database.exec(query,param)
     return result.rowsAffected

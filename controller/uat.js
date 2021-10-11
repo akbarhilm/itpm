@@ -10,17 +10,17 @@ router.get('/uat', async (req, res, next) => {
     try {
 
         const rowspar = await uat.find({
-            iduat: req.query.id
+            idproj: req.query.id
         });
 
         if (rowspar.length !== 0) {
             
-        const rowsch =  await uat.findChild({iduat:rowspar[0].IDUAT}) 
+        //const rowsch =  await uat.findChild({iduat:rowspar[0].IDUAT}) 
 
-        rowspar[0].LISTDETAIL = rowsch||null
+       // rowspar[0].LISTDETAIL = rowsch||null
 
        
-            res.status(200).json(rowspar[0]);
+            res.status(200).json(rowspar);
         } else {
             res.status(200).json({});
         }
@@ -34,7 +34,7 @@ router.get('/uat/:id', async (req, res, next) => {
     try {
 
         const rowspar = await uat.find({
-            idproj: req.params.id
+            iduat: req.params.id
         });
 
         if (rowspar.length !== 0) {
