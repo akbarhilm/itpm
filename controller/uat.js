@@ -96,10 +96,11 @@ router.post('/uat/tambah', async (req, res, next) => {
 
         let reselect
         //const resdetail = []
-        console.dir(temparray)
+        //console.dir(temparray)
         const dtl = temparray.map(async (el, i, array) => {
             el.iduat = respar.iduat
             if (i == array.length - 1) {
+                console.dir(el.nikuat)
                 const res = await uat.addChild(el, {autoCommit:true}, conn)
                 
                 //resdetail.push(res)

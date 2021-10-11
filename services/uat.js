@@ -27,7 +27,7 @@ async function find(params) {
         }
     }
     query+=` order by d_entry desc`
-    console.dir(query)
+    //console.dir(query)
     const result = await database.exec(query, params)
     return result.rows;
 }
