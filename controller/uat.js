@@ -22,7 +22,7 @@ router.get('/uat', async (req, res, next) => {
        
             res.status(200).json(rowspar);
         } else {
-            res.status(200).json({});
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)
