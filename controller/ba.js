@@ -30,8 +30,9 @@ router.post('/ba/tambah',async(req,res,next)=>{
         parammail.code = "addba"
         parammail.to = to
         
-        const resmail = await smail.mail(parammail)
+        
         if(rest==1){
+            const resmail = await smail.mail(parammail)
             res.status(200).json({"code":200,"message":"berhasil Simpan"})
         }else{
             res.status(500).json({"code":500,"message":"TIdak berhasil Simpan"})
