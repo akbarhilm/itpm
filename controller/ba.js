@@ -10,8 +10,8 @@ const oracle = require("oracledb");
 router.post('/ba/tambah',async(req,res,next)=>{
     try{
         const idproj = req.body.idproj.toString()
-
-        const rest = await ba.addBa(idproj)
+        
+        const rest = await ba.addBa({idproj:idproj})
         const datapro = await proj.find({id:idproj});
         let mail = await pgun.useremail({nik:datapro[0].NIKREQ})
        
