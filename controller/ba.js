@@ -49,7 +49,7 @@ router.post('/ba/tambah',async(req,res,next)=>{
 router.post('/ba/approve',async(req,res,next)=>{
     try{
         const idproj = req.body.idproj.toString()
-        const rest = await ba.approveBa(idproj)
+        const rest = await ba.approveBa({idproj:idproj})
         if(rest==1){
             res.status(200).json({"code":200,"message":"berhasil Approve"})
         }else{
