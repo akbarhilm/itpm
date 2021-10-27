@@ -30,5 +30,18 @@ async function approveBa(params){
     return result.rowsAffected
 }
 
+async function failBa(params){
+    let query=`update dbadmit.tmitpmproj set
+    c_itpm_baapprv = 0,
+    d_itpm_baapprv = null
+    where i_itpm_proj = :idproj`
+
+    const param = {}
+   param.idproj = params.idproj
+    const result = await database.exec(query,param)
+    return result.rowsAffected
+}
+
+module.exports.failBa = failBa
 module.exports.addBa = addBa
 module.exports.approveBa = approveBa
