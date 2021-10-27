@@ -77,7 +77,7 @@ router.post('/ba/approve', async (req, res, next) => {
                         res.status(200).json({ "code": 200, "message": "berhasil Approve" })
                         //return res.data
                     })
-                    .catch(error => {
+                    .catch(async (error) => {
                         console.error(error)
                         const fail = await ba.failBa({idproj:idproj})
                         res.status(500).json({ "code": 500, "message": "TIdak berhasil Approve" })
