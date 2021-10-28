@@ -54,7 +54,7 @@ router.post('/ba/approve', async (req, res, next) => {
         const datapro = await proj.find({ id: idproj })
         const idlayanan = datapro[0].IDLAYANAN
         const rest = await ba.approveBa({ idproj: idproj })
-        const postData = {kode_status: "FBP"}
+        const postData = {kode_status: "FBP", catatan: "Selesai dengan persetujuan BAST (Berita Acara Serah Terima)"}
         if (rest == 1) {
            
                 axios
