@@ -59,7 +59,7 @@ router.post('/ba/approve', async (req, res, next) => {
            
                 axios
                     //.post('http://10.1.94.235:8025/send', postData,
-                    .post(process.env.API_INFO+'/api/hit/aplikasi/ticket', postData,
+                    .post(process.env.API_INFO+'/hit/aplikasi/ticket', postData,
                         {
                             params:{"idpm":idlayanan},
                             headers: {
