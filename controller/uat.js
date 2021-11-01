@@ -81,12 +81,12 @@ router.post('/uat/tambah', async (req, res, next) => {
         //const mail = await smail.getmail({nik:datapro[0].NIKREQ})
 
         //=================parammail==================//
-        const mailbpo = {}
-       mailbpo.email = "ahilman"
-       mailbpo.proyek = datapro[0].NAMAPROYEK
-       mailbpo.role = "QA"
+        const mailqa = {}
+       mailqa.email = "ahilman"
+       mailqa.proyek = datapro[0].NAMAPROYEK
+       mailqa.role = "QA"
        const cc = []
-       const to = [mailbpo]
+       const to = [mailqa]
 
        const parammail = {}
        parammail.cc = cc
@@ -244,8 +244,22 @@ router.put('/uat/approveqa',async(req,res,next)=>{
         const param = req.body
         param.idubah = req.user.data.nik
 
+        const mailbpo = {}
+       mailbpo.email = "ahilman"
+       mailbpo.proyek = datapro[0].NAMAPROYEK
+       mailbpo.role = "BPO"
+       const cc = []
+       const to = [mailbpo]
+
+       const parammail = {}
+       parammail.cc = cc
+       parammail.code = "approveqauat"
+       parammail.to = to
+
         const result = await uat.approveqa(param)
         if(result == 1){
+             const resmail = await smail.mail(parammail)
+            console.dir(resmail)
             res.status(200).json({"code":200,"message":"Berhasil Approve"})
         }else{
             res.status(500).json({"code":500,"message":"Tidak Berhasil Approve"})
