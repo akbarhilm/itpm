@@ -244,7 +244,8 @@ router.put('/uat/approveqa',async(req,res,next)=>{
     try{
         const param = req.body
         param.idubah = req.user.data.nik
-        const datapro = await proj.find({id:idproj});
+        const datauat = await uat.find({iduat:req.body.iduat})
+        const datapro = await proj.find({id:datauat[0].IDPROJ});
         const email = await alamatemail.useremail({nik:datapro[0].NIKREQ})
         const mailbpo = {}
        mailbpo.email = email[0].EMAIL
