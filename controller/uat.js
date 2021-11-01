@@ -4,6 +4,7 @@ const uat = require('../services/uat');
 const proj = require('../services/proyek')
 const map = require('../util/errorHandling')
 const smail = require('../services/email')
+const alamatemail = require('../services/pengguna')
 const oracle = require("oracledb");
 
 router.get('/uat', async (req, res, next) => {
@@ -243,9 +244,10 @@ router.put('/uat/approveqa',async(req,res,next)=>{
     try{
         const param = req.body
         param.idubah = req.user.data.nik
-
+        const datapro = await proj.find({id:idproj});
+        const email = await alamatemail.useremail({nik:datapro[0].NIKREQ})
         const mailbpo = {}
-       mailbpo.email = "ahilman"
+       mailbpo.email = email[0].EMAIL
        mailbpo.proyek = datapro[0].NAMAPROYEK
        mailbpo.role = "BPO"
        const cc = []
@@ -255,7 +257,7 @@ router.put('/uat/approveqa',async(req,res,next)=>{
        parammail.cc = cc
        parammail.code = "approveqauat"
        parammail.to = to
-
+     
         const result = await uat.approveqa(param)
         if(result == 1){
              const resmail = await smail.mail(parammail)
