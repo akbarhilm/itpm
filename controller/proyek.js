@@ -184,19 +184,27 @@ router.post('/tambah', async (req, res, next) => {
        //============end================================//
 
         const rows = await proyek.add(paramsproyek,{},conn);
-       
+        
+
+      
         const resuser = await proyek.addUser(paramuser,{},conn);
 
         const resuserauth = await proyek.addUserAuth(paramuserauth,{autoCommit:true},conn)
         //console.dir(parammail)
        // console.dir("testst")
+       //new Promise()
+       
+        
         const mail = await smail.mail(parammail)
-        if(mail.CODE = 200){
-            res.status(200).json(rows);
-        }else{
-           const delt = await proyek.delproyek({idproj:rows.idproj})
-           res.status(500).json({"code":"500","message":"Gagal Membuat Proyek"});
-        }
+        console.dir(mail)
+                 if(mail && mail.status == 200){
+                    res.status(200).json(rows);
+                 }else{
+                     console.dir("else 1")
+                     const delt = await proyek.delproyek({idproj:rows.idproj})
+                    res.status(500).json({"code":"500","message":"Gagal Membuat Proyek"});
+                 }
+        
        //console.dir(mail)
         
     } catch (err) {
