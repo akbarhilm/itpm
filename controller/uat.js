@@ -264,9 +264,19 @@ router.put('/uat/approveqa', async (req, res, next) => {
 
         const result = await uat.approveqa(param);
         if (result == 1) {
-            const resmail = await smail.mail(parammail);
-            console.dir(resmail);
-            res.status(200).json({ "code": 200, "message": "Berhasil Approve" });
+            const mail = await smail.mail(parammail)
+            console.dir(mail)
+                     if(mail && mail.status == 200){
+                        res.status(200).json({ "code": 200, "message": "Berhasil Approve" });
+                     }else{
+                        
+                         const delt = await uat.failApproveqa({iduat:iduatparam})
+                        res.status(500).json({"code":"500","message":"Gagal Approve"});
+                     }
+            
+            // const resmail = await smail.mail(parammail);
+            // console.dir(resmail);
+            
         } else {
             res.status(500).json({ "code": 500, "message": "Tidak Berhasil Approve" });
         }

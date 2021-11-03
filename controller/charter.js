@@ -105,9 +105,17 @@ router.post('/charter/tambah', async (req, res, next) => {
                 reselect[0].LISTDETAIL = rowsch||null
         
             }
-            const resmail = await smail.mail(parammail)
-            console.dir(resmail)
-            res.status(200).json(reselect[0])
+            const mail = await smail.mail(parammail)
+            console.dir(mail)
+                     if(mail && mail.status == 200){
+                        res.status(200).json(reselect[0])
+                     }else{
+                        
+                         const delt = await charter.failAddParent({idcharter:reselect[0].IDCHARTER.toString()})
+                         const delt = await charter.failAddChild({idcharter:reselect[0].IDCHARTER.toString()})
+                        res.status(500).json({"code":"500","message":"Gagal Simpan"});
+                     }
+            
            await conn.close()
         })
 

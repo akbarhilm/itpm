@@ -189,7 +189,24 @@ async function approveqa(params){
     return result.rowsAffected
 }
 
+async function failApproveqa(params){
+    let query=`update dbadmit.tmitpmuat
+    set i_emp_qa = null,
+         c_itpm_qaaprv = 0,
+         d_itpm_qaaprv = null,
+         i_update = null,
+     d_update = null
+    where i_itpm_uat = :iduat`
 
+    const param ={}
+    param.idubah = params.idubah
+    param.iduat = params.iduat
+
+    const result  = await database.exec(query,param)
+    return result.rowsAffected
+}
+
+module.exports.failApproveqa = failApproveqa
 module.exports.approveuser = approveuser
 module.exports.approveqa = approveqa
 module.exports.findChild = findChild
