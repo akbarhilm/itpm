@@ -1,6 +1,7 @@
 const database = require('../conf/db/db')
 const oracledb = require('oracledb');
-const nomer = require('./nomer')
+const nomer = require('./nomer');
+const { autoCommit } = require('oracledb');
 //  const aplikasi = require('./aplikasi');
 //  const layanan = require('./layanan')
 //  const modul = require('./modul') 
@@ -193,6 +194,13 @@ async function updateStatus(params,commit,conn){
     return result.rows
 }
 
+async function delproyek(param){
+    let query =`delete dbadmit.tmitpmproj where i_itpm_proj = :idproj`
+    const result = await database.exec(query,param)
+    return result.rows
+}
+
+module.exports.delproyek = delproyek
 module.exports.find = find
 module.exports.add = add
 module.exports.stepper = stepper

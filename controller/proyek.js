@@ -191,9 +191,14 @@ router.post('/tambah', async (req, res, next) => {
         //console.dir(parammail)
        // console.dir("testst")
         const mail = await smail.mail(parammail)
-
+        if(mail.CODE = 200){
+            res.status(200).json(rows);
+        }else{
+           const delt = await proyek.delproyek({idproj:rows.idproj})
+           res.status(500).json({"code":"500","message":"Gagal Membuat Proyek"});
+        }
        //console.dir(mail)
-        res.status(200).json(rows);
+        
     } catch (err) {
         const { errorNum } = err;
         const message = await map.map(errorNum)
