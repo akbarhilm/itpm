@@ -42,7 +42,7 @@ router.post('/otoritas/tambah',async(req,res,next)=>{
         if (rows == 1) {
             res.status(200).json({"code":200,"message":"berhasil tambah"});
         } else {
-            res.json({});
+            res.status(500).json({"code":500,"message":"Tidak berhasil tambah"});
         }
     }catch (err) {
         const { errorNum } = err;

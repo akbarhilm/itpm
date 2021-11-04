@@ -1,6 +1,7 @@
 const database = require('../conf/db/db')
 const oracledb = require('oracledb');
-const nomer = require('./nomer')
+const nomer = require('./nomer');
+const { autoCommit } = require('oracledb');
 //  const aplikasi = require('./aplikasi');
 //  const layanan = require('./layanan')
 //  const modul = require('./modul') 
@@ -15,7 +16,7 @@ async function find(params){
     E_ITPM_PROJ as ketproyek,
     C_ITPM_PROJSTAT as kodestatus,
     E_ITPM_PROJSTATCHNG as ketstatus,
-    D_ITPM_PROJSTATCHNG as tglstatus,
+    to_char(D_ITPM_PROJSTATCHNG,'dd/mm/yyyy') as tglstatus,
     C_ITPM_ACTV as kodeaktif,
     N_ITPM_PROJURI as namauri,
     I_EMP_REQ as nikreq,
@@ -25,9 +26,9 @@ async function find(params){
     I_ITPM_RESRCNBR as nores,
     I_ITPM_REALNBR as noreal,
     I_ITPM_BANBR as noba,
-    D_ITPM_BA as tglba,
+    to_char(D_ITPM_BA,'dd/mm/yyyy') as tglba,
     C_ITPM_BAAPPRV as kodeaproveba,
-    D_ITPM_BAAPPRV as tglaproveba,
+    to_char(D_ITPM_BAAPPRV,'dd/mm/yyyy') as tglaproveba,
     I_ITPM_UREQNBR as noureq,
     I_ITPM_APPL as idaplikasi,
     I_ITPM_MDL as idmodul from DBADMIT.TMITPMPROJ`
@@ -193,6 +194,13 @@ async function updateStatus(params,commit,conn){
     return result.rows
 }
 
+async function delproyek(param){
+    let query =`delete dbadmit.tmitpmproj where i_itpm_proj = :idproj`
+    const result = await database.exec(query,param)
+    return result.rows
+}
+
+module.exports.delproyek = delproyek
 module.exports.find = find
 module.exports.add = add
 module.exports.stepper = stepper

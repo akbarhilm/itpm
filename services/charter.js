@@ -148,7 +148,27 @@ async function deleteChild(params,commit,conn) {
     let query = `delete dbadmit.tmitpmcharterdtl where i_itpm_charter = :idcharter`
     const param ={}
     param.idcharter = params.idcharter
-    const result = await database.seqexec(query, param, commit, conn)
+    const result = await database.exec(query, param, commit, conn)
+    return result.rowsAffected
+
+}
+
+async function failAddParent(params,commit,conn) {
+    console.dir("del")
+    let query = `delete dbadmit.tmitpmcharte where i_itpm_charter = :idcharter`
+    const param ={}
+    param.idcharter = params.idcharter
+    const result = await database.exec(query, param)
+    return result.rowsAffected
+
+}
+
+async function failAddChild(params,commit,conn) {
+    console.dir("del")
+    let query = `delete dbadmit.tmitpmcharterdtl where i_itpm_charter = :idcharter`
+    const param ={}
+    param.idcharter = params.idcharter
+    const result = await database.exec(query, param)
     return result.rowsAffected
 
 }
@@ -168,7 +188,8 @@ async function approve(params){
     return result.rowsAffected
 }
 
-
+module.exports.failAddChild = failAddChild
+module.exports.failAddParent = failAddParent
 module.exports.approve = approve
 module.exports.findChild = findChild
 module.exports.deleteChild = deleteChild
