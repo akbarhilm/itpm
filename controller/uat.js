@@ -97,7 +97,8 @@ router.post('/uat/tambah', async (req, res, next) => {
 
         let reselect;
         //const resdetail = []
-        //console.dir(temparray)
+        console.dir("DATA")
+        console.dir(temparray)
         const dtl = temparray.map(async (el, i, array) => {
             el.iduat = respar.iduat;
             if (i == array.length - 1) {
@@ -112,8 +113,11 @@ router.post('/uat/tambah', async (req, res, next) => {
             }
 
         });
-
-        return Promise.all(dtl).then(async () => {
+        console.dir("Mapped Data")
+        console.dir(dtl)
+        return Promise.all(dtl).then(async (ress) => {
+            console.dir("Hasil promises")
+            console.dir(ress)
             reselect = await uat.find({ idproj: idproj });
             if (reselect.length !== 0) {
 
