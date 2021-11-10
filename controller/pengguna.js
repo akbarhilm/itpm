@@ -66,11 +66,16 @@ router.get('/pengguna', async (req, res, next) => {
     }
 })
 
-function getinfonik(){
+function getinfonik(param){
     return new Promise(async(resolve,reject)=>{
     
     let rawData = ''
-        const options = new URL(`https://helpdesk-api.indonesian-aerospace.com/general/employee`);
+    let options
+    if(param){
+         options = new URL(process.env.NIK_INFO+param)
+    }else{
+        options = new URL(process.env.NIK_INFO)
+    }
         await http.get(options, (res) => {
         const { statusCode } = res;
         const contentType = res.headers['content-type'];
@@ -113,9 +118,9 @@ function getinfonik(){
     })
 }
 
-router.get('/karyawan',async(req,res,next)=>{
+router.get('/karyawanIT',async(req,res,next)=>{
 try{
-   const kar = await getinfonik()
+   const kar = await getinfonik('?org=%IT%')
    
    res.status(200).json(kar.data)
 }catch(e){
@@ -123,6 +128,17 @@ try{
     res.status(500).json({"code":"99","message":"internal error"})
 }
 })
+
+router.get('/Allkaryawan',async(req,res,next)=>{
+    try{
+       const kar = await getinfonik()
+       
+       res.status(200).json(kar.data)
+    }catch(e){
+        console.err(e)
+        res.status(500).json({"code":"99","message":"internal error"})
+    }
+    })
 
 
 module.exports = router

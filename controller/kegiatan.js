@@ -60,9 +60,9 @@ router.delete('/kegiatan/hapus',async (req,res,next)=>{
         const rest = await kegiatan.del({id:req.body.id})
 
         if(rest==1){
-            res.status(200).json({code:200,message:"Berhasil Hapus"})
+            res.status(200).json({"code":200,"message":"Berhasil Hapus"})
         }else{
-            res.status(200).json({})
+            res.status(500).json({"code":500,"message":"TIdak Berhasil Hapus"})
         }
     }catch(e){
         console.error(e)

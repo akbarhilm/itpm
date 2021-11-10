@@ -9,8 +9,11 @@ async function getNomer(param,conn) {
         case 'ureq':
             code = 'REQ'
             break;
-        case 'planreal':
+        case 'plan':
             code = 'PLN'
+            break;
+        case 'real':
+            code = 'JRS'
             break;
         case 'othrresrc':
             code = 'KSD'

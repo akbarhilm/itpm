@@ -43,7 +43,7 @@ router.post('/layanan/tambah', async (req, res, next) => {
         if (rows.length != 0) {
             res.status(200).json(rows);
         } else {
-            res.json({});
+            res.status(500).json({"code":500,"message":"Tidak Berhasil Tambah"});
         }
     } catch (err) {
         const { errorNum } = err;

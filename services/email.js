@@ -4,7 +4,7 @@ const axios = require('axios')
 
 
 
-function  mail(params){
+async function  mail(params){
 var postData = JSON.stringify(params)
     // {
     //     "cc": [
@@ -22,8 +22,8 @@ var postData = JSON.stringify(params)
     //   }
     console.dir("masuk mail")
 console.dir(process.env.ITPM_MAIL)
-
-    axios
+try{
+    const res = await axios
     //.post('http://10.1.94.235:8025/send', postData,
     .post(process.env.ITPM_MAIL, postData,
     {headers: {
@@ -31,18 +31,19 @@ console.dir(process.env.ITPM_MAIL)
         'Content-Type': 'application/json'
       }
     })
-    .then(res => {
-     // resp.status(200).json(
-      // res.data
-     //)
+    // .then(res => {
+    //  // resp.status(200).json(
+    //   // res.data
+    //  //)
 
-      console.dir(res.data)
-      return res.data
-    })
-    .catch(error => {
-      console.error(error)
-    })
-  
+    //   console.dir(res.data)
+    //    res.data;
+    // })
+    
+  return res
+}catch(e){
+  return e
+}
 }
 
 async function getmail(params){
