@@ -114,7 +114,7 @@ router.post('/plan/tambah',async(req,res,next)=>{
             console.dir(oracle.getPool().connectionsInUse)
         }).catch((e)=>{
             console.dir(e)
-           
+           conn.close()
         })
         
 
@@ -189,7 +189,7 @@ router.put('/plan/ubah',async(req,res,next)=>{
         }).catch((e)=>{
             console.dir(e)
             
-           
+           conn.close()
         })
         
 
