@@ -109,8 +109,8 @@ async function add(params){
 }
 
 async function getNomerLayanan(){
-    let query=`(select trim(to_char(nvl(nomer,'1'),'000'))||'/APL/IT000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nomer from(
-                select trim(to_char(max(substr(i_itpm_scnbr ,0,3))+1,'000')) as nomer from dbadmit.tmitpmsc where substr(i_itpm_scnbr,-4) = to_char(sysdate,'yyyy')
+    let query=`(select trim(to_char(nvl(nomer,'1'),'0000'))||'/APL/IT000/'||to_char(sysdate,'mm')||'/'||to_char(sysdate,'yyyy') as nomer from(
+                select trim(to_char(max(substr(i_itpm_scnbr ,0,3))+1,'0000')) as nomer from dbadmit.tmitpmsc where substr(i_itpm_scnbr,-4) = to_char(sysdate,'yyyy')
                 ))`
 
                 const result = await database.exec(query,[])        
