@@ -98,7 +98,7 @@ router.post('/ureq/tambah',async(req,res,next)=>{
             
         }).catch((e)=>{
             console.dir(e)
-            //conn.close()
+            conn.close()
         })
 
     }catch(err){
@@ -151,7 +151,7 @@ router.put('/ureq/ubah',async(req,res,next)=>{
             
         }).catch((e)=>{
             console.dir(e)
-           // conn.close()
+            conn.close()
            
         })
 
