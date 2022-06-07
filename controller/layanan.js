@@ -41,7 +41,7 @@ router.post('/layanan/tambah', async (req, res, next) => {
         params.identry = req.user.data.nik
         const rows = await layanan.add(params);
         if (rows.length != 0) {
-            console.dir("== DATA REQUEST ==\n", params);
+            console.dir("== DATA REQUEST == "+ params);
             res.status(200).json(rows);
         } else {
             res.status(500).json({"code":500,"message":"Tidak Berhasil Tambah"});
