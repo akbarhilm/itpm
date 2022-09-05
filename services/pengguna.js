@@ -1,5 +1,14 @@
 const database = require('../conf/db/db')
 
+let query = `select I_ITPM_CHARTER   idcharter,
+I_ITPM_PROJ       idproj,
+I_ITPM_CHARTERNBR  nocharter,
+to_char(D_ITPM_CHARTERSTART,'dd/mm/yyyy')   tglmulai,
+to_char(D_ITPM_CHARTERFINISH,'dd/mm/yyyy')  tglselesai,
+C_ITPM_ACTV          kodeaktif,
+C_ITPM_APPRV         kodeapprove
+from dbadmit.tmitpmcharter where :idproj like '%,'||I_ITPM_PROJ||',%'`
+
 async function find(params){
     let query = `select i_emp as nik,i_emp_email as email,c_itpm_actv as kodeaktif`;
     const param = {}
@@ -23,7 +32,9 @@ async function useremail(params){
 }
 
 async function findPenggunaProyek(params){
-    const otor = await findPenggunaOtoritas(params);
+    const paramotor = {}
+    paramotor.nik = params.nik
+    const otor = await findPenggunaOtoritas(paramotor);
     let query =`select I_ITPM_PROJ as idproyek,
     N_ITPM_PROJ as namaproyek,
     E_ITPM_PROJ as ketproyek,
@@ -32,14 +43,25 @@ async function findPenggunaProyek(params){
     C_ITPM_PROJSTAT as statusproyek
 
     from dbadmit.tmitpmproj
+    where 1 = 1
     `;
     const param ={}
+    //param.status = params.status
     if(!otor.find(x=>x.KODEAUTH=='PMO')){
     param.nik = params.nik
 
-    query+=`\n  where :nik in (i_emp_req,i_emp_pm)`;
+    query+=` and :nik in (i_emp_req,i_emp_pm)`;
     }
-    query+=`order by d_entry desc`;
+    //console.dir(params.status)
+    if(params.status != 'ALL' ){
+      param.status = params.status
+    query += ` and  C_ITPM_PROJSTAT = :status`;
+    }
+    query+=` order by d_entry desc`;
+
+    
+    console.dir(param.status)
+
     let result = await database.exec(query,param)
     let list = {"list":result.rows}
     

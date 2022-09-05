@@ -3,13 +3,16 @@ const router = express.Router();
 const pengguna = require('../services/pengguna');
 const kar = require('./proyek')
 const http = require('https');
+const charter = require('../services/charter');
+const real = require('../services/real');
+const plan = require('../services/plan');
 
 router.get('/pengguna/nik', async (req, res, next) => {
     try {
        
         const rows = await pengguna.find({ nik: req.user.data.nik,nama:req.user.data.nama });
         if (rows.length !== 0) {
-           
+            
             res.status(200).json(rows[0]);
         } else {
             res.status(200).json({});
@@ -21,18 +24,54 @@ router.get('/pengguna/nik', async (req, res, next) => {
 })
 
 router.get('/pengguna/proyek/nik', async (req, res, next) => {
+  
     try {
-       
-        const rows = await pengguna.findPenggunaProyek({ nik: req.user.data.nik  });
-        if (rows.length !== 0) {
-            res.status(200).json(rows);
-        } else {
-            res.status(200).json([]);
+       const param = {}
+       const pc = {}
+       param.nik = req.user.data.nik 
+       param.status = req.query.status.toString()
+      
+      
+        const rows = await pengguna.findPenggunaProyek(param);
+        if(req.query.d){
+                const  batch = await rows.list.map(async(v)=>{
+                    const cr = await charter.find({
+                        idproj: v.IDPROYEK
+                    })
+            
+                    const pl = await plan.find2({
+                        idproj: v.IDPROYEK
+                    })
+            
+                    const rl = await real.find({
+                        idproj: v.IDPROYEK
+                    })
+            
+                return {...v,charter:cr,plan:pl,real:rl}
+                })
+                    console.dir(batch)
+            
+                
+                return Promise.all(batch).then(async(rest)=>{
+                    const final = {}
+                    final.otoritas = rows.otoritas
+                    final.list = rest
+                    res.status(200).json(final)
+                }).catch((e)=>{
+                    console.dir(e)
+                })
+        }else{
+            if (rows.length !== 0) {
+                res.status(200).json(rows);
+            } else {
+                res.status(200).json({});
+            }
         }
     } catch (err) {
         console.error(err)
         next(err)
     }
+
 })
 
 

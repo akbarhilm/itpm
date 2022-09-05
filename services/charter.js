@@ -1,6 +1,7 @@
 const database = require('../conf/db/db')
 const oracledb = require('oracledb');
 
+
 async function find(params) {
 
     let query = `select I_ITPM_CHARTER   idcharter,
@@ -187,6 +188,7 @@ async function approve(params){
     const result  = await database.exec(query,param)
     return result.rowsAffected
 }
+
 
 module.exports.failAddChild = failAddChild
 module.exports.failAddParent = failAddParent
