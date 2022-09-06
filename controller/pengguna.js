@@ -6,6 +6,7 @@ const http = require('https');
 const charter = require('../services/charter');
 const real = require('../services/real');
 const plan = require('../services/plan');
+const proyek = require('../services/proyek');
 
 router.get('/pengguna/nik', async (req, res, next) => {
     try {
@@ -46,10 +47,20 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
                     const rl = await real.find({
                         idproj: v.IDPROYEK
                     })
+                    const st = await proyek.stepper({
+                        id:''+v.IDPROYEK
+                    })
+                    let o = {};
+                    if (st.length !== 0) {
+                      
+                        let obj = st[0];
+                        Object.keys(obj).forEach((x) => o[x] = !!obj[x]);
+                       
+                    } 
             
-                return {...v,charter:cr,plan:pl,real:rl}
+                return {...v,charter:cr,plan:pl,real:rl,stepper:o}
                 })
-                    console.dir(batch)
+                   
             
                 
                 return Promise.all(batch).then(async(rest)=>{

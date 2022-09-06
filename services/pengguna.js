@@ -35,29 +35,30 @@ async function findPenggunaProyek(params){
     const paramotor = {}
     paramotor.nik = params.nik
     const otor = await findPenggunaOtoritas(paramotor);
-    let query =`select I_ITPM_PROJ as idproyek,
-    N_ITPM_PROJ as namaproyek,
-    E_ITPM_PROJ as ketproyek,
-    C_ITPM_ACTV as kodeaktif,
-    N_ITPM_PROJURI as namauri,
-    C_ITPM_PROJSTAT as statusproyek
+    let query =`select a.I_ITPM_PROJ as idproyek,
+    b.I_ITPM_SCNBR as nolayanan,
+    a.N_ITPM_PROJ as namaproyek,
+    a.E_ITPM_PROJ as ketproyek,
+    a.C_ITPM_ACTV as kodeaktif,
+    a.N_ITPM_PROJURI as namauri,
+    a.C_ITPM_PROJSTAT as statusproyek
 
-    from dbadmit.tmitpmproj
-    where 1 = 1
+    from dbadmit.tmitpmproj a, DBADMIT.TMITPMSC b
+    where a.I_ITPM_SC = b.I_ITPM_SC
     `;
     const param ={}
     //param.status = params.status
     if(!otor.find(x=>x.KODEAUTH=='PMO')){
     param.nik = params.nik
 
-    query+=` and :nik in (i_emp_req,i_emp_pm)`;
+    query+=` and :nik in (a.i_emp_req,a.i_emp_pm)`;
     }
     //console.dir(params.status)
     if(params.status != 'ALL' ){
       param.status = params.status
-    query += ` and  C_ITPM_PROJSTAT = :status`;
+    query += ` and  a.C_ITPM_PROJSTAT = :status`;
     }
-    query+=` order by d_entry desc`;
+    query+=` order by a.d_entry desc`;
 
     
     console.dir(param.status)
