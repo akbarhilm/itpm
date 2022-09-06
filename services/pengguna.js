@@ -1,14 +1,5 @@
 const database = require('../conf/db/db')
 
-let query = `select I_ITPM_CHARTER   idcharter,
-I_ITPM_PROJ       idproj,
-I_ITPM_CHARTERNBR  nocharter,
-to_char(D_ITPM_CHARTERSTART,'dd/mm/yyyy')   tglmulai,
-to_char(D_ITPM_CHARTERFINISH,'dd/mm/yyyy')  tglselesai,
-C_ITPM_ACTV          kodeaktif,
-C_ITPM_APPRV         kodeapprove
-from dbadmit.tmitpmcharter where :idproj like '%,'||I_ITPM_PROJ||',%'`
-
 async function find(params){
     let query = `select i_emp as nik,i_emp_email as email,c_itpm_actv as kodeaktif`;
     const param = {}
