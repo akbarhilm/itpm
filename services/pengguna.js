@@ -22,6 +22,46 @@ async function useremail(params){
     return result.rows;
 }
 
+async function summaryProyek(params){
+    const paramotor = {}
+    paramotor.nik = params.nik
+    const otor = await findPenggunaOtoritas(paramotor);
+    
+    let query=`SELECT SUM(total) as total,sum(baru) as baru , sum(berjalan) as berjalan, sum(pending) as pending, sum(selesai) as selesai from (
+        select count(*) as total,0 as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, count(*) as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU' 
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, 0 as baru, count(*) as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN'
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, 0 as baru, 0 as berjalan, count(*) as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, 0 as baru, 0 as berjalan, 0 as pending, count(*) as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
+        group by i_emp_req,i_emp_pm
+        )`
+
+    console.dir(otor)
+    const paramq = {}
+    if(!otor.find(x=>x.KODEAUTH=='PMO')){
+        paramq.nik = params.nik
+        
+        query+=`where :nik in (i_emp_req,i_emp_pm)`;
+        }
+    
+
+
+    const res = await database.exec(query,paramq)
+    return res.rows
+}
+
 async function findPenggunaProyek(params){
     const paramotor = {}
     paramotor.nik = params.nik
@@ -136,5 +176,6 @@ module.exports.find = find
 module.exports.findPenggunaProyek = findPenggunaProyek
 module.exports.findPenggunaOtoritas = findPenggunaOtoritas
 module.exports.useremail = useremail
+module.exports.summaryProyek = summaryProyek
 
 // module.exports.save = save

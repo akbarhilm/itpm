@@ -201,19 +201,7 @@ async function delproyek(param){
     return result.rows
 }
 
-async function summaryProyek(){
-    let query=`SELECT SUM(total) as total,sum(berjalan) as berjalan, sum(pending) as pending, sum(selesai) as selesai from (
-        select count(*) as total, 0 as berjalan, 0 as pending, 0 as selesai from DBADMIT.TMITPMPROJ
-        union all
-        select 0 as total, count(*) as berjalan, 0 as pending, 0 as selesai from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN'
-        union all
-        select 0 as total, 0 as berjalan, count(*) as pending, 0 as selesai from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING'
-        union all
-        select 0 as total, 0 as berjalan, 0 as pending, count(*) as selesai from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI'
-        )`
-    const res = await database.exec(query)
-    return res.rows
-}
+
 
 module.exports.delproyek = delproyek
 module.exports.find = find
@@ -224,4 +212,3 @@ module.exports.addUser = addUser
 module.exports.addUserAuth = addUserAuth
 module.exports.addNumber = addNumber
 module.exports.updateStatus = updateStatus
-module.exports.summaryProyek = summaryProyek

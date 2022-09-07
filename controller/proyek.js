@@ -217,20 +217,7 @@ router.post('/tambah', async (req, res, next) => {
     }
 });
 
-router.get('/summary', async (req, res, next) => {
-    try {
 
-        const rows = await proyek.summaryProyek();
-        if (rows.length !== 0) {
-            res.status(200).json(rows);
-        } else {
-            res.status(200).json({});
-        }
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-});
 
 
 module.exports = router;

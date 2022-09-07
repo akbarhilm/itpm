@@ -24,6 +24,22 @@ router.get('/pengguna/nik', async (req, res, next) => {
     }
 })
 
+router.get('/pengguna/proyek/summary', async (req, res, next) => {
+    try {
+        const param = {}
+        param.nik = req.user.data.nik 
+        const rows = await pengguna.summaryProyek(param);
+        if (rows.length !== 0) {
+            res.status(200).json(rows);
+        } else {
+            res.status(200).json({});
+        }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+})
+
 router.get('/pengguna/proyek/nik', async (req, res, next) => {
   
     try {
