@@ -217,6 +217,31 @@ router.post('/tambah', async (req, res, next) => {
     }
 });
 
+router.put('/ubahstatus', async (req, res, next) => {
+    const conn = await oracle.getConnection();
+    try {
+        const param = {} 
+        param.idproj = req.body.idproj
+        param.ket = req.body.ket
+        param.status = req.body.status
+        const updatestatus = await proyek.updateStatus(param, {
+            autoCommit: true
+        }, conn);
+        
+       if(updatestatus == 1){
+            res.status(200).json({ "code": 200, "message": "berhasil Ubah" })
+        }
+          
+        await conn.close();
+    } catch (err) {
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        conn.close();
+        next(err);
+    }
+});
+
 
 
 

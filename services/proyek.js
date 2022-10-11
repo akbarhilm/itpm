@@ -184,15 +184,16 @@ async function stepper(params,commit,conn){
 }
 
 async function updateStatus(params,commit,conn){
-    let query=`update dbadmit.tmitpmproj set c_itpm_projstat = :status
+    let query=`update dbadmit.tmitpmproj set c_itpm_projstat = :status, e_itpm_projstatchng = :ket, d_itpm_projstatchng = sysdate
     where i_itpm_proj = :idproj`
 
     const param={}
     param.idproj = params.idproj
     param.status = params.status
+    param.ket = params.ket || ''
 
     const result = await database.seqexec(query,param,commit,conn)
-    return result.rows
+    return result.rowsAffected
 }
 
 async function delproyek(param){
