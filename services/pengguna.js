@@ -79,7 +79,7 @@ async function findPenggunaProyek(params){
     `;
     const param ={}
     //param.status = params.status
-    if(!otor.find(x=>x.KODEAUTH=='PMO')){
+    if(otor.find(x=>x.kode=="BPO") || otor.find(x=>x.kode=="PM")){
     param.nik = params.nik
 
     query+=` and :nik in (a.i_emp_req,a.i_emp_pm)`;
