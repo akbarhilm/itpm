@@ -206,7 +206,12 @@ async function proyekByNik(param){
     let query = `select *  from dbadmit.tmitpmproj where i_itpm_proj in (
         select i_itpm_proj  from dbadmit.tmitpmproj where :nik in (i_emp_req, i_emp_pm)
         union
-        select distinct I_itpm_proj from dbadmit.tmitpmplanreal where i_emp_actyassign = :nik)`
+        select distinct I_itpm_proj from dbadmit.tmitpmplanreal where i_emp_actyassign = :nik
+        union
+        select distinct I_itpm_proj from dbadmit.tmitpmuat where i_emp_qa = :nik
+        union
+        select distinct b.I_itpm_proj from dbadmit.tmitpmuatdtl a,dbadmit.tmitpmuat b where a.i_emp_uat = :nik and a.i_itpm_uat = b.i_itpm_uat
+        )`
 
         const result = await database.exec(query,param)
         return result.rows
