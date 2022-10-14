@@ -202,8 +202,18 @@ async function delproyek(param){
     return result.rows
 }
 
+async function proyekByNik(param){
+    let query = `select *  from dbadmit.tmitpmproj where i_itpm_proj in (
+        select i_itpm_proj  from dbadmit.tmitpmproj where :nik in (i_emp_req, i_emp_pm)
+        union
+        select distinct I_itpm_proj from dbadmit.tmitpmplanreal where i_emp_actyassign = :nik)`
+
+        const result = await database.exec(query,param)
+        return result.rows
+}
 
 
+module.exports.proyekByNik = proyekByNik
 module.exports.delproyek = delproyek
 module.exports.find = find
 module.exports.add = add

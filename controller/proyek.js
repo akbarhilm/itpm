@@ -242,7 +242,23 @@ router.put('/ubahstatus', async (req, res, next) => {
     }
 });
 
+router.get('/searchbynik', async (req, res, next) => {
 
+    const param = req.body.nik
+    try {
+
+        const rows = await proyek.proyekByNik({ nik: param });
+        if (rows.length !== 0) {
+           
+            res.status(200).json(rows);
+        } else {
+            res.status(200).json({});
+        }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
 
 
 module.exports = router;
