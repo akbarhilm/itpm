@@ -50,7 +50,10 @@ async function summaryProyek(params){
 
     console.dir(otor)
     const paramq = {}
-    if(!otor.find(x=>x.KODEAUTH=='PMO')){
+
+    const mapotor = otor.map(x=>x.KODEAUTH)
+    const checkotor = ["PMO","QA","BOD"]
+    if(!checkotor.some(val => mapotor.includes(val))){
         paramq.nik = params.nik
         
         query+=`where :nik in (i_emp_req,i_emp_pm)`;
@@ -79,7 +82,12 @@ async function findPenggunaProyek(params){
     `;
     const param ={}
     //param.status = params.status
-    if(otor.find(x=>x.kode=="BPO") || otor.find(x=>x.kode=="PM")){
+    const mapotor = otor.map(x=>x.KODEAUTH)
+    const checkotor = ["PMO","QA","BOD"]
+
+  
+    // if(otor.find(x=>x.KODEAUTH=="BPO") || otor.find(x=>x.KODEAUTH=="PM")){
+    if(!checkotor.some(val => mapotor.includes(val))){
     param.nik = params.nik
 
     query+=` and :nik in (a.i_emp_req,a.i_emp_pm)`;
@@ -97,15 +105,17 @@ async function findPenggunaProyek(params){
     let result = await database.exec(query,param)
     let list = {"list":result.rows}
     
-    if(otor.find(x=>x.KODEAUTH=='PMO')){
-        const status = {"PMO":true};
-       list.otoritas = status
-    return list
-    }else{
-        const status = {"PMO":false};
-        list.otoritas = status
+  
+
+
+
+    const checks = checkotor.reduce((obj, val) => ({[val]: mapotor.includes(val), ...obj}), {})
+    
+    
+        list.otoritas = checks
+
         return list
-    }
+    
     
 }
 
