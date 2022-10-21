@@ -47,9 +47,16 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
        const pc = {}
        param.nik = req.user.data.nik 
        param.status = req.query.status.toString()
+      let rows
+       if(req.query.nik){
+         rows = await proyek.proyekByNik({nik:req.query.nik})
+         console.dir(rows)
+       }else{
+         rows = await pengguna.findPenggunaProyek(param);
+         console.dir("zxc")
+       }
       
-      
-        const rows = await pengguna.findPenggunaProyek(param);
+       
         if(req.query.d){
                 const  batch = await rows.list.map(async(v)=>{
                     const cr = await charter.find({

@@ -203,7 +203,15 @@ async function delproyek(param){
 }
 
 async function proyekByNik(param){
-    let query = `select *  from dbadmit.tmitpmproj where i_itpm_proj in (
+    let query = `select a.I_ITPM_PROJ as idproyek,
+    b.I_ITPM_SCNBR as nolayanan,
+    a.N_ITPM_PROJ as namaproyek,
+    a.E_ITPM_PROJ as ketproyek,
+    a.C_ITPM_ACTV as kodeaktif,
+    a.N_ITPM_PROJURI as namauri,
+    a.C_ITPM_PROJSTAT as statusproyek  
+    from dbadmit.tmitpmproj a, DBADMIT.TMITPMSC b
+    where a.I_ITPM_SC = b.I_ITPM_SC and  a.i_itpm_proj in (
         select i_itpm_proj  from dbadmit.tmitpmproj where :nik in (i_emp_req, i_emp_pm)
         union
         select distinct I_itpm_proj from dbadmit.tmitpmplanreal where i_emp_actyassign = :nik
@@ -214,7 +222,8 @@ async function proyekByNik(param){
         )`
 
         const result = await database.exec(query,param)
-        return result.rows
+        const list = {"list":result.rows}
+        return list
 }
 
 
