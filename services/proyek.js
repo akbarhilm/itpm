@@ -219,7 +219,9 @@ async function proyekByNik(param){
         select distinct I_itpm_proj from dbadmit.tmitpmuat where i_emp_qa = :nik
         union
         select distinct b.I_itpm_proj from dbadmit.tmitpmuatdtl a,dbadmit.tmitpmuat b where a.i_emp_uat = :nik and a.i_itpm_uat = b.i_itpm_uat
-        )`
+        )
+        order by a.d_entry desc`
+
 
         const result = await database.exec(query,param)
         const list = {"list":result.rows}
