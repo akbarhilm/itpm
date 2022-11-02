@@ -5,7 +5,7 @@ const oracledb = require("oracledb");
 async function find(params){
     let query=`select i_itpm_othrresrc as idresource, i_itpm_proj as idproj,
     n_itpm_othrresrc as namaresource, c_itpm_uom as kodeuom,
-     q_itpm_resrc as quantity from DBADMIT.TMITPMOTHRRESRC`
+     q_itpm_resrc as quantity, c_itpm_othrresrc as kode from DBADMIT.TMITPMOTHRRESRC`
      const param = {};
     if (Object.keys(params).some(function (k) { return params[k]; })) {
         // console.dir(!!params)
@@ -31,6 +31,7 @@ async function add(params){
     n_itpm_othrresrc, 
     c_itpm_uom,
      q_itpm_resrc,
+     c_itpm_othrresrc
      i_entry,
      d_entry
     )values(
@@ -38,6 +39,7 @@ async function add(params){
         :namaresource,
         :kodeuom,
         :quantity,
+        :kode,
         :identry,
         sysdate
     )`
@@ -46,6 +48,7 @@ async function add(params){
         param.namaresource = params.namaresource
         param.kodeuom = params.kodeuom
         param.quantity = params.quantity
+        param.kode = params.kode
         param.identry = params.identry
 
     const result = await database.exec(query, param);
