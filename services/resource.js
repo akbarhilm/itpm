@@ -31,7 +31,7 @@ async function add(params){
     n_itpm_othrresrc, 
     c_itpm_uom,
      q_itpm_resrc,
-     c_itpm_othrresrc
+     c_itpm_othrresrc,
      i_entry,
      d_entry
     )values(
