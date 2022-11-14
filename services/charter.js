@@ -146,8 +146,8 @@ async function editParent(params,commit,conn) {
     param.tglselesai = params.tglselesai
     param.idubah = params.idubah
     param.idcharter = params.idcharter
-
-
+    param.benffin = params.benffin
+    param.benfnonfin = params.benfnonfin
 
 
     const result = await database.seqexec(query, param, commit, conn)
