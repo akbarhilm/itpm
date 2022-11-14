@@ -10,11 +10,13 @@ async function find(params) {
   to_char(D_ITPM_CHARTERSTART,'dd/mm/yyyy')   tglmulai,
   to_char(D_ITPM_CHARTERFINISH,'dd/mm/yyyy')  tglselesai,
   C_ITPM_ACTV          kodeaktif,
-  C_ITPM_APPRV         kodeapprove
+  C_ITPM_APPRV         kodeapprove,
+  e_itpm_charterbenffin benefitfinansial,
+  e_itpm_charterbenfnonfin benefitnonfinansial
   from dbadmit.tmitpmcharter`
 
     if (!Object.keys(params).length == 0) {
-        // console.dir(!!params)
+         console.dir(params)
         query += `\n where`
         if (Object.keys(params).find(x => x == 'idproj')) {
             query += `\n I_ITPM_PROJ = :idproj`
@@ -24,7 +26,7 @@ async function find(params) {
             query += `\n I_ITPM_CHARTER = :idcharter`
         }
     }
-
+    console.dir(query)
     const result = await database.exec(query, params)
     return result.rows;
 }
@@ -54,6 +56,8 @@ async function addParent(params,commit,conn) {
   D_ITPM_CHARTERSTART,
   D_ITPM_CHARTERFINISH ,
   C_ITPM_ACTV          ,
+  e_itpm_charterbenffin,
+  e_itpm_charterbenfnonfin,
   I_ENTRY,
   D_ENTRY,
   C_ITPM_APPRV )
@@ -63,6 +67,8 @@ async function addParent(params,commit,conn) {
       to_date(:tglmulai,'dd/mm/yyyy'),
       to_date(:tglselesai,'dd/mm/yyyy'),
       1,
+      :benffin,
+      :benfnonfin,
       :identry,
       sysdate,
       0
@@ -74,6 +80,8 @@ async function addParent(params,commit,conn) {
     param.tglmulai = params.tglmulai
     param.tglselesai = params.tglselesai
     param.identry = params.identry
+    param.benffin = params.benffin
+    param.benfnonfin = params.benfnonfin
 
 
     param.idcharter = { dir: oracledb.BIND_OUT }
@@ -127,6 +135,8 @@ async function editParent(params,commit,conn) {
        
         set D_ITPM_CHARTERSTART =  to_date(:tglmulai,'dd/mm/yyyy'),
         D_ITPM_CHARTERFINISH = to_date(:tglselesai,'dd/mm/yyyy') ,
+        e_itpm_charterbenffin = :benffin,
+        e_itpm_charterbenfnonfin = :benfnonfin,
         I_UPDATE = :idubah        ,
         D_UPDATE = sysdate
         where I_ITPM_CHARTER = :idcharter`
