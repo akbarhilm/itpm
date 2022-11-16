@@ -3,13 +3,17 @@ const router = express.Router();
 const pengguna = require('../services/pengguna');
 const kar = require('./proyek')
 const http = require('https');
+const charter = require('../services/charter');
+const real = require('../services/real');
+const plan = require('../services/plan');
+const proyek = require('../services/proyek');
 
 router.get('/pengguna/nik', async (req, res, next) => {
     try {
        
         const rows = await pengguna.find({ nik: req.user.data.nik,nama:req.user.data.nama });
         if (rows.length !== 0) {
-           
+            
             res.status(200).json(rows[0]);
         } else {
             res.status(200).json({});
@@ -20,19 +24,88 @@ router.get('/pengguna/nik', async (req, res, next) => {
     }
 })
 
-router.get('/pengguna/proyek/nik', async (req, res, next) => {
+router.get('/pengguna/proyek/summary', async (req, res, next) => {
     try {
-       
-        const rows = await pengguna.findPenggunaProyek({ nik: req.user.data.nik  });
+        const param = {}
+        param.nik = req.user.data.nik 
+        const rows = await pengguna.summaryProyek(param);
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
-            res.status(200).json([]);
+            res.status(200).json({});
+        }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+})
+
+router.get('/pengguna/proyek/nik', async (req, res, next) => {
+  
+    try {
+       const param = {}
+       const pc = {}
+       param.nik = req.user.data.nik 
+       param.status = req.query.status.toString()
+      let rows
+       if(req.query.nik){
+         rows = await proyek.proyekByNik({nik:req.query.nik})
+         console.dir(rows)
+       }else{
+         rows = await pengguna.findPenggunaProyek(param);
+         console.dir("zxc")
+       }
+      
+       
+        if(req.query.d){
+                const  batch = await rows.list.map(async(v)=>{
+                    const cr = await charter.find({
+                        idproj: v.IDPROYEK
+                    })
+            
+                    const pl = await plan.find2({
+                        idproj: v.IDPROYEK
+                    })
+            
+                    const rl = await real.find({
+                        idproj: v.IDPROYEK
+                    })
+                    const st = await proyek.stepper({
+                        id:''+v.IDPROYEK
+                    })
+                    let o = {};
+                    if (st.length !== 0) {
+                      
+                        let obj = st[0];
+                        Object.keys(obj).forEach((x) => o[x] = !!obj[x]);
+                       
+                    } 
+            
+                return {...v,charter:cr,plan:pl,real:rl,stepper:o}
+                })
+                   
+            
+                
+                return Promise.all(batch).then(async(rest)=>{
+                    const final = {}
+                    final.otoritas = rows.otoritas
+                    final.list = rest
+                    res.status(200).json(final)
+                }).catch((e)=>{
+                    console.dir(e)
+                })
+        }else{
+            if (rows.length !== 0) {
+                res.status(200).json(rows);
+            } else {
+                res.status(200).json({});
+            }
         }
     } catch (err) {
         console.error(err)
         next(err)
     }
+
 })
 
 

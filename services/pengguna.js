@@ -22,36 +22,100 @@ async function useremail(params){
     return result.rows;
 }
 
-async function findPenggunaProyek(params){
-    const otor = await findPenggunaOtoritas(params);
-    let query =`select I_ITPM_PROJ as idproyek,
-    N_ITPM_PROJ as namaproyek,
-    E_ITPM_PROJ as ketproyek,
-    C_ITPM_ACTV as kodeaktif,
-    N_ITPM_PROJURI as namauri,
-    C_ITPM_PROJSTAT as statusproyek
+async function summaryProyek(params){
+    const paramotor = {}
+    paramotor.nik = params.nik
+    const otor = await findPenggunaOtoritas(paramotor);
+    
+    let query=`SELECT SUM(total) as total,sum(baru) as baru , sum(berjalan) as berjalan, sum(pending) as pending, sum(selesai) as selesai from (
+        select count(*) as total,0 as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, count(*) as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU' 
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, 0 as baru, count(*) as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN'
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, 0 as baru, 0 as berjalan, count(*) as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
+        group by i_emp_req,i_emp_pm
+        union all
+        
+        select 0 as total, 0 as baru, 0 as berjalan, 0 as pending, count(*) as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
+        group by i_emp_req,i_emp_pm
+        )`
 
-    from dbadmit.tmitpmproj
+    console.dir(otor)
+    const paramq = {}
+
+    const mapotor = otor.map(x=>x.KODEAUTH)
+    const checkotor = ["PMO","QA","BOD"]
+    if(!checkotor.some(val => mapotor.includes(val))){
+        paramq.nik = params.nik
+        
+        query+=`where :nik in (i_emp_req,i_emp_pm)`;
+        }
+    
+
+
+    const res = await database.exec(query,paramq)
+    return res.rows
+}
+
+async function findPenggunaProyek(params){
+    const paramotor = {}
+    paramotor.nik = params.nik
+    const otor = await findPenggunaOtoritas(paramotor);
+    let query =`select a.I_ITPM_PROJ as idproyek,
+    b.I_ITPM_SCNBR as nolayanan,
+    a.N_ITPM_PROJ as namaproyek,
+    a.E_ITPM_PROJ as ketproyek,
+    a.C_ITPM_ACTV as kodeaktif,
+    a.N_ITPM_PROJURI as namauri,
+    a.C_ITPM_PROJSTAT as statusproyek
+
+    from dbadmit.tmitpmproj a, DBADMIT.TMITPMSC b
+    where a.I_ITPM_SC = b.I_ITPM_SC
     `;
     const param ={}
-    if(!otor.find(x=>x.KODEAUTH=='PMO')){
+    //param.status = params.status
+    const mapotor = otor.map(x=>x.KODEAUTH)
+    const checkotor = ["PMO","QA","BOD"]
+
+  
+    // if(otor.find(x=>x.KODEAUTH=="BPO") || otor.find(x=>x.KODEAUTH=="PM")){
+    if(!checkotor.some(val => mapotor.includes(val))){
     param.nik = params.nik
 
-    query+=`\n  where :nik in (i_emp_req,i_emp_pm)`;
+    query+=` and :nik in (a.i_emp_req,a.i_emp_pm)`;
     }
-    query+=`order by d_entry desc`;
+    //console.dir(params.status)
+    if(params.status != 'ALL' ){
+      param.status = params.status
+    query += ` and  a.C_ITPM_PROJSTAT = :status`;
+    }
+    query+=` order by a.d_entry desc`;
+
+    
+    console.dir(param.status)
+
     let result = await database.exec(query,param)
     let list = {"list":result.rows}
     
-    if(otor.find(x=>x.KODEAUTH=='PMO')){
-        const status = {"PMO":true};
-       list.otoritas = status
-    return list
-    }else{
-        const status = {"PMO":false};
-        list.otoritas = status
+  
+
+
+
+    const checks = checkotor.reduce((obj, val) => ({[val]: mapotor.includes(val), ...obj}), {})
+    
+    
+        list.otoritas = checks
+
         return list
-    }
+    
     
 }
 
@@ -122,5 +186,6 @@ module.exports.find = find
 module.exports.findPenggunaProyek = findPenggunaProyek
 module.exports.findPenggunaOtoritas = findPenggunaOtoritas
 module.exports.useremail = useremail
+module.exports.summaryProyek = summaryProyek
 
 // module.exports.save = save
