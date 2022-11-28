@@ -209,6 +209,7 @@ router.post('/tambah', async (req, res, next) => {
         await conn.close()
         
     } catch (err) {
+        console.dir(err);
         const { errorNum } = err;
         const message = await map.map(errorNum);
         res.status(500).json({ "code": errorNum, "message": message });
