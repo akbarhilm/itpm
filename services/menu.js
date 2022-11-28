@@ -19,7 +19,12 @@ async function findMenuProyekByPengguna(params){
     let query=""
     console.dir(otor)
     const param ={}
-    if(!otor.find(x=>x.KODEAUTH=='PMO')){
+    const mapotor = otor.map(x=>x.KODEAUTH)
+    const checkotor = ["PMO","QA","BOD"]
+
+  
+    // if(otor.find(x=>x.KODEAUTH=="BPO") || otor.find(x=>x.KODEAUTH=="PM")){
+    if(!checkotor.some(val => mapotor.includes(val))){
         console.dir(params.nik)
         console.dir(params.id)
         param.nik = params.nik
@@ -38,7 +43,7 @@ async function findMenuProyekByPengguna(params){
         query +=`select i_itpm_menu as idmenu,n_itpm_menu as namaMenu,n_itpm_menuuri as namaUri,e_itpm_menu as ketMenu,
         c_itpm_menusdbar as kodeSidebar,i_itpm_menusort as idSort
                 from DBADMIT.TRITPMMENU where i_itpm_menu in (
-                select i_itpm_menu from dbadmit.tritpmmenuauth a, dbadmit.tritpmauth b  where a.i_itpm_auth = b.i_itpm_auth and b.c_itpm_auth='PMO')`
+                select i_itpm_menu from dbadmit.tritpmmenuauth a, dbadmit.tritpmauth b  where a.i_itpm_auth = b.i_itpm_auth)`
                 }
     
     const result = await database.exec(query,param)

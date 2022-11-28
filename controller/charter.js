@@ -84,7 +84,7 @@ router.post('/charter/tambah', async (req, res, next) => {
             el.idcharter = respar.idcharter;
             if (i == array.length - 1) {
                 const res = await charter.addChild(el, [], conn);
-                const updatestatus = await proj.updateStatus({ idproj: idproj }, {
+                const updatestatus = await proj.updateStatus({ idproj: idproj, status:"BERJALAN" }, {
                     autoCommit: true
                 }, conn);
                 //resdetail.push(res)

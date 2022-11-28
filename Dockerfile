@@ -1,4 +1,4 @@
-FROM 10.1.94.254:8082/custom/pm2-oracleclient
+FROM repository.indonesian-aerospace.com:8082/custom/pm2-oracleclient
 
 # COPY . itpm-app/
 # WORKDIR /itpm-app

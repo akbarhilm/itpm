@@ -209,10 +209,54 @@ router.post('/tambah', async (req, res, next) => {
         await conn.close()
         
     } catch (err) {
+        console.dir(err);
         const { errorNum } = err;
         const message = await map.map(errorNum);
         res.status(500).json({ "code": errorNum, "message": message });
         conn.close()
+        next(err);
+    }
+});
+
+router.put('/ubahstatus', async (req, res, next) => {
+    const conn = await oracle.getConnection();
+    try {
+        const param = {} 
+        param.idproj = req.body.idproj
+        param.ket = req.body.ket
+        param.status = req.body.status
+        const updatestatus = await proyek.updateStatus(param, {
+            autoCommit: true
+        }, conn);
+        
+       if(updatestatus == 1){
+            res.status(200).json({ "code": 200, "message": "berhasil Ubah" })
+        }
+          
+        await conn.close();
+    } catch (err) {
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        conn.close();
+        next(err);
+    }
+});
+
+router.get('/searchbynik', async (req, res, next) => {
+
+    const param = req.body.nik
+    try {
+
+        const rows = await proyek.proyekByNik({ nik: param });
+        if (rows.length !== 0) {
+           
+            res.status(200).json(rows);
+        } else {
+            res.status(200).json({});
+        }
+    } catch (err) {
+        console.error(err);
         next(err);
     }
 });
