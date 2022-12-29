@@ -9,6 +9,7 @@ const url = require('url');
 const map = require('../util/errorHandling');
 const oracle = require("oracledb");
 const smail = require('../services/email');
+const axios = require('axios')
 
 
 router.get('/detail/:id', async (req, res, next) => {
@@ -163,51 +164,51 @@ router.post('/tambah', async (req, res, next) => {
         paramuserauth.nikpm = req.body.nikpm;
         paramuserauth.nikreq = req.body.nikreq;
         //================end=============//
-        
-       //======param email==========//
-       const mailpm = {}
-       mailpm.email = pm.data[0].email.split('@')[0]
-       mailpm.proyek = req.body.namaproj
-       mailpm.role = "PM"
-       
-       const mailbpo = {}
-       mailbpo.email = bpo.data[0].email.split('@')[0]
-       mailbpo.proyek = req.body.namaproj
-       mailbpo.role = "BPO"
-       const cc = []
-       const to = [mailpm,mailbpo]
 
-       const parammail = {}
-       parammail.cc = cc
-       parammail.code = "addproyek"
-       parammail.to = to
-       //============end================================//
+        //======param email==========//
+        const mailpm = {}
+        mailpm.email = pm.data[0].email.split('@')[0]
+        mailpm.proyek = req.body.namaproj
+        mailpm.role = "PM"
 
-        const rows = await proyek.add(paramsproyek,{},conn);
-        
+        const mailbpo = {}
+        mailbpo.email = bpo.data[0].email.split('@')[0]
+        mailbpo.proyek = req.body.namaproj
+        mailbpo.role = "BPO"
+        const cc = []
+        const to = [mailpm, mailbpo]
 
-      
-        const resuser = await proyek.addUser(paramuser,{},conn);
+        const parammail = {}
+        parammail.cc = cc
+        parammail.code = "addproyek"
+        parammail.to = to
+        //============end================================//
 
-        const resuserauth = await proyek.addUserAuth(paramuserauth,{autoCommit:true},conn)
+        const rows = await proyek.add(paramsproyek, {}, conn);
+
+
+
+        const resuser = await proyek.addUser(paramuser, {}, conn);
+
+        const resuserauth = await proyek.addUserAuth(paramuserauth, { autoCommit: true }, conn)
         //console.dir(parammail)
-       // console.dir("testst")
-       //new Promise()
-       
-        
+        // console.dir("testst")
+        //new Promise()
+
+
         const mail = await smail.mail(parammail)
         console.dir(mail)
-                 if(mail && mail.status == 200){
-                    res.status(200).json(rows);
-                 }else{
-                     console.dir("else 1")
-                     const delt = await proyek.delproyek({idproj:rows.idproj})
-                    res.status(500).json({"code":"500","message":"Gagal Membuat Proyek"});
-                 }
-        
-       //console.dir(mail)
+        if (mail && mail.status == 200) {
+            res.status(200).json(rows);
+        } else {
+            console.dir("else 1")
+            const delt = await proyek.delproyek({ idproj: rows.idproj })
+            res.status(500).json({ "code": "500", "message": "Gagal Membuat Proyek" });
+        }
+
+        //console.dir(mail)
         await conn.close()
-        
+
     } catch (err) {
         console.dir(err);
         const { errorNum } = err;
@@ -221,18 +222,52 @@ router.post('/tambah', async (req, res, next) => {
 router.put('/ubahstatus', async (req, res, next) => {
     const conn = await oracle.getConnection();
     try {
-        const param = {} 
+        // get token for call api info
+        const token = req.headers.authorization.split(' ')[1]
+        // get id layanan
+        const datapro = await proyek.find({ id: req.body.idproj.toString() })
+        const idlayanan = datapro[0].IDLAYANAN
+        const statusBeforeUpdate = datapro[0].KODESTATUS
+
+        const param = {}
         param.idproj = req.body.idproj
         param.ket = req.body.ket
         param.status = req.body.status
         const updatestatus = await proyek.updateStatus(param, {
             autoCommit: true
         }, conn);
-        
-       if(updatestatus == 1){
-            res.status(200).json({ "code": 200, "message": "berhasil Ubah" })
+
+
+        const postData = { kode_status: "FBP", catatan: "Selesai dengan Keterangan : " + param.ket }
+
+        if (updatestatus == 1) {
+            if (param.status === "SELESAI") {
+                axios
+                    .post(process.env.API_INFO + '/hit/aplikasi/ticket', postData,
+                        {
+                            params: { "idpm": idlayanan },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'token': token
+                            }
+                        })
+                    .then(async rest => {
+                        console.dir(rest.data)
+                        res.status(200).json({ "code": 200, "message": "berhasil Ubah" })
+                    })
+                    .catch(async (error) => {
+                        console.error(error)
+                        param.status = statusBeforeUpdate
+                        param.ket = "gagal ubah status"
+                        const fail = await proyek.updateStatus(param, {
+                            autoCommit: true
+                        }, conn);
+                        res.status(500).json({ "code": 500, "message": "Tidak berhasil ubah" })
+                    })
+
+            }
+            else res.status(200).json({ "code": 200, "message": "berhasil Ubah" })
         }
-          
         await conn.close();
     } catch (err) {
         const { errorNum } = err;
@@ -250,7 +285,6 @@ router.get('/searchbynik', async (req, res, next) => {
 
         const rows = await proyek.proyekByNik({ nik: param });
         if (rows.length !== 0) {
-           
             res.status(200).json(rows);
         } else {
             res.status(200).json({});
