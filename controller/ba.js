@@ -84,9 +84,7 @@ router.post('/ba/approve', async (req, res, next) => {
 
                         console.dir(rest.data)
                         res.status(200).json({ "code": 200, "message": "berhasil Approve" })
-                         const  updatestatus = await proj.updateStatus({ idproj: idproj, status:"SELESAI" }, {
-                            autoCommit: true
-                        });
+                         const  updatestatus = await proj.updateStatusBa({ idproj: idproj, status:"SELESAI" });
                         //return res.data
                     })
                     .catch(async (error) => {
