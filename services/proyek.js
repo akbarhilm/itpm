@@ -196,6 +196,18 @@ async function updateStatus(params,commit,conn){
     return result.rowsAffected
 }
 
+async function updateStatusBa(params,commit){
+    let query=`update dbadmit.tmitpmproj set c_itpm_projstat = :status, d_itpm_projstatchng = sysdate
+    where i_itpm_proj = :idproj`
+
+    const param={}
+    param.idproj = params.idproj
+    param.status = params.status
+
+    const result = await database.exec(query,param,commit)
+    return result.rowsAffected
+}
+
 async function delproyek(param){
     let query =`delete dbadmit.tmitpmproj where i_itpm_proj = :idproj`
     const result = await database.exec(query,param)
@@ -239,3 +251,4 @@ module.exports.addUser = addUser
 module.exports.addUserAuth = addUserAuth
 module.exports.addNumber = addNumber
 module.exports.updateStatus = updateStatus
+module.exports.updateStatusBa = updateStatusBa
