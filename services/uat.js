@@ -199,7 +199,7 @@ async function failApproveqa(params){
     where i_itpm_uat = :iduat`
 
     const param ={}
-    param.idubah = params.idubah
+    //param.idubah = params.idubah
     param.iduat = params.iduat
 
     const result  = await database.exec(query,param)
