@@ -153,9 +153,9 @@ router.post('/tambah', async (req, res, next) => {
         const bpo = await getinfonik(req.body.nikreq);
         paramuser.nikpm = req.body.nikpm;
         paramuser.identry = req.user.data.nik;
-        paramuser.emailpm = pm.data[0].email;
+        paramuser.emailpm = pm.data[0].email.split('@')[0];
         paramuser.nikreq = req.body.nikreq;
-        paramuser.emailreq = bpo.data[0].email;
+        paramuser.emailreq = bpo.data[0].email.split('@')[0];
 
         //==================end==============//
 
