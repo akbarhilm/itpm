@@ -12,11 +12,17 @@ let query=`select I_ITPM_SC as idlayanan, I_ITPM_SCNBR as nolayanan ,I_EMP_REQ a
     I_EMP_PM as nikpm
     from   DBADMIT.TMITPMSC 
     `
-    if(params){
+    const param = {}
+    if (params.id) {
+        param.id = params.id
+        
         query+=`where I_ITPM_SC = :id`
     }
 
-    const result = await database.exec(query,params)
+      
+    
+
+    const result = await database.exec(query,param)
     return result.rows;
 }
 

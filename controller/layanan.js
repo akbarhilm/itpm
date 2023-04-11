@@ -3,10 +3,10 @@ const router = express.Router();
 const layanan = require('../services/layanan');
 const map = require('../util/errorHandling')
 
-router.get('/layanan', async (req, res, next) => {
+router.get('/layanan/', async (req, res, next) => {
     try {
        
-        const rows = await layanan.find();
+        const rows = await layanan.find({id:req.query.id});
         if (rows.length !== 0) {
             res.status(200).json(rows);
         } else {
