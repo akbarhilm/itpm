@@ -309,7 +309,8 @@ async function summaryByYear(){
 }
 
 async function summaryByDev(){
-    let query = `SELECT i_emp_actyassign as nik, sum(baru) as baru, sum(berjalan) as berjalan, sum(pending) as pending, sum(selesai) as selesai from (
+    let query = `select nik, baru, berjalan,pending,selesai, (baru+berjalan+pending+selesai) as total from (
+    SELECT i_emp_actyassign as nik, sum(baru) as baru, sum(berjalan) as berjalan, sum(pending) as pending, sum(selesai) as selesai from (
         select i_emp_actyassign, COUNT(a.C_ITPM_PROJSTAT) as baru, 0 as berjalan, 0 as pending, 0 as selesai from dbadmit.tmitpmproj a, dbadmit.tmitpmplanreal b  where C_ITPM_PROJSTAT = 'BARU' and  a.i_itpm_proj = b.i_itpm_proj and C_ITPM_PLANREAL = 'REALISASI' and i_itpm_acty = 4
         group by i_emp_actyassign
         union all
@@ -321,7 +322,7 @@ async function summaryByDev(){
         union all
         select i_emp_actyassign, 0 as baru, 0 as berjalan, 0 as pending, COUNT(a.C_ITPM_PROJSTAT) as selesai from dbadmit.tmitpmproj a, dbadmit.tmitpmplanreal b  where C_ITPM_PROJSTAT = 'SELESAI' and  a.i_itpm_proj = b.i_itpm_proj and C_ITPM_PLANREAL = 'REALISASI' and i_itpm_acty = 4
         group by i_emp_actyassign)
-        group by i_emp_actyassign`
+        group by i_emp_actyassign)`
     const result = await database.exec(query,{})
     return result.rows
 }
