@@ -20,7 +20,7 @@ async function findMenuProyekByPengguna(params){
     console.dir(otor)
     const param ={}
     const mapotor = otor.map(x=>x.KODEAUTH)
-    const checkotor = ["PMO","QA","BOD"]
+    const checkotor = ["PMO","QA","BOD","DBA","SYSADMIN","PROGRAMMER","ANALYST"]
 
   
     // if(otor.find(x=>x.KODEAUTH=="BPO") || otor.find(x=>x.KODEAUTH=="PM")){
@@ -36,14 +36,16 @@ async function findMenuProyekByPengguna(params){
                 select  case when i_emp_req = :nik then 'BPO'
                     when i_emp_pm = :nik then 'PM'
                     end as role
-                from DBADMIT.TMITPMPROJ where to_char(i_itpm_proj) = :id  or n_itpm_projuri = :id))`
+                from DBADMIT.TMITPMPROJ where to_char(i_itpm_proj) = :id  or n_itpm_projuri = :id))
+                order by 6`
                 }
     else{
         
         query +=`select i_itpm_menu as idmenu,n_itpm_menu as namaMenu,n_itpm_menuuri as namaUri,e_itpm_menu as ketMenu,
         c_itpm_menusdbar as kodeSidebar,i_itpm_menusort as idSort
                 from DBADMIT.TRITPMMENU where i_itpm_menu in (
-                select i_itpm_menu from dbadmit.tritpmmenuauth a, dbadmit.tritpmauth b  where a.i_itpm_auth = b.i_itpm_auth)`
+                select i_itpm_menu from dbadmit.tritpmmenuauth a, dbadmit.tritpmauth b  where a.i_itpm_auth = b.i_itpm_auth)
+                order by 6`
                 }
     
     const result = await database.exec(query,param)
