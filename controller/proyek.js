@@ -75,52 +75,70 @@ router.get('/stepper/:id', async (req, res, next) => {
     }
 });
 
-function getinfonik(params) {
-    return new Promise(async (resolve, reject) => {
+// function getinfonik(params) {
+//     return new Promise(async (resolve, reject) => {
 
-        let rawData = '';
-        //const options = new URL(`https://helpdesk-api.indonesian-aerospace.com/general/employee?nik=${params}`);
-        const options = new URL(process.env.NIK_INFO + `?nik=` + params);
-        await http.get(options, (res) => {
-            const { statusCode } = res;
-            const contentType = res.headers['content-type'];
+//         let rawData = '';
+//         //const options = new URL(`https://helpdesk-api.indonesian-aerospace.com/general/employee?nik=${params}`);
+//         const options = new URL(process.env.NIK_INFO + `?nik=` + params);
+//         await http.get(options, (res) => {
+//             const { statusCode } = res;
+//             const contentType = res.headers['content-type'];
 
-            let error;
-            // Any 2xx status code signals a successful response but
-            // here we're only checking for 200.
-            if (statusCode !== 200) {
-                error = new Error('Request Failed.\n' +
-                    `Status Code: ${statusCode}`);
-            } else if (!/^application\/json/.test(contentType)) {
-                error = new Error('Invalid content-type.\n' +
-                    `Expected application/json but received ${contentType}`);
-            }
-            if (error) {
-                console.error(error.message);
-                // Consume response data to free up memory
-                res.resume();
-                return;
-            }
+//             let error;
+//             // Any 2xx status code signals a successful response but
+//             // here we're only checking for 200.
+//             if (statusCode !== 200) {
+//                 error = new Error('Request Failed.\n' +
+//                     `Status Code: ${statusCode}`);
+//             } else if (!/^application\/json/.test(contentType)) {
+//                 error = new Error('Invalid content-type.\n' +
+//                     `Expected application/json but received ${contentType}`);
+//             }
+//             if (error) {
+//                 console.error(error.message);
+//                 // Consume response data to free up memory
+//                 res.resume();
+//                 return;
+//             }
 
-            res.setEncoding('utf8');
+//             res.setEncoding('utf8');
 
-            res.on('data', (chunk) => { rawData += chunk; });
-            res.on('end', () => {
-                try {
-                    const parsedData = JSON.parse(rawData);
-                    // console.log(parsedData);
-                    resolve(parsedData);
-                } catch (e) {
-                    reject(e);
-                    console.error(e.message);
-                }
-            });
-        }).on('error', (e) => {
-            console.error(`Got error: ${e.message}`);
-        });
+//             res.on('data', (chunk) => { rawData += chunk; });
+//             res.on('end', () => {
+//                 try {
+//                     const parsedData = JSON.parse(rawData);
+//                     // console.log(parsedData);
+//                     resolve(parsedData);
+//                 } catch (e) {
+//                     reject(e);
+//                     console.error(e.message);
+//                 }
+//             });
+//         }).on('error', (e) => {
+//             console.error(`Got error: ${e.message}`);
+//         });
 
 
-    });
+//     });
+// }
+
+async function getinfonik(param) {
+    let options
+    let data
+   
+        options = process.env.NIK_INFO + `?nik=`+ param
+   
+   await axios.get(options).then((res)=>
+    {
+       //console.dir(res.data)
+       data = res.data
+       return data
+      })
+
+      console.dir(data)
+    return data
+
 }
 
 
@@ -286,6 +304,29 @@ router.get('/searchbynik', async (req, res, next) => {
         const rows = await proyek.proyekByNik({ nik: param });
         if (rows.length !== 0) {
             res.status(200).json(rows);
+        } else {
+            res.status(200).json({});
+        }
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+});
+
+router.get('/summaryby', async (req, res, next) => {
+    try {
+        const rest = {}
+        const rowspm = await proyek.summaryByPm();
+        rest.pm = rowspm || null
+        const rowsdev = await proyek.summaryByDev();
+        rest.dev = rowsdev || null
+        const rowscat = await proyek.summaryByKategori();
+        rest.cat = rowscat || null
+        const rowsyr = await proyek.summaryByYear();
+        rest.year = rowsyr || null
+
+        if (rowspm.length !== 0) {
+            res.status(200).json(rest);
         } else {
             res.status(200).json({});
         }

@@ -48,6 +48,27 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
         const pc = {}
         param.nik = req.user.data.nik
         param.status = req.query.status.toString()
+       
+        if(req.query.non === 'true'){
+            param.non = 'NON_SAP'
+            
+        }else{
+           
+            param.non = ''
+        }
+        if(req.query.sap === 'true'){
+            
+            param.sap = 'SAP'
+        }else{
+           
+            param.sap = ''
+        }
+        if(req.query.sap === 'true' || req.query.non === 'true')
+        param.d = true 
+        else
+        param.d =  false
+        
+        
         let rows
         if (req.query.nik) {
             rows = await proyek.proyekByNik({ nik: req.query.nik })
@@ -207,7 +228,7 @@ async function getinfonik(param) {
        return data
       })
 
-      console.dir(data)
+      
     return data
 
 }
