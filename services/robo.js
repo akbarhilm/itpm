@@ -186,8 +186,8 @@ async function findRoboAct(params) {
     e_itpm_roboact as ketact,
     n_tanggungjawab as namatj,
     n_pihakterlibat as namapt,
-    to_char(d_itpm_actystart,'dd/mm/ yyyy') as tglmulai,
-    to_char(d_itpm_actyfinish,'dd/mm/ yyyy') as tglselesai,
+    to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai,
+    to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
     c_itpm_actv as kodeaktif
     from dbadmit.TMITPMROBOACT 
     where i_itpm_idrobo = :idrobo`
