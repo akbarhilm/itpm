@@ -156,16 +156,19 @@ router.post('/robo/tambah', async (req, res, next) => {
         let countb = 1
         let resmaster
         if(req.body.LISTDETAIL.EDIT){
-            resmaster = await robo.updateRoboMaster(parammaster, { autoCommit: false }, conn)
-            resmaster.idrobo = req.body.IDROBO
-            await robo.deleteResp({idrobo:resmaster.idrobo})
-            await robo.deleteAct({idrobo:resmaster.idrobo})
-            await robo.deleteBO({idrobo:resmaster.idrobo})
+            resmaster = await robo.updateRoboMaster(parammaster, { autoCommit: true }, conn)
+            
+            console.dir(resmaster)
+            await robo.deleteResp({idproj:parammaster.idproj})
+            await robo.deleteAct({idproj:parammaster.idproj})
+            await robo.deleteBO({idproj:parammaster.idproj})
             
         }else{
             resmaster = await robo.addRoboMaster(parammaster, { autoCommit: false }, conn)
         }
-    const pr = Promise.all(paramresp.map(async (el, i, array) => {
+        console.dir("param master")
+        console.dir(resmaster)
+    const pr = await Promise.all(paramresp.map(async (el, i, array) => {
             el.idrobo = resmaster.idrobo;
             el.identry = req.user.data.nik;
             if(i>0){
@@ -189,7 +192,7 @@ router.post('/robo/tambah', async (req, res, next) => {
            
                
            const res =   await robo.addRoboResp(el, { autoCommit: true }, conn);
-            console.dir(res)
+            
           
         }).concat(paramact.map(async (el, i, array) => {
             el.idrobo = resmaster.idrobo;
@@ -221,9 +224,9 @@ router.post('/robo/tambah', async (req, res, next) => {
             }
 
             
-                 await robo.addBOPlan(el, { autoCommit: true }, conn);
+              const res =    await robo.addBOPlan(el, { autoCommit: true }, conn);
            
-            
+              
         })
         )).then(async (ress) => {
             console.dir(ress)
@@ -237,7 +240,7 @@ router.post('/robo/tambah', async (req, res, next) => {
             const val = await pr
            
             res.status(200).json(val)
-            conn.close()
+          await  conn.close()
        
 
     }
@@ -247,15 +250,15 @@ router.post('/robo/tambah', async (req, res, next) => {
         res.status(500).json({ "code": errorNum, "message": message });
         next(err)
 
-       const rb = await robo.findRoboMaster({idproj:req.body.IDPROJ.toString()})
-       const idrobo = rb[0].IDROBO
        if(!req.body.LISTDETAIL.EDIT){
-       await robo.deleteMaster({idrobo:idrobo})
-       await robo.deleteResp({idrobo:idrobo})
-       await robo.deleteAct({idrobo:idrobo})
-       await robo.deleteBO({idrobo:idrobo})
+       await robo.deleteMaster({idproj:req.body.IDPROJ.toString()})
+       await robo.deleteResp({idproj:req.body.IDPROJ.toString()})
+       await robo.deleteAct({idproj:req.body.IDPROJ.toString()})
+       await robo.deleteBO({idproj:req.body.IDPROJ.toString()})
+       }else{
+        await conn.rollback();
        }
-        conn.close()
+        await conn.close()
     }
 
 })
