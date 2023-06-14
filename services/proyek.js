@@ -173,10 +173,11 @@ async function addUserAuth(params,commit,conn){
 
 async function stepper(params,commit,conn){
 
-    let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,c.i_itpm_uatnbr as nouat, to_number(a.c_itpm_baapprv) as approveba, to_number(b.c_itpm_apprv) as approvecharter
+    let query = `SELECT a.I_ITPM_RISKNBR as norisk, a.I_ITPM_PLANNBR as noplan, a.I_ITPM_RESRCNBR as nores,a.I_ITPM_REALNBR as noreal,a.I_ITPM_BANBR as noba,a.I_ITPM_UREQNBR as noureq,b.I_ITPM_CHARTERNBR as nocharter,d.i_itpm_robonbr as norobo,c.i_itpm_uatnbr as nouat, to_number(a.c_itpm_baapprv) as approveba, to_number(b.c_itpm_apprv) as approvecharter
     from dbadmit.tmitpmproj a
     full outer join DBADMIT.TMITPMCHARTER b on a.i_itpm_proj = b.i_itpm_proj
     full outer join DBADMIT.TMITPMUAT c on c.i_itpm_proj = b.i_itpm_proj
+    full outer join DBADMIT.TMITPMROBO d on d.i_itpm_proj = b.i_itpm_proj
     where to_char(a.i_itpm_proj) = :id or a.n_itpm_projuri =:id`
 
     const result = await database.exec(query,params)
@@ -216,6 +217,7 @@ async function delproyek(param){
 
 async function proyekByNik(param){
     let query = `select a.I_ITPM_PROJ as idproyek,
+    a.C_ITPM_APPLSTAT as jenisproj,
     b.I_ITPM_SCNBR as nolayanan,
     a.N_ITPM_PROJ as namaproyek,
     a.E_ITPM_PROJ as ketproyek,
@@ -240,7 +242,96 @@ async function proyekByNik(param){
         return list
 }
 
+async function summaryByPm(){
+    let query = `
+            select nikpm, baru, berjalan,pending,selesai, (baru+berjalan+pending+selesai) as total from (
+            select nikpm, nvl(sum(baru),0) as baru, nvl(sum(berjalan),0) as berjalan, nvl(sum(pending),0) as pending, nvl(sum(selesai),0) as selesai from (
+            select i_emp_pm as nikpm, count(C_ITPM_PROJSTAT) as baru , null as berjalan, null as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'BARU'
+            group by i_emp_pm
+            union all
+            select i_emp_pm as nikpm, null as baru , count(C_ITPM_PROJSTAT) as berjalan, null as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'BERJALAN'
+            group by i_emp_pm
+            union all 
+            select i_emp_pm as nikpm, null as baru , null as berjalan, count(C_ITPM_PROJSTAT) as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'PENDING'
+            group by i_emp_pm
+            union all
+            select i_emp_pm as nikpm, null as baru , null as berjalan, null as pending, count(C_ITPM_PROJSTAT) as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'SELESAI'
+            group by i_emp_pm
+            )
+            group by nikpm
+            )`
+    const result = await database.exec(query,{})
+    return result.rows
+    
+}
 
+async function summaryByKategori(){
+    let query=`select kategori, baru, berjalan,pending,selesai, (baru+berjalan+pending+selesai) as total from (
+        select kategori, nvl(sum(baru),0) as baru, nvl(sum(berjalan),0) as berjalan, nvl(sum(pending),0) as pending, nvl(sum(selesai),0) as selesai from (
+        select C_ITPM_APPLSTAT as kategori, count(C_ITPM_PROJSTAT) as baru , null as berjalan, null as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'BARU'
+        group by C_ITPM_APPLSTAT
+        union all
+        select C_ITPM_APPLSTAT as kategori, null as baru , count(C_ITPM_PROJSTAT) as berjalan, null as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'BERJALAN'
+        group by C_ITPM_APPLSTAT
+        union all 
+        select C_ITPM_APPLSTAT as kategori, null as baru , null as berjalan, count(C_ITPM_PROJSTAT) as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'PENDING'
+        group by C_ITPM_APPLSTAT
+        union all
+        select C_ITPM_APPLSTAT as kategori, null as baru , null as berjalan, null as pending, count(C_ITPM_PROJSTAT) as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'SELESAI'
+        group by C_ITPM_APPLSTAT
+        )
+        group by kategori
+        )`
+    const result = await database.exec(query,{})
+    return result.rows
+}
+
+async function summaryByYear(){
+    let query=`select tahun, baru, berjalan,pending,selesai, (baru+berjalan+pending+selesai) as total from (
+        select tahun, nvl(sum(baru),0) as baru, nvl(sum(berjalan),0) as berjalan, nvl(sum(pending),0) as pending, nvl(sum(selesai),0) as selesai from (
+        select to_char(D_ENTRY,'yyyy') as tahun , count(C_ITPM_PROJSTAT) as baru , null as berjalan, null as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'BARU'
+        group by d_entry
+        union all
+        select to_char(D_ENTRY,'yyyy') as tahun , null as baru , count(C_ITPM_PROJSTAT) as berjalan, null as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'BERJALAN'
+        group by d_entry
+        union all 
+        select to_char(D_ENTRY,'yyyy') as tahun , null as baru , null as berjalan, count(C_ITPM_PROJSTAT) as pending, null as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'PENDING'
+        group by d_entry
+        union all
+        select to_char(D_ENTRY,'yyyy') as tahun , null as baru , null as berjalan, null as pending, count(C_ITPM_PROJSTAT) as selesai from DBADMIT.TMITPMPROJ where C_ITPM_PROJSTAT = 'SELESAI'
+        group by d_entry
+        )
+        group by tahun
+        )`
+    const result = await database.exec(query,{})
+    console.dir(result.rows)
+    return result.rows
+    
+}
+
+async function summaryByDev(){
+    let query = `select nik, baru, berjalan,pending,selesai, (baru+berjalan+pending+selesai) as total from (
+    SELECT i_emp_actyassign as nik, sum(baru) as baru, sum(berjalan) as berjalan, sum(pending) as pending, sum(selesai) as selesai from (
+        select i_emp_actyassign, COUNT(a.C_ITPM_PROJSTAT) as baru, 0 as berjalan, 0 as pending, 0 as selesai from dbadmit.tmitpmproj a, dbadmit.tmitpmplanreal b  where C_ITPM_PROJSTAT = 'BARU' and  a.i_itpm_proj = b.i_itpm_proj and C_ITPM_PLANREAL = 'REALISASI' and i_itpm_acty = 4
+        group by i_emp_actyassign
+        union all
+        select i_emp_actyassign, 0 as baru, COUNT(a.C_ITPM_PROJSTAT) as berjalan, 0 as pending, 0 as selesai from dbadmit.tmitpmproj a, dbadmit.tmitpmplanreal b  where C_ITPM_PROJSTAT = 'BERJALAN' and  a.i_itpm_proj = b.i_itpm_proj and C_ITPM_PLANREAL = 'REALISASI' and i_itpm_acty = 4
+        group by i_emp_actyassign
+        union all
+        select i_emp_actyassign, 0 as baru, 0 as berjalan, COUNT(a.C_ITPM_PROJSTAT) as pending, 0 as selesai from dbadmit.tmitpmproj a, dbadmit.tmitpmplanreal b  where C_ITPM_PROJSTAT = 'PENDING' and  a.i_itpm_proj = b.i_itpm_proj and C_ITPM_PLANREAL = 'REALISASI' and i_itpm_acty = 4
+        group by i_emp_actyassign
+        union all
+        select i_emp_actyassign, 0 as baru, 0 as berjalan, 0 as pending, COUNT(a.C_ITPM_PROJSTAT) as selesai from dbadmit.tmitpmproj a, dbadmit.tmitpmplanreal b  where C_ITPM_PROJSTAT = 'SELESAI' and  a.i_itpm_proj = b.i_itpm_proj and C_ITPM_PLANREAL = 'REALISASI' and i_itpm_acty = 4
+        group by i_emp_actyassign)
+        group by i_emp_actyassign)`
+    const result = await database.exec(query,{})
+    return result.rows
+}
+
+module.exports.summaryByDev = summaryByDev
+module.exports.summaryByYear = summaryByYear
+module.exports.summaryByKategori = summaryByKategori
+module.exports.summaryByPm = summaryByPm
 module.exports.proyekByNik = proyekByNik
 module.exports.delproyek = delproyek
 module.exports.find = find

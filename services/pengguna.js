@@ -70,6 +70,7 @@ async function findPenggunaProyek(params){
     paramotor.nik = params.nik
     const otor = await findPenggunaOtoritas(paramotor);
     let query =`select a.I_ITPM_PROJ as idproyek,
+    a.C_ITPM_APPLSTAT as jenisproj,
     b.I_ITPM_SCNBR as nolayanan,
     a.N_ITPM_PROJ as namaproyek,
     a.E_ITPM_PROJ as ketproyek,
@@ -78,13 +79,18 @@ async function findPenggunaProyek(params){
     a.C_ITPM_PROJSTAT as statusproyek
 
     from dbadmit.tmitpmproj a, DBADMIT.TMITPMSC b
-    where a.I_ITPM_SC = b.I_ITPM_SC
+    where a.I_ITPM_SC = b.I_ITPM_SC 
     `;
+    
     const param ={}
     //param.status = params.status
     const mapotor = otor.map(x=>x.KODEAUTH)
     const checkotor = ["PMO","QA","BOD"]
-
+    if(params.d){
+        param.sap = params.sap
+        param.non = params.non
+        query+=`and a.C_ITPM_APPLSTAT in (:sap,:non)`
+    }
   
     // if(otor.find(x=>x.KODEAUTH=="BPO") || otor.find(x=>x.KODEAUTH=="PM")){
     if(!checkotor.some(val => mapotor.includes(val))){
@@ -99,7 +105,8 @@ async function findPenggunaProyek(params){
     }
     query+=` order by a.d_entry desc`;
 
-    
+    console.dir(query)
+    console.dir(param)
     console.dir(param.status)
 
     let result = await database.exec(query,param)

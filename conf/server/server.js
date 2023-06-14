@@ -20,6 +20,7 @@ const rescRoute = require('../../controller/resource')
 const realRoute = require('../../controller/real')
 const uatRoute = require('../../controller/uat')
 const baRoute = require('../../controller/ba')
+const roboRoute = require('../../controller/robo')
 const swaggerRoute = require('../../controller/swagger')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
@@ -113,6 +114,7 @@ function init() {
         app.use('/api/proyek',realRoute)
         app.use('/api/proyek',uatRoute)
         app.use('/api/proyek',baRoute)
+        app.use('/api/proyek',roboRoute)
         
        server =  http.createServer(app).listen(port)
             .on('listening', () => {

@@ -16,7 +16,7 @@ async function find(params) {
   from dbadmit.tmitpmcharter`
 
     if (!Object.keys(params).length == 0) {
-         console.dir(params)
+        
         query += `\n where`
         if (Object.keys(params).find(x => x == 'idproj')) {
             query += `\n I_ITPM_PROJ = :idproj`
@@ -26,7 +26,7 @@ async function find(params) {
             query += `\n I_ITPM_CHARTER = :idcharter`
         }
     }
-    console.dir(query)
+    
     const result = await database.exec(query, params)
     return result.rows;
 }
