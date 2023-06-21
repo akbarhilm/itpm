@@ -21,6 +21,7 @@ const realRoute = require('../../controller/real')
 const uatRoute = require('../../controller/uat')
 const baRoute = require('../../controller/ba')
 const roboRoute = require('../../controller/robo')
+const dashRoute = require('../../controller/dashboard')
 const swaggerRoute = require('../../controller/swagger')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
@@ -73,6 +74,7 @@ function init() {
           app.use(morgan('combined'));  
           app.use(express.json());
           app.use(cookieparsers())
+          app.use('/api/dev/v1',dashRoute)
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
         //test helmet
