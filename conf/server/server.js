@@ -93,12 +93,13 @@ function init() {
         //        getToken: (req)=> req.cookies.token}))//from httpOnly cookie
 
        app.use(function (err, req, res, next) {
-        
+       
         //console.dir(req.cookies.token)
         if (err.name === 'UnauthorizedError') {
           res.status(401).json(["UnAuthorize!"]);
         
       }
+      
       });
         
         app.use('/api/profil', menuRoute)
@@ -117,7 +118,10 @@ function init() {
         app.use('/api/proyek',uatRoute)
         app.use('/api/proyek',baRoute)
         app.use('/api/proyek',roboRoute)
-        
+
+        app.use(function(req,res){
+          res.status(404).send('Not Found');
+      });
        server =  http.createServer(app).listen(port)
             .on('listening', () => {
                 console.log('Starting on localhost:' + port)

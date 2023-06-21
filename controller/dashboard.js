@@ -123,7 +123,11 @@ router.get('/project/:id', async (req, res, next) => {
         .catch(er=>console.error(er))
 
     } catch (err) {
+        const { errorNum } = err;
+        if(errorNum){
         console.error(err);
+        res.status(500).send("Internal Server Error")
+        }
         next(err);
     }
 });
