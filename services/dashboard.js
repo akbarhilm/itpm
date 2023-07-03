@@ -83,7 +83,7 @@ async function realisasi(params) {
 async function summary(){
 
     
-    let query=`SELECT SUM(total) as "proyek total",sum(baru) as "proyek baru" , sum(berjalan) as "proyek_berjalan", sum(pending) as "proyek pending", sum(selesai) as "proyek selesai" from (
+    let query=`SELECT SUM(total) as "proyek_total",sum(baru) as "proyek_baru" , sum(berjalan) as "proyek_berjalan", sum(pending) as "proyek_pending", sum(selesai) as "proyek_selesai" from (
         select count(*) as total,0 as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ
         group by i_emp_req,i_emp_pm
         union all
