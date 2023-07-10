@@ -73,18 +73,28 @@ router.get('/project/summary', async (req, res, next) => {
 router.get('/project/:id', async (req, res, next) => {
     try {
         
-       
+        const datanik = await getinfonik()
         const rows = await dashboard.projectById({ id: req.params.id });
-        const rest = await rows.map(async(v)=>{
+        console.dir(rows[0].bisnis_owner)
+        let restrows = []
+        await rows.forEach(d=>restrows.push({...d,
+            bisnis_owner:datanik.data.find(x=>x.nik===d.bisnis_owner).nama,
+            project_mgr:datanik.data.find(x=>x.nik===d.project_mgr).nama
+        })
+        )
+        
+      
+
+        const rest = await restrows.map(async(v)=>{
             const st = await dashboard.stepper({
                 id: ''+v.id
             })
             const rl = await dashboard.realisasi({
                 id: ''+v.id
             })
-            const datanik = await getinfonik()
-
-            rl.for
+            
+           
+           
             let rlnama = []
             await rl.forEach(d=>rlnama.push({...d,pelaksana:d.pelaksana+" - "+datanik.data.find(x=>x.nik===d.pelaksana).nama}))
             let out = []
@@ -110,11 +120,12 @@ router.get('/project/:id', async (req, res, next) => {
 
             }
 
-            return { ...v, realisasi:out, progress_by_step: o}
+            return { ...v,  realisasi:out, progress_by_step: o}
     })
 
     
     Promise.all(rest).then(async (r) => {
+        
         res.status(200).json({
             "status": 200,
             "message": "Succcessfully get project by ID : "+req.params.id,
