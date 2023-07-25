@@ -75,7 +75,7 @@ router.get('/project/:id', async (req, res, next) => {
         
         const datanik = await getinfonik()
         const rows = await dashboard.projectById({ id: req.params.id });
-        console.dir(rows[0].bisnis_owner)
+       
         let restrows = []
         await rows.forEach(d=>restrows.push({...d,
             bisnis_owner:datanik.data.find(x=>x.nik===d.bisnis_owner).nama,
@@ -93,11 +93,13 @@ router.get('/project/:id', async (req, res, next) => {
                 id: ''+v.id
             })
             
-           
+          
            
             let rlnama = []
-            await rl.forEach(d=>rlnama.push({...d,pelaksana:d.pelaksana+" - "+datanik.data.find(x=>x.nik===d.pelaksana).nama}))
             let out = []
+           if(rl.length!==0)
+           { await rl.forEach(d=>rlnama.push({...d,pelaksana:d.pelaksana+" - "+datanik.data.find(x=>x.nik===d.pelaksana).nama}))
+            
             await rlnama.forEach(function(item) {
                 var existing = out.filter(function(v, i) {
                   return v.kegiatan == item.kegiatan;
@@ -111,7 +113,7 @@ router.get('/project/:id', async (req, res, next) => {
                   out.push(item);
                 }
               });
-
+            }
             let o = {};
             if (st.length !== 0) {
 
