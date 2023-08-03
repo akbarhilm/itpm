@@ -2,7 +2,7 @@ const database = require('../conf/db/db')
 
 async function find(params){
 let query = `select i_itpm_auth as idauth, c_itpm_auth as kodeauth, n_itpm_auth as namaauth,
-e_itpm_auth as ketauth, c_itpm_actv as kodeaktif from tritpmauth`
+e_itpm_auth as ketauth, c_itpm_actv as kodeaktif from dbadmit.tritpmauth`
 const param = {}
     if(params){
         

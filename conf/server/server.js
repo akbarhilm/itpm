@@ -23,6 +23,7 @@ const baRoute = require('../../controller/ba')
 const roboRoute = require('../../controller/robo')
 const dashRoute = require('../../controller/dashboard')
 const swaggerRoute = require('../../controller/swagger')
+const otoritasRoute = require('../../controller/otoritas')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
@@ -101,7 +102,7 @@ function init() {
       }
       
       });
-        
+        app.use('/api/profil',otoritasRoute)
         app.use('/api/profil', menuRoute)
         app.use('/api/profil', penggunaRoute)
         app.use('/api/proyek',kegiatanRoute);
