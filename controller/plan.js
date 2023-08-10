@@ -77,12 +77,13 @@ router.post('/plan/tambah',async(req,res,next)=>{
         paramnoresc.idproj = req.body.idproj
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
-        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai})))
+        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,idrole,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,idrole,progress})))
         
        // const rest = await plan.addPlan(mapdata)
         
         //console.dir(mapdata)
         let reselect ={}
+        console.log(mapdata)
         const batch =  mapdata.map(async (el, i, array) => {
             el.idproj = req.body.idproj
             el.identry = req.user.data.nik
@@ -150,7 +151,7 @@ router.put('/plan/ubah',async(req,res,next)=>{
         paramnoresc.idproj = req.body.idproj
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
-        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai})))
+        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,idrole,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,idrole,progress})))
         
        // const rest = await plan.addPlan(mapdata)
         const del = await plan.delplan({idproj:idproj},{},conn)
