@@ -33,7 +33,7 @@ async function find(params) {
 
 
 async function find2(params){
-    let query=`select idplanreal,idproj, idkegiatan,  kodeplanreal, nikpelaksana, tglmulai, tglselesai,nvl(progress,0) as progress,nvl(idrole,0) as idrole,sum(REALISASI) as REALISASI 
+    let query=`select idplanreal,idproj, idkegiatan,  kodeplanreal, nikpelaksana, tglmulai, tglselesai,sum(REALISASI) as REALISASI 
     from (
         select i_itpm_planreal as idplanreal, 
             i_itpm_proj as idproj, 
@@ -42,14 +42,12 @@ async function find2(params){
             i_emp_actyassign as nikpelaksana, 
             to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
             to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
-            v_itpm_progress as progress,
-            i_itpm_auth as idrole,
             1 as REALISASI
                 from dbadmit.tmitpmplanreal a
                 where i_itpm_proj = :idproj and c_itpm_planreal='PLAN'
                 and  exists ( select *
                 from dbadmit.tmitpmplanreal b
-                where i_itpm_proj = :idproj and c_itpm_planreal='REALISASI' and a.i_ITPM_ACTY = b.i_ITPM_ACTY and v_itpm_progress>0)
+                where i_itpm_proj = :idproj and c_itpm_planreal='REALISASI' and a.i_ITPM_ACTY = b.i_ITPM_ACTY)
      
         union all
 
@@ -60,14 +58,12 @@ async function find2(params){
             i_emp_actyassign as nikpelaksana, 
             to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
             to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
-            v_itpm_progress as progress,
-            i_itpm_auth as idrole,
             0 as REALISASI
                 from dbadmit.tmitpmplanreal
                 where i_itpm_proj = :idproj and c_itpm_planreal='PLAN'
      )
      group by   idplanreal, idproj,  idkegiatan, kodeplanreal, 
-                nikpelaksana, tglmulai, tglselesai,progress,idrole
+                nikpelaksana, tglmulai, tglselesai
     order by 1`
 
     const param = {};
@@ -84,8 +80,6 @@ async function addPlan(params, commit, conn) {
         i_emp_actyassign,
         d_itpm_actystart,
         d_itpm_actyfinish,
-        v_itpm_progress,
-        i_itpm_auth,
         i_entry,
         d_entry)values(
         :idproj, 
@@ -94,8 +88,6 @@ async function addPlan(params, commit, conn) {
         :nik, 
         to_date(:tglmulai,'dd/mm/yyyy'), 
         to_date(:tglselesai,'dd/mm/yyyy'),
-        :progress,
-        :idrole,
         :identry,
          sysdate)`;
 
@@ -106,8 +98,6 @@ async function addPlan(params, commit, conn) {
     param.tglmulai = params.tglmulai;
     param.tglselesai = params.tglselesai;
     param.identry = params.identry;
-    param.bobot = params.bobot
-    param.idrole = params.idrole
 
     //param.idplanreal = { dir: oracledb.BIND_OUT }
     //  console.dir(params)
