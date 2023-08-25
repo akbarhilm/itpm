@@ -77,7 +77,7 @@ router.post('/plan/tambah',async(req,res,next)=>{
         paramnoresc.idproj = req.body.idproj
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
-        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai})))
+        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,progress})))
         
        // const rest = await plan.addPlan(mapdata)
         
@@ -150,7 +150,7 @@ router.put('/plan/ubah',async(req,res,next)=>{
         paramnoresc.idproj = req.body.idproj
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
-        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai})))
+        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,progress})))
         
        // const rest = await plan.addPlan(mapdata)
         const del = await plan.delplan({idproj:idproj},{},conn)
