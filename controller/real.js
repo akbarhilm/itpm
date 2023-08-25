@@ -76,7 +76,7 @@ router.post('/real/tambah',async(req,res,next)=>{
         paramnoresc.idproj = req.body.idproj
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
-        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,idrole,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,idrole,progress})))
+        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai})))
         
        // const rest = await real.addPlan(mapdata)
         

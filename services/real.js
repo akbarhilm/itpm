@@ -44,8 +44,6 @@ async function addReal(params, commit, conn) {
         i_emp_actyassign,
         d_itpm_actystart,
         d_itpm_actyfinish,
-        i_itpm_auth,
-        v_itpm_progress,
         i_entry,
         d_entry)values(
         :idproj, 
@@ -54,8 +52,6 @@ async function addReal(params, commit, conn) {
         :nik, 
         to_date(:tglmulai,'dd/mm/yyyy'), 
         to_date(:tglselesai,'dd/mm/yyyy'),
-        :idrole,
-        :progress,
         :identry,
          sysdate)`;
 
@@ -66,9 +62,7 @@ async function addReal(params, commit, conn) {
     param.tglmulai = params.tglmulai;
     param.tglselesai = params.tglselesai;
     param.identry = params.identry;
-    param.progress = params.progress
-    param.idrole = params.idrole
-console.log(param)
+
     //param.idplanreal = { dir: oracledb.BIND_OUT }
     //  console.dir(params)
     //const result = await database.execmany(query, params) //exec many
