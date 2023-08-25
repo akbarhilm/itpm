@@ -43,7 +43,7 @@ async function find2(params){
             to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
             to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
             v_itpm_progress as progress,
-            i_itpm_auth as idrole,
+            i_itpm_auth as idrole, 
             1 as REALISASI
                 from dbadmit.tmitpmplanreal a
                 where i_itpm_proj = :idproj and c_itpm_planreal='PLAN'

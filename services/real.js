@@ -11,7 +11,7 @@ async function find(params) {
     to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
     to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
     nvl(v_itpm_progress,0) as progress,
-    nvl(i_itpm_auth,0) as idrole
+    nvl(i_itpm_auth,0) as idrole 
     from dbadmit.tmitpmplanreal
     where c_itpm_planreal = 'REALISASI'`;
     const param = {};

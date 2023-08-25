@@ -167,7 +167,7 @@ router.put('/plan/ubah',async(req,res,next)=>{
                 const nr = await proj.addNumber(paramproj,{},conn)
                 const nr2 = await proj.addNumber(paramnoresc,{autoCommit:true},conn)
                
-               
+                
             } else {
                 const res = await plan.addPlan(el, {},conn)
                

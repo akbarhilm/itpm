@@ -146,7 +146,7 @@ router.put('/real/ubah',async(req,res,next)=>{
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
         const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,idrole,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,idrole,progress})))
-        
+         
        // const rest = await real.addPlan(mapdata)
         const del = await real.delreal({idproj:idproj},{},conn)
         //console.dir(mapdata)
