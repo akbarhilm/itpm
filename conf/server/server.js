@@ -21,7 +21,9 @@ const realRoute = require('../../controller/real')
 const uatRoute = require('../../controller/uat')
 const baRoute = require('../../controller/ba')
 const roboRoute = require('../../controller/robo')
+const dashRoute = require('../../controller/dashboard')
 const swaggerRoute = require('../../controller/swagger')
+const otoritasRoute = require('../../controller/otoritas')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
@@ -73,6 +75,7 @@ function init() {
           app.use(morgan('combined'));  
           app.use(express.json());
           app.use(cookieparsers())
+          app.use('/api/dev/v1',dashRoute)
         app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null,options));
         app.use('/',swaggerRoute)
         //test helmet
@@ -91,14 +94,15 @@ function init() {
         //        getToken: (req)=> req.cookies.token}))//from httpOnly cookie
 
        app.use(function (err, req, res, next) {
-        
+       
         //console.dir(req.cookies.token)
         if (err.name === 'UnauthorizedError') {
           res.status(401).json(["UnAuthorize!"]);
         
       }
+      
       });
-        
+        app.use('/api/profil',otoritasRoute)
         app.use('/api/profil', menuRoute)
         app.use('/api/profil', penggunaRoute)
         app.use('/api/proyek',kegiatanRoute);
@@ -115,7 +119,10 @@ function init() {
         app.use('/api/proyek',uatRoute)
         app.use('/api/proyek',baRoute)
         app.use('/api/proyek',roboRoute)
-        
+
+        app.use(function(req,res){
+          res.status(404).send('Not Found');
+      });
        server =  http.createServer(app).listen(port)
             .on('listening', () => {
                 console.log('Starting on localhost:' + port)

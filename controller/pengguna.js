@@ -247,7 +247,7 @@ router.get('/karyawanIT', async (req, res, next) => {
 router.get('/Allkaryawan', async (req, res, next) => {
     try {
         const kar = await getinfonik()
-        console.dir(kar)
+        
         res.status(200).json(kar.data)
     } catch (e) {
         console.error(e)
