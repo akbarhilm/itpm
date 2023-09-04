@@ -6,7 +6,7 @@ async function find(params){
     n_itpm_acty as namakegiatan,
     n_itpm_actytarget as namatarget,
     c_itpm_actv kodeaktif,
-    v_itpm_bobot as nilaibobot
+    v_itpm_bobot1 as nilaibobot
      from dbadmit.tritpmacty`
      const param ={}
      if (Object.keys(params).some(function(k) {return params[k];})) {
