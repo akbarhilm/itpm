@@ -6,8 +6,8 @@ const axios = require('axios').default;
 
 router.get('/project', async (req, res, next) => {
     try {
-
-        const rows = await dashboard.listProyek();
+        const tahun = req.query.tahun
+        const rows = await dashboard.listProyek({tahun:tahun});
         const rest = await rows.map(async(v)=>{
                 const st = await dashboard.stepper({
                     id: ''+v.id
@@ -41,7 +41,7 @@ async function getinfonik() {
     let options
     let data
    
-    options = process.env.NIK_INFO + '?org=%IT%'
+    options = process.env.NIK_INFO 
   
    await axios.get(options).then((res)=>
     {
@@ -57,8 +57,8 @@ async function getinfonik() {
 
 router.get('/project/summary', async (req, res, next) => {
     try {
-        console.dir("masuk")
-        const rest = await dashboard.summary()
+        const tahun = req.query.tahun
+        const rest = await dashboard.summary({tahun:tahun})
         res.status(200).json({
             "status": 200,
             "message": "Succcessfully get project summary",

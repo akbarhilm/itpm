@@ -4,7 +4,7 @@ const oracledb = require('oracledb');
 
 
 
-async function listProyek(){
+async function listProyek(params){
     let query =`select a.I_ITPM_PROJ as "id",
     b.I_ITPM_SCNBR as "no_layanan",
     N_ITPM_PROJ as "nama_proyek",
@@ -14,9 +14,11 @@ async function listProyek(){
     to_char(c.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai"
 
     from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b, DBADMIT.TMITPMCHARTER c
-    where a.i_itpm_sc = b.i_Itpm_sc and a.i_itpm_proj = c.i_itpm_proj`
-
-    const result = await database.exec(query)
+    where a.i_itpm_sc = b.i_Itpm_sc and a.i_itpm_proj = c.i_itpm_proj
+    and substr(to_char(a.d_entry,'dd/mm/yyyy'),7)=:tahun`
+    const param = {}
+    param.tahun = params.tahun
+    const result = await database.exec(query,param)
     console.dir(result)
     return result.rows
 }
@@ -29,7 +31,7 @@ async function stepper(params){
     full outer join DBADMIT.TMITPMCHARTER b on a.i_itpm_proj = b.i_itpm_proj
     full outer join DBADMIT.TMITPMUAT c on c.i_itpm_proj = b.i_itpm_proj
     full outer join DBADMIT.TMITPMROBO d on d.i_itpm_proj = b.i_itpm_proj
-    where to_char(a.i_itpm_proj) = :id or a.n_itpm_projuri =:id`
+    where to_char(a.i_itpm_proj) = :id`
 
     const result = await database.exec(query,params)
     return result.rows
@@ -80,34 +82,39 @@ async function realisasi(params) {
     return result.rows;
 }
 
-async function summary(){
+async function summary(params){
 
     
-    let query=`SELECT SUM(total) as "proyek_total",sum(baru) as "proyek_baru" , sum(berjalan) as "proyek_berjalan", sum(pending) as "proyek_pending", sum(selesai) as "proyek_selesai" from (
-        select count(*) as total,0 as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ
-        group by i_emp_req,i_emp_pm
+    let query=`SELECT SUM(total) as "proyek_total",sum(baru) as "proyek_baru" , sum(berjalan) as "proyek_berjalan", sum(pending) as "proyek_pending", sum(selesai) as "proyek_selesai",tahun from (
+        select count(*) as total,0 as baru, 0 as berjalan, 0 as pending, 0 as selesai,substr(to_char(d_entry,'dd/mm/yyyy'),7) as tahun from DBADMIT.TMITPMPROJ
+       group by d_entry
         union all
         
-        select 0 as total, count(*) as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU' 
-        group by i_emp_req,i_emp_pm
+        select 0 as total, count(*) as baru, 0 as berjalan, 0 as pending, 0 as selesai,substr(to_char(d_entry,'dd/mm/yyyy'),7) as tahun from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU' 
+        group by d_entry
         union all
         
-        select 0 as total, 0 as baru, count(*) as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN'
-        group by i_emp_req,i_emp_pm
+        select 0 as total, 0 as baru, count(*) as berjalan, 0 as pending, 0 as selesai,substr(to_char(d_entry,'dd/mm/yyyy'),7) as tahun from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN'
+        group by d_entry
         union all
         
-        select 0 as total, 0 as baru, 0 as berjalan, count(*) as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
-        group by i_emp_req,i_emp_pm
+        select 0 as total, 0 as baru, 0 as berjalan, count(*) as pending, 0 as selesai,substr(to_char(d_entry,'dd/mm/yyyy'),7) as tahun from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
+       group by d_entry
         union all
         
-        select 0 as total, 0 as baru, 0 as berjalan, 0 as pending, count(*) as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
-        group by i_emp_req,i_emp_pm
-        )`
+        select 0 as total, 0 as baru, 0 as berjalan, 0 as pending, count(*) as selesai,substr(to_char(d_entry,'dd/mm/yyyy'),7) as tahun from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
+       group by d_entry
+        )
+        where tahun = :tahun
+        group by tahun
+   
+       `
 
 
-        console.dir("sum")
+     const param = {}
+     param.tahun = params.tahun
 
-    const res = await database.exec(query)
+    const res = await database.exec(query,param)
     return res.rows
     }
 module.exports.summary = summary
