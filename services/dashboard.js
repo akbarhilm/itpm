@@ -4,27 +4,30 @@ const oracledb = require('oracledb');
 
 
 
-async function listProyek(params){
-    let query =`select a.I_ITPM_PROJ as "id",
-    b.I_ITPM_SCNBR as "no_layanan",
-    N_ITPM_PROJ as "nama_proyek",
-    E_ITPM_PROJ as "keterangan",
-    C_ITPM_PROJSTAT as "status",
-    to_char(c.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
-    to_char(c.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai"
+async function listProyek(params) {
+    let query = `   select "id","no_layanan","nama_proyek","keterangan","status","tanggal_mulai","tanggal_selesai"
+    from(
+    select a.I_ITPM_PROJ as "id",
+b.I_ITPM_SCNBR as "no_layanan",
+N_ITPM_PROJ as "nama_proyek",
+E_ITPM_PROJ as "keterangan",
+C_ITPM_PROJSTAT as "status",
+to_char(z.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
+to_char(z.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai"
 
-    from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b, DBADMIT.TMITPMCHARTER c
-    where a.i_itpm_sc = b.i_Itpm_sc and a.i_itpm_proj = c.i_itpm_proj
-    and substr(to_char(a.d_entry,'dd/mm/yyyy'),7)=:tahun`
+from DBADMIT.TMITPMPROJ a full join  dbadmit.tmitpmcharter z on  a.i_itpm_proj= z.i_itpm_proj, DBADMIT.TMITPMSC b
+where a.i_itpm_sc = b.i_Itpm_sc 
+and substr(to_char(a.d_entry,'dd/mm/yyyy'),7)=:tahun
+)`
     const param = {}
     param.tahun = params.tahun
-    const result = await database.exec(query,param)
+    const result = await database.exec(query, param)
     console.dir(result)
     return result.rows
 }
 
 
-async function stepper(params){
+async function stepper(params) {
 
     let query = `SELECT a.I_ITPM_UREQNBR as "user_req",b.I_ITPM_CHARTERNBR as "charter",a.I_ITPM_PLANNBR as "plan", a.I_ITPM_RISKNBR as "risk",  a.I_ITPM_RESRCNBR as "resources",a.I_ITPM_REALNBR as "realisasi",a.I_ITPM_BANBR as "berita_acara",d.i_itpm_robonbr as "backout",c.i_itpm_uatnbr as "uat"
     from dbadmit.tmitpmproj a
@@ -33,13 +36,13 @@ async function stepper(params){
     full outer join DBADMIT.TMITPMROBO d on d.i_itpm_proj = b.i_itpm_proj
     where to_char(a.i_itpm_proj) = :id`
 
-    const result = await database.exec(query,params)
+    const result = await database.exec(query, params)
     return result.rows
 }
 
 
-async function projectById(params){
-    let query =`select a.I_ITPM_PROJ as "id",
+async function projectById(params) {
+    let query = `select a.I_ITPM_PROJ as "id",
     b.I_ITPM_SCNBR as "no_layanan",
     a.C_ITPM_SC as "type_layanan",
     C_ITPM_APPLSTAT as "jenis_app",
@@ -58,7 +61,7 @@ async function projectById(params){
     console.dir("byid")
     const param = {}
     param.id = params.id
-    const result = await database.exec(query,param)
+    const result = await database.exec(query, param)
     return result.rows
 
 }
@@ -77,15 +80,15 @@ async function realisasi(params) {
 
     const param = {}
     param.idproj = params.id
-    
+
     const result = await database.exec(query, param);
     return result.rows;
 }
 
-async function summary(params){
+async function summary(params) {
 
-    
-    let query=`SELECT SUM(total) as "proyek_total",sum(baru) as "proyek_baru" , sum(berjalan) as "proyek_berjalan", sum(pending) as "proyek_pending", sum(selesai) as "proyek_selesai",tahun from (
+
+    let query = `SELECT SUM(total) as "proyek_total",sum(baru) as "proyek_baru" , sum(berjalan) as "proyek_berjalan", sum(pending) as "proyek_pending", sum(selesai) as "proyek_selesai",tahun from (
         select count(*) as total,0 as baru, 0 as berjalan, 0 as pending, 0 as selesai,substr(to_char(d_entry,'dd/mm/yyyy'),7) as tahun from DBADMIT.TMITPMPROJ
        group by d_entry
         union all
@@ -111,12 +114,12 @@ async function summary(params){
        `
 
 
-     const param = {}
-     param.tahun = params.tahun
+    const param = {}
+    param.tahun = params.tahun
 
-    const res = await database.exec(query,param)
+    const res = await database.exec(query, param)
     return res.rows
-    }
+}
 module.exports.summary = summary
 module.exports.listProyek = listProyek
 module.exports.stepper = stepper
