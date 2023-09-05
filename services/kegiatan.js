@@ -5,8 +5,7 @@ async function find(params){
     let query=` select  i_itpm_acty as idkegiatan,
     n_itpm_acty as namakegiatan,
     n_itpm_actytarget as namatarget,
-    c_itpm_actv kodeaktif,
-    v_itpm_bobot as nilaibobot
+    c_itpm_actv kodeaktif
      from dbadmit.tritpmacty`
      const param ={}
      if (Object.keys(params).some(function(k) {return params[k];})) {
