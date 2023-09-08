@@ -71,7 +71,7 @@ async function addParent(params,commit,conn) {
       :benfnonfin,
       :identry,
       sysdate,
-      0
+      1
   ) returning i_itpm_charter into :idcharter`
 
     const param = {}
