@@ -9,7 +9,8 @@ async function find(params) {
     c_itpm_planreal as kodeplanreal, 
     i_emp_actyassign as nikpelaksana, 
     to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
-    to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai 
+    to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
+    v_itpm_progress as progress
     from dbadmit.tmitpmplanreal
     where c_itpm_planreal = 'PLAN'`;
     const param = {};
@@ -60,7 +61,7 @@ async function find2(params){
             i_emp_actyassign as nikpelaksana, 
             to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
             to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
-            v_itpm_progress as progress,
+            v_itpm_progress as progress, 
            
             0 as REALISASI
                 from dbadmit.tmitpmplanreal
@@ -93,7 +94,7 @@ async function addPlan(params, commit, conn) {
         :nik, 
         to_date(:tglmulai,'dd/mm/yyyy'), 
         to_date(:tglselesai,'dd/mm/yyyy'),
-        :progress,    
+       :progress,
         :identry,
          sysdate)`;
 
@@ -104,7 +105,7 @@ async function addPlan(params, commit, conn) {
     param.tglmulai = params.tglmulai;
     param.tglselesai = params.tglselesai;
     param.identry = params.identry;
-    param.progress = params.progress
+   param.progress = params.progress
 
     //param.idplanreal = { dir: oracledb.BIND_OUT }
     //  console.dir(params)

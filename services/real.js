@@ -65,6 +65,7 @@ async function addReal(params, commit, conn) {
     param.tglselesai = params.tglselesai;
     param.identry = params.identry;
     param.progress = params.progress
+   
 
     //param.idplanreal = { dir: oracledb.BIND_OUT }
     //  console.dir(params)
