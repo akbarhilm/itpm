@@ -42,7 +42,7 @@ async function find2(params){
             i_emp_actyassign as nikpelaksana, 
             to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
             to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
-            v_itpm_progress as progress,
+            v_itpm_progress as progress, 
           
             1 as REALISASI
                 from dbadmit.tmitpmplanreal a

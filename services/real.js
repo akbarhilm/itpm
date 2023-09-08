@@ -10,7 +10,7 @@ async function find(params) {
     i_emp_actyassign as nikpelaksana, 
     to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
     to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
-    nvl(v_itpm_progress,0) as progress
+    nvl(v_itpm_progress,0) as progress 
    
     from dbadmit.tmitpmplanreal
     where c_itpm_planreal = 'REALISASI'`;
