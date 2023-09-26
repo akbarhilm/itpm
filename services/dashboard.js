@@ -120,6 +120,68 @@ async function summary(params) {
     const res = await database.exec(query, param)
     return res.rows
 }
+
+
+async function reportproject(params){
+    let query=`select 
+    a.I_ITPM_PROJ as "id",
+    b.I_ITPM_SCNBR as "no_layanan",
+    N_ITPM_PROJ as "nama_aplikasi",
+    C_ITPM_APPLSTAT as "jenis_app",
+    a.C_ITPM_SC as "jenis_layanan",
+    a.I_EMP_REQ as "nik_BPO",
+    a.I_EMP_PM as "nik_PM"
+   
+
+    from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b where a.I_itpm_sc = b.I_itpm_sc 
+    and :idproj like '%,'||a.I_ITPM_PROJ||',%'`
+    const param = {}
+    param.idproj = params.idproj
+
+    const result = await database.exec(query)
+    return result.rows
+}
+
+async function reportrealisasi(params) {
+
+    let query = `select
+    b.n_itpm_acty as "kegiatan",  
+    i_emp_actyassign as "pelaksana", 
+    to_char(d_itpm_actystart,'dd/mm/yyyy') as "tanggal_mulai", 
+    to_char(d_itpm_actyfinish,'dd/mm/yyyy') as "tanggal_selesai",
+    b.N_ITPM_ACTYTARGET as "target" 
+    from dbadmit.tmitpmplanreal a, dbadmit.tritpmacty b
+    where c_itpm_planreal = 'REALISASI' and
+    I_ITPM_PROJ = :idproj and A.I_ITPM_ACTY = B.I_ITPM_ACTY`;
+
+    const param = {}
+    param.idproj = params.id
+
+    const result = await database.exec(query, param);
+    return result.rows;
+}
+async function reportrencana(params) {
+
+    let query = `select
+    b.n_itpm_acty as "kegiatan",  
+    i_emp_actyassign as "pelaksana", 
+    to_char(d_itpm_actystart,'dd/mm/yyyy') as "tanggal_mulai", 
+    to_char(d_itpm_actyfinish,'dd/mm/yyyy') as "tanggal_selesai",
+    b.N_ITPM_ACTYTARGET as "target"
+    from dbadmit.tmitpmplanreal a, dbadmit.tritpmacty b
+    where c_itpm_planreal = 'PLAN' and
+    I_ITPM_PROJ = :idproj and A.I_ITPM_ACTY = B.I_ITPM_ACTY`;
+
+    const param = {}
+    param.idproj = params.id
+
+    const result = await database.exec(query, param);
+    return result.rows;
+}
+
+module.exports.reportproject = reportproject
+module.exports.reportrealisasi = reportrealisasi
+module.exports.reportrencana = reportrencana
 module.exports.summary = summary
 module.exports.listProyek = listProyek
 module.exports.stepper = stepper
