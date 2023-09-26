@@ -34,7 +34,7 @@ async function find(params) {
 
 
 async function find2(params){
-    let query=`select idplanreal,idproj, idkegiatan,  kodeplanreal, nikpelaksana, tglmulai, tglselesai,sum(REALISASI) as REALISASI 
+    let query=`select idplanreal,idproj, idkegiatan,  kodeplanreal, nikpelaksana, tglmulai, tglselesai,progress,sum(REALISASI) as REALISASI 
     from (
         select i_itpm_planreal as idplanreal, 
             i_itpm_proj as idproj, 
@@ -43,7 +43,7 @@ async function find2(params){
             i_emp_actyassign as nikpelaksana, 
             to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
             to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
-           
+            v_itpm_progress as progress,
           
             1 as REALISASI
                 from dbadmit.tmitpmplanreal a
@@ -61,14 +61,13 @@ async function find2(params){
             i_emp_actyassign as nikpelaksana, 
             to_char(d_itpm_actystart,'dd/mm/yyyy') as tglmulai, 
             to_char(d_itpm_actyfinish,'dd/mm/yyyy') as tglselesai,
-           
-           
+            v_itpm_progress as progress,
             0 as REALISASI
                 from dbadmit.tmitpmplanreal
                 where i_itpm_proj = :idproj and c_itpm_planreal='PLAN'
      )
      group by   idplanreal, idproj,  idkegiatan, kodeplanreal, 
-                nikpelaksana, tglmulai, tglselesai
+                nikpelaksana, tglmulai, tglselesai,progress
     order by 1`
 
     const param = {};
@@ -85,7 +84,7 @@ async function addPlan(params, commit, conn) {
         i_emp_actyassign,
         d_itpm_actystart,
         d_itpm_actyfinish,
-        
+        v_itpm_progress,
         i_entry,
         d_entry)values(
         :idproj, 
@@ -94,7 +93,7 @@ async function addPlan(params, commit, conn) {
         :nik, 
         to_date(:tglmulai,'dd/mm/yyyy'), 
         to_date(:tglselesai,'dd/mm/yyyy'),
-      
+        0,
         :identry,
          sysdate)`;
 
