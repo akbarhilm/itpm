@@ -4,6 +4,7 @@ const uat = require('../services/uat');
 const proj = require('../services/proyek');
 const map = require('../util/errorHandling');
 const smail = require('../services/email');
+const charter = require('../services/charter');
 const alamatemail = require('../services/pengguna');
 const oracle = require("oracledb");
 
@@ -231,6 +232,7 @@ router.put('/uat/approveuser', async (req, res, next) => {
         param.idubah = req.user.data.nik;
 
         const result = await uat.approveuser(param);
+        const rest = await uat.approvebyUAT(param)
         if (result == 1) {
             res.status(200).json({ "code": 200, "message": "Berhasil Approve" });
         } else {

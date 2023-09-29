@@ -150,9 +150,9 @@ router.get('/reportproject', async (req, res, next) => {
     try {
         
         const datanik = await getinfonik()
-        const param = req.query.idproj
-        const rows = await dashboard.reportproject({idproj:param});
-       //console.dir(rows)
+        //const param = req.query.idproj
+        const rows = await dashboard.reportproject();
+      // console.dir(rows)
         let restrows = []
         await rows.forEach(d=>restrows.push({...d,
             nama_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).nama,
@@ -202,7 +202,7 @@ router.get('/reportproject', async (req, res, next) => {
 
                    const hasilpl =  outpl.map(({kegiatan,pelaksana,...rest})=>({[kegiatan]:pelaksana,...rest}))
           
-            if(pl.length>0){
+            if(rl.length>0){
                
            await rl.forEach((d)=>maprl.push({...d,pelaksana:d.pelaksana+" - "+datanik.data.filter(z=>z.nik === d.pelaksana).map(x=>x.nama).toString() }))
             }
@@ -221,7 +221,7 @@ router.get('/reportproject', async (req, res, next) => {
               });
 
             const hasilrl =  outrl.map(({kegiatan,pelaksana,...rest})=>({[kegiatan]:pelaksana,...rest}))
-            // let o = {};
+          //   // let o = {};
             // if (st.length !== 0) {
 
             //     let obj = st[0];

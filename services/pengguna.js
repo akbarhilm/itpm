@@ -76,8 +76,10 @@ async function findPenggunaProyek(params){
     a.E_ITPM_PROJ as ketproyek,
     a.C_ITPM_ACTV as kodeaktif,
     a.N_ITPM_PROJURI as namauri,
-    a.C_ITPM_PROJSTAT as statusproyek
-
+    a.C_ITPM_PROJSTAT as statusproyek,
+    a.C_ITPM_SC as "jenis_layanan",
+    a.I_EMP_REQ as "nik_BPO",
+    a.I_EMP_PM as "nik_PM"
     from dbadmit.tmitpmproj a, DBADMIT.TMITPMSC b
     where a.I_ITPM_SC = b.I_ITPM_SC 
     `;

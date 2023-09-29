@@ -122,7 +122,7 @@ async function summary(params) {
 }
 
 
-async function reportproject(params){
+async function reportproject(){
     let query=`select 
     a.I_ITPM_PROJ as "id",
     b.I_ITPM_SCNBR as "no_layanan",
@@ -133,10 +133,10 @@ async function reportproject(params){
     a.I_EMP_PM as "nik_PM"
    
 
-    from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b where a.I_itpm_sc = b.I_itpm_sc 
-    and :idproj like '%,'||a.I_ITPM_PROJ||',%'`
-    const param = {}
-    param.idproj = params.idproj
+    from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b where a.I_itpm_sc = b.I_itpm_sc` 
+    //and :idproj like '%,'||a.I_ITPM_PROJ||',%'`
+    // const param = {}
+    // param.idproj = params.idproj
 
     const result = await database.exec(query)
     return result.rows

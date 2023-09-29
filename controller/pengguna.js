@@ -7,6 +7,7 @@ const charter = require('../services/charter');
 const real = require('../services/real');
 const plan = require('../services/plan');
 const proyek = require('../services/proyek');
+const dashboard = require('../services/dashboard')
 
 
 router.get('/pengguna/nik', async (req, res, next) => {
@@ -41,9 +42,30 @@ router.get('/pengguna/proyek/summary', async (req, res, next) => {
     }
 })
 
+async function getinfonik(param) {
+    let options
+    let data
+    if (param) {
+        options = process.env.NIK_INFO + param
+    } else {
+        options = process.env.NIK_INFO
+    }
+   await axios.get(options).then((res)=>
+    {
+       //console.dir(res.data)
+       data = res.data
+       return data
+      })
+
+      
+    return data
+
+}
+
 router.get('/pengguna/proyek/nik', async (req, res, next) => {
 
     try {
+        const datanik = await getinfonik()
         const param = {}
         const pc = {}
         param.nik = req.user.data.nik
@@ -80,7 +102,15 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
 
 
         if (req.query.d) {
-            const batch = await rows.list.map(async (v) => {
+            let restrows = []
+            await rows.list.forEach(d=>restrows.push({...d,
+                nama_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).nama,
+                divisi_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).organisasi,
+                nama_PM:datanik.data.find(x=>x.nik===d.nik_PM).nama,
+                divisi_PM:datanik.data.find(x=>x.nik===d.nik_PM).organisasi,
+            })
+            )
+            const batch = await restrows.map(async (v) => {
                 const cr = await charter.find({
                     idproj: v.IDPROYEK
                 })
@@ -95,6 +125,63 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
                 const st = await proyek.stepper({
                     id: '' + v.IDPROYEK
                 })
+            
+                    const plreport = await dashboard.reportrencana({
+                        id: ''+v.IDPROYEK
+                    })
+        
+                    const rlreport = await dashboard.reportrealisasi({
+                        id: ''+v.IDPROYEK
+                    })
+                   
+                    
+                 
+                   
+                  
+                    let mappl=[]
+                    let maprl = []
+                    let outpl = []
+                    let outrl = []
+                    if(plreport.length>0){
+                       
+                        await plreport.forEach((d)=>mappl.push({...d,pelaksana:d.pelaksana+" - "+datanik.data.filter(z=>z.nik === d.pelaksana).map(x=>x.nama).toString() }))
+                         }
+                         await mappl.forEach(function(item) {
+                             var existing = outpl.filter(function(v, i) {
+                               return v.kegiatan == item.kegiatan;
+                             });
+                             if (existing.length) {
+                               var existingIndex = outpl.indexOf(existing[0]);
+                               outpl[existingIndex].pelaksana = outpl[existingIndex].pelaksana.concat(item.pelaksana);
+                             } else {
+                               if (typeof item.pelaksana == 'string')
+                                 item.pelaksana = [item.pelaksana];
+                               outpl.push(item);
+                             }
+                           });
+        
+                           const hasilpl =  outpl.map(({kegiatan,pelaksana,target,...rest})=>({[kegiatan]:pelaksana.toString(),["target_"+kegiatan]:target, ...rest}))
+                  
+                    if(rlreport.length>0){
+                       
+                   await rlreport.forEach((d)=>maprl.push({...d,pelaksana:d.pelaksana+" - "+datanik.data.filter(z=>z.nik === d.pelaksana).map(x=>x.nama).toString() }))
+                    }
+                    await maprl.forEach(function(item) {
+                        var existing = outrl.filter(function(v, i) {
+                          return v.kegiatan == item.kegiatan;
+                        });
+                        if (existing.length) {
+                          var existingIndex = outrl.indexOf(existing[0]);
+                          outrl[existingIndex].pelaksana = outrl[existingIndex].pelaksana.concat(item.pelaksana);
+                        } else {
+                          if (typeof item.pelaksana == 'string')
+                            item.pelaksana = [item.pelaksana];
+                          outrl.push(item);
+                        }
+                      });
+        
+                    const hasilrl =  outrl.map(({kegiatan,pelaksana,...rest})=>({[kegiatan]:pelaksana.toString(),...rest}))
+                  
                 let o = {};
                 if (st.length !== 0) {
 
@@ -103,7 +190,7 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
 
                 }
 
-                return { ...v, charter: cr, plan: pl, real: rl, stepper: o }
+                return { ...v, charter: cr, plan: pl,planreport:hasilpl, real: rl, realreport:hasilrl, stepper: o }
             })
 
 
@@ -213,25 +300,7 @@ router.get('/pengguna', async (req, res, next) => {
 //     })
 // }
 
-async function getinfonik(param) {
-    let options
-    let data
-    if (param) {
-        options = process.env.NIK_INFO + param
-    } else {
-        options = process.env.NIK_INFO
-    }
-   await axios.get(options).then((res)=>
-    {
-       //console.dir(res.data)
-       data = res.data
-       return data
-      })
 
-      
-    return data
-
-}
 
 router.get('/karyawanIT', async (req, res, next) => {
     try {
