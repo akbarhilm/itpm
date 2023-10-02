@@ -49,7 +49,7 @@ async function add(params,commit,conn){
     let query =`INSERT INTO DBADMIT.TMITPMPROJ 
     (I_ITPM_SC,    C_ITPM_APPLSTAT, C_ITPM_SC,    N_ITPM_PROJ, E_ITPM_PROJ,
         C_ITPM_PROJSTAT,   D_ITPM_PROJSTATCHNG,
-    C_ITPM_ACTV,    N_ITPM_PROJURI,    I_EMP_REQ,    I_EMP_PM`
+    C_ITPM_ACTV,    N_ITPM_PROJURI,    I_EMP_REQ,    I_EMP_PM,C_MPTI,N_REF_MPTI`
     if(params.idaplikasi){
      query+=`,I_ITPM_APPL`
     }
@@ -68,7 +68,9 @@ async function add(params,commit,conn){
     1,
     :namauri,
     :nikreq,
-    :nikpm,`
+    :nikpm,
+    :kodempti,
+    :ketmpti,`
     if(params.idaplikasi){
         query+=`:idaplikasi,`
        }
@@ -123,6 +125,8 @@ async function edit(params){
     N_ITPM_PROJURI =:namauri,   
     I_EMP_REQ = :nikreq,    
     I_EMP_PM = :nikpm,
+    C_MPTI = :kodempti,
+    N_REF_MPTI = :ketmpti,
     I_ITPM_APPL = :idaplikasi,
     I_ITPM_MDL = :idmodul,
     I_UPDATE = :idupdate,
