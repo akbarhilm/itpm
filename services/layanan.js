@@ -110,7 +110,7 @@ async function add(params){
         param.namamodul = params.namamodul
         param.ketlayanan = params.ketlayanan
         param.nikpm = params.nikpm
-        param.prioritas = params.prioritas
+        param.priority = params.priority
         param.notiket = params.notiket
         param.identry = params.identry
 
