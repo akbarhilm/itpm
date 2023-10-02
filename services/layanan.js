@@ -94,7 +94,7 @@ async function add(params){
             :namamodul,
             :ketlayanan,
             :nikpm,
-            :prioritas,
+            :priority,
             :notiket,
             :identry,
             sysdate)
