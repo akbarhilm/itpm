@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const real = require('../services/real');
+const plan = require('../services/plan')
 const proj = require('../services/proyek')
 const map = require('../util/errorHandling')
 const oracle = require("oracledb");
@@ -33,13 +34,17 @@ router.get('/real/:id', async (req, res, next) => {
         const rows = await real.find({
             idproj: idproj
         });
+        const rowspl = await plan.find({
+            idproj: idproj
+        });
       
         const resnr = await proj.stepper({id:idproj})
         
         if (rows.length != 0 || resnr.length != 0 ) {
             if(resnr[0].NOREAL){
             data.NOREAL=resnr[0].NOREAL
-            data.LISTDETAIL = rows
+            const refined = rows.map((d)=>({...d,BOBOT:rowspl.find((x)=>x.IDKEGIATAN === d.IDKEGIATAN).BOBOT}))
+            data.LISTDETAIL = refined
 
         
             res.status(200).json(data);
@@ -76,8 +81,9 @@ router.post('/real/tambah',async(req,res,next)=>{
         paramnoresc.idproj = req.body.idproj
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
-        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,progress})))
-        
+        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,progress,bobot }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,progress,bobot})))
+        const mapdatabobot = parampr.listdetail.flatMap(({ idkegiatan, bobot }) =>({ idkegiatan,bobot}))
+    
        // const rest = await real.addPlan(mapdata)
         
         //console.dir(mapdata)
@@ -89,11 +95,15 @@ router.post('/real/tambah',async(req,res,next)=>{
                 
                 const res = await real.addReal(el, {
                 } ,conn)
+                const pl = await plan.ubahbobotplan (el, {
+                } ,conn)
                 const nr = await proj.addNumber(paramnoreal,{autoCommit:true},conn)
           
                
             } else {
+                const pl = await plan.ubahbobotplan(el, {},conn)
                 const res = await real.addReal(el, {},conn)
+                
                
             }
 
@@ -103,8 +113,10 @@ router.post('/real/tambah',async(req,res,next)=>{
          return Promise.all(batch).then(async() => {
             const find = await real.find({idproj:idproj})
             const resnr = await proj.stepper({id:idproj})
+            const pln = await plan.find({idproj:idproj})
             reselect.NOREAL=resnr[0].NOREAL
-            reselect.LISTDETAIL = find
+            const refined = find.map((d)=>({...d,BOBOT:pln.find((x)=>x.IDKEGIATAN === d.IDKEGIATAN).BOBOT}))
+            reselect.LISTDETAIL = refined
            
 
             res.status(200).json(reselect)

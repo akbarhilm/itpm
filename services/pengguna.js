@@ -27,26 +27,51 @@ async function summaryProyek(params){
     paramotor.nik = params.nik
     const otor = await findPenggunaOtoritas(paramotor);
     
-    let query=`SELECT SUM(total) as total,sum(baru) as baru , sum(berjalan) as berjalan, sum(pending) as pending, sum(selesai) as selesai from (
-        select count(*) as total,0 as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ
-        group by i_emp_req,i_emp_pm
-        union all
-        
-        select 0 as total, count(*) as baru, 0 as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU' 
-        group by i_emp_req,i_emp_pm
-        union all
-        
-        select 0 as total, 0 as baru, count(*) as berjalan, 0 as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN'
-        group by i_emp_req,i_emp_pm
-        union all
-        
-        select 0 as total, 0 as baru, 0 as berjalan, count(*) as pending, 0 as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
-        group by i_emp_req,i_emp_pm
-        union all
-        
-        select 0 as total, 0 as baru, 0 as berjalan, 0 as pending, count(*) as selesai,i_emp_req,i_emp_pm from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
-        group by i_emp_req,i_emp_pm
-        )`
+    let query=`SELECT SUM(total) as total,sum(baru) as baru , sum(berjalan) as berjalan, sum(delay) as delay,sum(pending) as pending, sum(cancl) as cancel,sum(hold) as hold, sum(blocked) as blocked, sum(selesai) as selesai from (
+        select count(*) as total,0 as baru, 0 as berjalan,0 as delay, 0 as pending, 0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       from DBADMIT.TMITPMPROJ  where  substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       
+       union all
+   
+       select 0 as total, count(*) as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU'  and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+     
+       union all
+       
+       select 0 as total, 0 as baru, count(*) as berjalan,0 as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj not in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
+      and  substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       union all
+       
+        select 0 as total, 0 as baru, 0 as berjalan,count(*)  as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
+    and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       union all
+       
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, count(*) as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
+       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       union all
+   
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,count(*) as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'CANCEL' 
+       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       union all
+   
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, count(*) as hold, 0 as blocked,0 as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'HOLD' 
+       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       union all
+   
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, count(*) as blocked,0 as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BLOCKED' 
+       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+
+       union all
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, count(*) as selesai
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
+       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       )`
 
     console.dir(otor)
     const paramq = {}
@@ -60,7 +85,7 @@ async function summaryProyek(params){
         }
     
 
-
+        paramq.tahun = params.tahun
     const res = await database.exec(query,paramq)
     return res.rows
 }
@@ -72,14 +97,18 @@ async function findPenggunaProyek(params){
     let query =`select a.I_ITPM_PROJ as idproyek,
     a.C_ITPM_APPLSTAT as jenisproj,
     b.I_ITPM_SCNBR as nolayanan,
+    b.N_PRIORITY_LVL as prioritas,
     a.N_ITPM_PROJ as namaproyek,
     a.E_ITPM_PROJ as ketproyek,
     a.C_ITPM_ACTV as kodeaktif,
     a.N_ITPM_PROJURI as namauri,
     a.C_ITPM_PROJSTAT as statusproyek,
+    a.e_itpm_projstatchng as ketstatus,
     a.C_ITPM_SC as "jenis_layanan",
     a.I_EMP_REQ as "nik_BPO",
-    a.I_EMP_PM as "nik_PM"
+    a.I_EMP_PM as "nik_PM",
+    to_char(a.d_entry,'dd/mm/yyyy') as tglentry
+    
     from dbadmit.tmitpmproj a, DBADMIT.TMITPMSC b
     where a.I_ITPM_SC = b.I_ITPM_SC 
     `;
@@ -102,6 +131,15 @@ async function findPenggunaProyek(params){
     }
     //console.dir(params.status)
     if(params.status != 'ALL' ){
+        if(params.status === 'DELAYED'){
+            params.status = 'BERJALAN'
+            query+=`and a.i_itpm_proj in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )`
+        }
+        if(params.status === 'BERJALAN'){
+           
+            query+=`and a.i_itpm_proj not in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )`
+        }
+        
       param.status = params.status
     query += ` and  a.C_ITPM_PROJSTAT = :status`;
     }

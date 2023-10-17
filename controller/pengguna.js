@@ -30,6 +30,7 @@ router.get('/pengguna/proyek/summary', async (req, res, next) => {
     try {
         const param = {}
         param.nik = req.user.data.nik
+        param.tahun = req.query.tahun.toString()
         const rows = await pengguna.summaryProyek(param);
         if (rows.length !== 0) {
             res.status(200).json(rows);
@@ -70,7 +71,7 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
         const pc = {}
         param.nik = req.user.data.nik
         param.status = req.query.status.toString()
-       
+       const chgstatus = req.query.status.toString();
         if(req.query.non === 'true'){
             param.non = 'NON_SAP'
             
@@ -108,7 +109,8 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
                 divisi_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).organisasi,
                 nama_PM:datanik.data.find(x=>x.nik===d.nik_PM).nama,
                 divisi_PM:datanik.data.find(x=>x.nik===d.nik_PM).organisasi,
-            })
+            
+            }) 
             )
             const batch = await restrows.map(async (v) => {
                 const cr = await charter.find({

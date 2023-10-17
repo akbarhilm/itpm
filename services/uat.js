@@ -177,10 +177,10 @@ async function approvebyUAT(params){
     set c_itpm_apprv = 1,
      i_update = :idubah,
      d_update = sysdate
-    where i_itpm_proj = (select i_itpm_proj from dbadmit.tmitpmuat where i_itpm_uat = :uat)`
+    where i_itpm_proj = (select i_itpm_proj from dbadmit.tmitpmuat where i_itpm_uat = :iduat)`
 
     const param = {}
-    param.idcharter = params.idcharter
+    param.iduat = params.iduat
     param.idubah = params.idubah
     const result  = await database.exec(query,param)
     return result.rowsAffected

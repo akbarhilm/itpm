@@ -21,6 +21,10 @@ async function find(params){
     N_ITPM_PROJURI as namauri,
     I_EMP_REQ as nikreq,
     I_EMP_PM as nikpm,
+    C_MPTI as kodempti,
+    N_REF_MPTI as ketmpti,
+    C_proker as kodeproker,
+    N_REF_proker as ketproker,
     I_ITPM_RISKNBR as norisk,
     I_ITPM_PLANNBR as noplan,
     I_ITPM_RESRCNBR as nores,
@@ -49,7 +53,7 @@ async function add(params,commit,conn){
     let query =`INSERT INTO DBADMIT.TMITPMPROJ 
     (I_ITPM_SC,    C_ITPM_APPLSTAT, C_ITPM_SC,    N_ITPM_PROJ, E_ITPM_PROJ,
         C_ITPM_PROJSTAT,   D_ITPM_PROJSTATCHNG,
-    C_ITPM_ACTV,    N_ITPM_PROJURI,    I_EMP_REQ,    I_EMP_PM,C_MPTI,N_REF_MPTI`
+    C_ITPM_ACTV,    N_ITPM_PROJURI,    I_EMP_REQ,    I_EMP_PM,C_MPTI,N_REF_MPTI,C_proker,N_REF_proker`
     if(params.idaplikasi){
      query+=`,I_ITPM_APPL`
     }
@@ -70,7 +74,9 @@ async function add(params,commit,conn){
     :nikreq,
     :nikpm,
     :kodempti,
-    :ketmpti,`
+    :ketmpti,
+    :kodeproker,
+    :ketproker,`
     if(params.idaplikasi){
         query+=`:idaplikasi,`
        }
@@ -127,6 +133,8 @@ async function edit(params){
     I_EMP_PM = :nikpm,
     C_MPTI = :kodempti,
     N_REF_MPTI = :ketmpti,
+    C_proker = :kodempti,
+    N_REF_proker = :ketmpti,
     I_ITPM_APPL = :idaplikasi,
     I_ITPM_MDL = :idmodul,
     I_UPDATE = :idupdate,
@@ -227,7 +235,8 @@ async function proyekByNik(param){
     a.E_ITPM_PROJ as ketproyek,
     a.C_ITPM_ACTV as kodeaktif,
     a.N_ITPM_PROJURI as namauri,
-    a.C_ITPM_PROJSTAT as statusproyek  
+    a.C_ITPM_PROJSTAT as statusproyek,
+    to_char(a.d_entry,'dd/mm/yyyy') as tglentry
     from dbadmit.tmitpmproj a, DBADMIT.TMITPMSC b
     where a.I_ITPM_SC = b.I_ITPM_SC and  a.i_itpm_proj in (
         select i_itpm_proj  from dbadmit.tmitpmproj where :nik in (i_emp_req, i_emp_pm)

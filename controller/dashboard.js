@@ -4,7 +4,7 @@ const dashboard = require('../services/dashboard')
 const axios = require('axios').default;
 
 
-router.get('/project', async (req, res, next) => {
+router.get('/projects', async (req, res, next) => {
     try {
         const tahun = req.query.tahun
         const rows = await dashboard.listProyek({tahun:tahun});
@@ -55,7 +55,7 @@ async function getinfonik() {
 
 }
 
-router.get('/project/summary', async (req, res, next) => {
+router.get('/project/summaries', async (req, res, next) => {
     try {
         const tahun = req.query.tahun
         const rest = await dashboard.summary({tahun:tahun})
@@ -68,6 +68,21 @@ router.get('/project/summary', async (req, res, next) => {
         console.error(err)
         next(err)
     }
+})
+
+router.get('/project/project-mpti', async (req, res, next) => {
+  try {
+      const tahun = req.query.tahun
+      const rest = await dashboard.getProker({tahun:tahun})
+      res.status(200).json({
+          "status": 200,
+          "message": "Status Project by Status MPTI",
+          "data":rest
+      })
+  }catch(err){
+      console.error(err)
+      next(err)
+  }
 })
 
 router.get('/project/:id', async (req, res, next) => {
