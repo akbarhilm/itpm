@@ -12,6 +12,12 @@ router.get('/projects', async (req, res, next) => {
                 const st = await dashboard.stepper({
                     id: ''+v.id
                 })
+                const pr = await dashboard.progressById({idproj:""+v.id})
+                console.log(pr);
+              const mappr = pr.map(x => Object.fromEntries(Object.entries(x).map(
+                ([key, value]) => [key, typeof value == 'string' ? value.replace(/& /g,"").replace(/ /g,"_").toLowerCase() : value]))).map(y=>({[y.NAMAKEGIATAN]:y.PROGRESS}))
+             // console.log(mappr);
+                const hasil = Object.assign({},...mappr)
                 let o = {};
                 if (st.length !== 0) {
 
@@ -20,7 +26,7 @@ router.get('/projects', async (req, res, next) => {
 
                 }
 
-                return { ...v, progress_by_step: o}
+                return { ...v, progress_by_step: o,bobot:hasil}
         })
 
       

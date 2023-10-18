@@ -40,6 +40,22 @@ async function stepper(params) {
     return result.rows
 }
 
+async function progressById(params){
+    let query=`select i_itpm_acty as idkegiatan, n_itpm_acty as namakegiatan , sum(progress) as progress from (
+        select i_itpm_acty , n_itpm_acty , 0 as progress from dbadmit.tritpmacty
+        union all
+        select a.i_itpm_acty, b.n_itpm_acty, to_number(a.v_itpm_progress) as progress from dbadmit.tmitpmplanreal a,  dbadmit.tritpmacty b where a.i_itpm_proj = :idproj
+        and a.I_itpm_acty = b.i_itpm_acty and a.c_itpm_planreal = 'REALISASI')
+        group by i_itpm_acty, n_itpm_acty
+        order by 1`
+
+    const param = {}
+    param.idproj = params.idproj
+    const result = await database.exec(query,param)
+
+    return result.rows
+}
+
 
 async function projectById(params) {
     let query = `select a.I_ITPM_PROJ as "id",
@@ -214,6 +230,7 @@ async function getProker(params){
     return rest.rows
 }
 
+module.exports.progressById = progressById
 module.exports.getProker = getProker
 module.exports.reportproject = reportproject
 module.exports.reportrealisasi = reportrealisasi
