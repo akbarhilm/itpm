@@ -4,6 +4,7 @@ const uat = require('../services/uat');
 const proj = require('../services/proyek');
 const map = require('../util/errorHandling');
 const smail = require('../services/email');
+const charter = require('../services/charter');
 const alamatemail = require('../services/pengguna');
 const oracle = require("oracledb");
 
@@ -33,7 +34,6 @@ router.get('/uat', async (req, res, next) => {
 
 router.get('/uat/:id', async (req, res, next) => {
     try {
-
         const rowspar = await uat.find({
             iduat: req.params.id
         });
@@ -229,23 +229,32 @@ router.put('/uat/approveuser', async (req, res, next) => {
     try {
         const param = req.body;
         param.idubah = req.user.data.nik;
-
+       
+        console.dir("Uat user");
         const result = await uat.approveuser(param);
+        
+        console.dir(result);
+       
+
+       const rest = await uat.approvebyUAT(param)
+        console.dir("charter uat");
+        console.dir(rest);
         if (result == 1) {
             res.status(200).json({ "code": 200, "message": "Berhasil Approve" });
         } else {
             res.status(500).json({ "code": 500, "message": "Tidak Berhasil Approve" });
         }
     } catch (err) {
-        const { errorNum } = err;
+       const { errorNum } = err;
         const message = await map.map(errorNum);
-        res.status(500).json({ "code": errorNum, "message": message });
+        res.status(500).json(err);
         next(err);
     }
 });
 
 router.put('/uat/approveqa', async (req, res, next) => {
     try {
+      
         const param = req.body;
         param.idubah = req.user.data.nik;
         const iduatparam = req.body.iduat.toString();
