@@ -115,7 +115,12 @@ router.get('/project/:id', async (req, res, next) => {
             })
             
           
-           
+            const pr = await dashboard.progressById({idproj:""+v.id})
+            console.log(pr);
+          const mappr = pr.map(x => Object.fromEntries(Object.entries(x).map(
+            ([key, value]) => [key, typeof value == 'string' ? value.replace(/& /g,"").replace(/ /g,"_").toLowerCase() : value]))).map(y=>({[y.NAMAKEGIATAN]:y.PROGRESS}))
+         // console.log(mappr);
+            const hasil = Object.assign({},...mappr)
             let rlnama = []
             let out = []
            if(rl.length!==0)
@@ -143,7 +148,7 @@ router.get('/project/:id', async (req, res, next) => {
 
             }
 
-            return { ...v,  realisasi:out, progress_by_step: o}
+            return { ...v,  realisasi:out, progress_by_step: o,bobot:hasil}
     })
 
     
