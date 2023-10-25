@@ -5,9 +5,13 @@ const oracledb = require('oracledb');
 
 
 async function listProyek(params) {
-    let query = `select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'BERJALAN' end) else "status" end as "status","tanggal_mulai","tanggal_selesai"
+    let query = `select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai"
     from(
-    select "id","no_layanan","nama_proyek","keterangan",case "status" when 'SELESAI' THEN 'CLOSED' ELSE "status" end as "status","tanggal_mulai","tanggal_selesai", max(max_tgl) as max_tgl
+    select "id","no_layanan","nama_proyek","keterangan",
+    case "status" when 'SELESAI' THEN 'CLOSED' 
+                  when 'BARU' then 'NEW'
+                  ELSE "status" end as "status",
+    "tanggal_mulai","tanggal_selesai", max(max_tgl) as max_tgl
         from(
         select a.I_ITPM_PROJ as "id",
     b.I_ITPM_SCNBR as "no_layanan",
