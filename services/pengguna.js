@@ -28,49 +28,64 @@ async function summaryProyek(params){
     const otor = await findPenggunaOtoritas(paramotor);
     
     let query=`SELECT SUM(total) as total,sum(baru) as baru , sum(berjalan) as berjalan, sum(delay) as delay,sum(pending) as pending, sum(cancl) as cancel,sum(hold) as hold, sum(blocked) as blocked, sum(selesai) as selesai from (
-        select count(*) as total,0 as baru, 0 as berjalan,0 as delay, 0 as pending, 0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+        select count(*) as total,0 as baru, 0 as berjalan,0 as delay, 0 as pending, 0 as cancl, 0 as hold, 0 as blocked, 0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ  where  substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       group by i_emp_pm,i_emp_req
        
        union all
    
-       select 0 as total, count(*) as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, count(*) as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU'  and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
-     
+       group by i_emp_pm,i_emp_req
+       
        union all
        
-       select 0 as total, 0 as baru, count(*) as berjalan,0 as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, 0 as baru, count(*) as berjalan,0 as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj not in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
       and  substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+      group by i_emp_pm,i_emp_req
+       
        union all
        
-        select 0 as total, 0 as baru, 0 as berjalan,count(*)  as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+        select 0 as total, 0 as baru, 0 as berjalan,count(*)  as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
     and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+    group by i_emp_pm,i_emp_req
+       
        union all
        
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, count(*) as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, count(*) as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
        and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       group by i_emp_pm,i_emp_req
+       
        union all
    
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,count(*) as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,count(*) as cancl, 0 as hold, 0 as blocked, 0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'CANCEL' 
        and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       group by i_emp_pm,i_emp_req
+       
        union all
    
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, count(*) as hold, 0 as blocked,0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, count(*) as hold, 0 as blocked,0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'HOLD' 
        and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       group by i_emp_pm,i_emp_req
+       
        union all
    
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, count(*) as blocked,0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, count(*) as blocked,0 as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BLOCKED' 
        and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       group by i_emp_pm,i_emp_req
 
        union all
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, count(*) as selesai
+       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, count(*) as selesai, i_emp_pm,i_emp_req
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
        and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       group by i_emp_pm,i_emp_req
+       
        )`
 
     console.dir(otor)

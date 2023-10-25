@@ -5,20 +5,33 @@ const oracledb = require('oracledb');
 
 
 async function listProyek(params) {
-    let query = `   select "id","no_layanan","nama_proyek","keterangan","status","tanggal_mulai","tanggal_selesai"
+    let query = `select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai"
     from(
-    select a.I_ITPM_PROJ as "id",
-b.I_ITPM_SCNBR as "no_layanan",
-N_ITPM_PROJ as "nama_proyek",
-E_ITPM_PROJ as "keterangan",
-C_ITPM_PROJSTAT as "status",
-to_char(z.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
-to_char(z.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai"
-
-from DBADMIT.TMITPMPROJ a full join  dbadmit.tmitpmcharter z on  a.i_itpm_proj= z.i_itpm_proj, DBADMIT.TMITPMSC b
-where a.i_itpm_sc = b.i_Itpm_sc 
-and substr(to_char(a.d_entry,'dd/mm/yyyy'),7)=:tahun
-)`
+    select "id","no_layanan","nama_proyek","keterangan",
+    case "status" when 'SELESAI' THEN 'CLOSED' 
+                  when 'BARU' then 'NEW'
+                  ELSE "status" end as "status",
+    "tanggal_mulai","tanggal_selesai", max(max_tgl) as max_tgl
+        from(
+        select a.I_ITPM_PROJ as "id",
+    b.I_ITPM_SCNBR as "no_layanan",
+    N_ITPM_PROJ as "nama_proyek",
+    E_ITPM_PROJ as "keterangan",
+   C_ITPM_PROJSTAT as "status",
+    p.d_itpm_actyfinish as max_tgl,
+    to_char(z.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
+    to_char(z.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai"
+    
+    from DBADMIT.TMITPMPROJ a full join  dbadmit.tmitpmcharter z on  a.i_itpm_proj= z.i_itpm_proj
+                              full join dbadmit.tmitpmplanreal p on a.I_itpm_proj = p.I_itpm_proj and p.c_Itpm_planreal = 'PLAN'
+                              , DBADMIT.TMITPMSC b
+    where a.i_itpm_sc = b.i_Itpm_sc 
+    
+    and to_char(a.d_entry,'yyyy')=:tahun
+    
+    )
+    group by "id","no_layanan","nama_proyek","keterangan","status","tanggal_mulai","tanggal_selesai"
+    )`
     const param = {}
     param.tahun = params.tahun
     const result = await database.exec(query, param)
@@ -106,48 +119,48 @@ async function summary(params) {
 
     let query = `SELECT SUM(total) as "total",sum(baru) as "new" , sum(berjalan) as "on_going", sum(delay) as "delay",sum(pending) as "pending", sum(cancl) as "cancel",sum(hold) as "hold", sum(blocked) as "blocked", sum(selesai) as "closed" from (
         select count(*) as total,0 as baru, 0 as berjalan,0 as delay, 0 as pending, 0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
-       from DBADMIT.TMITPMPROJ  where  substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       from DBADMIT.TMITPMPROJ  where  to_char(d_entry,'yyyy') = :tahun
        
        union all
    
        select 0 as total, count(*) as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
-       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU'  and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU'  and to_char(d_entry,'yyyy') = :tahun
      
        union all
        
        select 0 as total, 0 as baru, count(*) as berjalan,0 as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj not in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
-      and  substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+      and  to_char(d_entry,'yyyy') = :tahun
        union all
        
         select 0 as total, 0 as baru, 0 as berjalan,count(*)  as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
-    and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+    and to_char(d_entry,'yyyy') = :tahun
        union all
        
        select 0 as total, 0 as baru, 0 as berjalan,0 as delay, count(*) as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
-       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       and to_char(d_entry,'yyyy') = :tahun
        union all
    
        select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,count(*) as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'CANCEL' 
-       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       and to_char(d_entry,'yyyy') = :tahun
        union all
    
        select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, count(*) as hold, 0 as blocked,0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'HOLD' 
-       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       and to_char(d_entry,'yyyy') = :tahun
        union all
    
        select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, count(*) as blocked,0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BLOCKED' 
-       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       and to_char(d_entry,'yyyy') = :tahun
 
        union all
        select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, count(*) as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
-       and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun
+       and to_char(d_entry,'yyyy') = :tahun
        )
     
        `
@@ -219,9 +232,10 @@ async function reportrencana(params) {
 }
 
 async function getProker(params){
-    let query=`select 'PROKER' as proker, COUNT((select I_ITPM_PROJ from dbadmit.tmitpmproj WHERE c_mpti = 1 and c_proker = 1 and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun )) as mpti, COUNT((select I_ITPM_PROJ from dbadmit.tmitpmproj WHERE c_mpti = 0 and c_proker = 1 and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun)) as non_mpti from dual
+    let query=`select 'PROKER' as proker, (select count(*) from dbadmit.tmitpmproj WHERE c_mpti = 1 and c_proker = 1 and to_char(d_entry,'yyyy') = :tahun ) as mpti, (select COUNT(*) from dbadmit.tmitpmproj WHERE c_mpti = 0 and c_proker = 1 and to_char(d_entry,'yyyy') = :tahun) as non_mpti from dual
     union ALL
-    select 'NON PROKER' as NON_proker, COUNT((select I_ITPM_PROJ from dbadmit.tmitpmproj WHERE c_mpti = 1 and c_proker = 0 and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun)) as mpti, COUNT((select I_ITPM_PROJ from dbadmit.tmitpmproj WHERE c_mpti = 0 and c_proker = 0 and substr(to_char(d_entry,'dd-mm-yyyy'),7) = :tahun)) as non_mpti from dual`
+    select 'NON PROKER' as NON_proker, (select COUNT(*) from dbadmit.tmitpmproj WHERE c_mpti = 1 and c_proker = 0 and  to_char(d_entry,'yyyy') = :tahun) as mpti, (select COUNT(*) from dbadmit.tmitpmproj WHERE c_mpti = 0 and c_proker = 0 and to_char(d_entry,'yyyy') = :tahun) as non_mpti from dual
+`
 
     const param = {}
     param.tahun = params.tahun
