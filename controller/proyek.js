@@ -144,10 +144,11 @@ async function getinfonik(param) {
 
 
 router.put('/ubah', async (req, res, next) => {
+    const conn = await oracle.getConnection();
     try {
         const param = req.body;
         param.idupdate = req.user.data.nik;
-        const row = await proyek.edit(param);
+        const row = await proyek.edit(param,{ autoCommit: true }, conn);
         res.status(200).json(row);
     } catch (err) {
         console.error(err);

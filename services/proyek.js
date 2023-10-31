@@ -70,7 +70,7 @@ async function add(params,commit,conn){
     :statusproj,
     sysdate,
     1,
-    :namauri,
+    DBADMIT.SEQ01MITPMPROJ.CURRVAL,
     :nikreq,
     :nikpm,
     :kodempti,
@@ -121,27 +121,28 @@ async function addNumber(params,commit,conn){
 
 }
 
-async function edit(params){
+async function edit(params,commit,conn){
     let query=`UPDATE DBADMIT.TMITPMPROJ
     set I_ITPM_SC = :idlayanan,
     C_ITPM_APPLSTAT = :statusapl, 
     C_ITPM_SC = :jenislayanan,    
     N_ITPM_PROJ = :namaproj, 
     E_ITPM_PROJ = :ketproj,
-    N_ITPM_PROJURI =:namauri,   
+       
     I_EMP_REQ = :nikreq,    
     I_EMP_PM = :nikpm,
     C_MPTI = :kodempti,
     N_REF_MPTI = :ketmpti,
-    C_proker = :kodempti,
-    N_REF_proker = :ketmpti,
+    C_proker = :kodeproker,
+    N_REF_proker = :ketproker,
     I_ITPM_APPL = :idaplikasi,
     I_ITPM_MDL = :idmodul,
     I_UPDATE = :idupdate,
     D_UPDATE = sysdate
     where i_itpm_proj = :idproj`
     
-    const result = await database.exec(query,params,{autoCommit:true})
+    console.log(params);
+    const result = await database.seqexec(query,params,commit,conn)
     if(result.rowsAffected ==1){
         return params
     }else{
