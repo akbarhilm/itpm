@@ -149,8 +149,10 @@ router.put('/ubah', async (req, res, next) => {
         const param = req.body;
         param.idupdate = req.user.data.nik;
         const row = await proyek.edit(param,{ autoCommit: true }, conn);
+        conn.close()
         res.status(200).json(row);
     } catch (err) {
+        conn.close()
         console.error(err);
         next(err);
     }
