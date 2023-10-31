@@ -62,6 +62,7 @@ SELECT A.I_ITPM_SC as idlayanan, A.I_ITPM_SCNBR as nolayanan ,A.I_EMP_REQ as nik
     LEFT JOIN DBADMIT.TMITPMPROJ B ON A.I_ITPM_SC = B.I_ITPM_SC
     WHERE B.I_ITPM_PROJ = :idproj
     `
+    query+=`order by 1 desc`
     }
     
     const result = await database.exec(query,param)
