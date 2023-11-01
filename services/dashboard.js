@@ -5,13 +5,13 @@ const oracledb = require('oracledb');
 
 
 async function listProyek(params) {
-    let query = `select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai"
+    let query = `select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
     from(
     select "id","no_layanan","nama_proyek","keterangan",
     case "status" when 'SELESAI' THEN 'CLOSED' 
                   when 'BARU' then 'NEW'
                   ELSE "status" end as "status",
-    "tanggal_mulai","tanggal_selesai", max(max_tgl) as max_tgl
+    "tanggal_mulai","tanggal_selesai", max(max_tgl) as max_tgl,"mpti","ref_mpti","proker","ref_proker"
         from(
         select a.I_ITPM_PROJ as "id",
     b.I_ITPM_SCNBR as "no_layanan",
@@ -20,7 +20,12 @@ async function listProyek(params) {
    C_ITPM_PROJSTAT as "status",
     p.d_itpm_actyfinish as max_tgl,
     to_char(z.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
-    to_char(z.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai"
+    to_char(z.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai",
+    a.c_mpti as "mpti",
+    a.n_ref_mpti as "ref_mpti",
+    a.c_proker as "proker",
+    a.n_ref_proker as "ref_proker"
+
     
     from DBADMIT.TMITPMPROJ a full join  dbadmit.tmitpmcharter z on  a.i_itpm_proj= z.i_itpm_proj
                               full join dbadmit.tmitpmplanreal p on a.I_itpm_proj = p.I_itpm_proj and p.c_Itpm_planreal = 'PLAN'
@@ -30,7 +35,7 @@ async function listProyek(params) {
     and to_char(a.d_entry,'yyyy')=:tahun
     
     )
-    group by "id","no_layanan","nama_proyek","keterangan","status","tanggal_mulai","tanggal_selesai"
+    group by "id","no_layanan","nama_proyek","keterangan","status","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
     )`
     const param = {}
     param.tahun = params.tahun
@@ -82,7 +87,11 @@ async function projectById(params) {
     a.I_EMP_REQ as "bisnis_owner",
     a.I_EMP_PM as "project_mgr",
     to_char(c.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
-    to_char(c.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai"
+    to_char(c.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai",
+    a.c_mpti as "mpti",
+    a.n_ref_mpti as "ref_mpti",
+    a.c_proker as "proker",
+    a.n_ref_proker as "ref_proker"
 
     from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b, DBADMIT.TMITPMCHARTER c,dbadmit.tritpmmdl d
     where a.i_itpm_sc = b.i_Itpm_sc and a.i_itpm_proj = c.i_itpm_proj and a.i_Itpm_mdl = d.i_itpm_mdl
