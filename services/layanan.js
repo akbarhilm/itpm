@@ -9,7 +9,9 @@ let query=`select I_ITPM_SC as idlayanan, I_ITPM_SCNBR as nolayanan ,I_EMP_REQ a
     C_ITPM_ACTV as kodeaktif,
     N_ITPM_MDL as namamodul,
     E_ITPM_SC as ketlayanan,
-    I_EMP_PM as nikpm
+    I_EMP_PM as nikpm,
+    N_PRIORITY_LVL as prioritas,
+    I_TCKT as notiket
     from   DBADMIT.TMITPMSC 
     `
     const param = {}
@@ -36,7 +38,9 @@ async function findUnsed(params){
     C_ITPM_ACTV as kodeaktif,
     N_ITPM_MDL as namamodul,
     E_ITPM_SC as ketlayanan,
-    I_EMP_PM as nikpm
+    I_EMP_PM as nikpm,
+    N_PRIORITY_LVL as prioritas,
+    I_TCKT as notiket
     from   DBADMIT.TMITPMSC a
     where not exists (select 1 from dbadmit.tmitpmproj b where B.I_ITPM_SC = a.i_itpm_sc)`
     if(params.idproj){
@@ -51,11 +55,14 @@ SELECT A.I_ITPM_SC as idlayanan, A.I_ITPM_SCNBR as nolayanan ,A.I_EMP_REQ as nik
     A.C_ITPM_ACTV as kodeaktif,
     A.N_ITPM_MDL as namamodul,
    A.E_ITPM_SC as ketlayanan,
-    A.I_EMP_PM as nikpm
+    A.I_EMP_PM as nikpm,
+    N_PRIORITY_LVL as prioritas,
+    I_TCKT as notiket
     from   DBADMIT.TMITPMSC A
     LEFT JOIN DBADMIT.TMITPMPROJ B ON A.I_ITPM_SC = B.I_ITPM_SC
     WHERE B.I_ITPM_PROJ = :idproj
     `
+    query+=`order by 1 desc`
     }
     
     const result = await database.exec(query,param)
@@ -74,6 +81,8 @@ async function add(params){
         N_ITPM_MDL,
         E_ITPM_SC,
         I_EMP_PM,
+        N_PRIORITY_LVL,
+        I_TCKT,
         i_entry,
         d_entry)
         values(
@@ -86,6 +95,8 @@ async function add(params){
             :namamodul,
             :ketlayanan,
             :nikpm,
+            :priority,
+            :notiket,
             :identry,
             sysdate)
             returning i_itpm_sc into :idlayanan
@@ -100,6 +111,8 @@ async function add(params){
         param.namamodul = params.namamodul
         param.ketlayanan = params.ketlayanan
         param.nikpm = params.nikpm
+        param.priority = params.priority
+        param.notiket = params.notiket
         param.identry = params.identry
 
        param.idlayanan = {dir:oracledb.BIND_OUT}

@@ -5,6 +5,7 @@ async function find(params){
     let query=` select  i_itpm_acty as idkegiatan,
     n_itpm_acty as namakegiatan,
     n_itpm_actytarget as namatarget,
+    v_itpm_bobot as nilaibobot,
     c_itpm_actv kodeaktif
      from dbadmit.tritpmacty`
      const param ={}
