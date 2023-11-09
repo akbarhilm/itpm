@@ -95,10 +95,10 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
         let rows
         if (req.query.nik) {
             rows = await proyek.proyekByNik({ nik: req.query.nik })
-            console.dir(rows)
+            //console.dir(rows)
         } else {
             rows = await pengguna.findPenggunaProyek(param);
-            console.dir("zxc")
+            //console.dir("zxc")
         }
 
 

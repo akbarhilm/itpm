@@ -136,7 +136,7 @@ async function getinfonik(param) {
        return data
       })
 
-      console.dir(data)
+      //console.dir(data)
     return data
 
 }
@@ -218,11 +218,11 @@ router.post('/tambah', async (req, res, next) => {
 
 
         const mail = await smail.mail(parammail)
-        console.dir(mail)
+        //console.dir(mail)
         if (mail && mail.status == 200) {
             res.status(200).json(rows);
         } else {
-            console.dir("else 1")
+            //console.dir("else 1")
             const delt = await proyek.delproyek({ idproj: rows.idproj })
             res.status(500).json({ "code": "500", "message": "Gagal Membuat Proyek" });
         }
@@ -273,7 +273,7 @@ router.put('/ubahstatus', async (req, res, next) => {
                             }
                         })
                     .then(async rest => {
-                        console.dir(rest.data)
+                        //console.dir(rest.data)
                         res.status(200).json({ "code": 200, "message": "berhasil Ubah" })
                     })
                     .catch(async (error) => {

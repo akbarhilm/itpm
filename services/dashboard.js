@@ -40,7 +40,7 @@ async function listProyek(params) {
     const param = {}
     param.tahun = params.tahun
     const result = await database.exec(query, param)
-    console.dir(result)
+    //console.dir(result)
     return result.rows
 }
 
@@ -96,7 +96,7 @@ async function projectById(params) {
     from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b, DBADMIT.TMITPMCHARTER c,dbadmit.tritpmmdl d
     where a.i_itpm_sc = b.i_Itpm_sc and a.i_itpm_proj = c.i_itpm_proj and a.i_Itpm_mdl = d.i_itpm_mdl
     and a.I_itpm_proj = :id`
-    console.dir("byid")
+    //console.dir("byid")
     const param = {}
     param.id = params.id
     const result = await database.exec(query, param)

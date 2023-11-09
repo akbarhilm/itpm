@@ -111,7 +111,7 @@ router.post('/plan/tambah',async(req,res,next)=>{
 
             res.status(200).json(reselect)
             conn.close()
-            console.dir(oracle.getPool().connectionsInUse)
+            //console.dir(oracle.getPool().connectionsInUse)
         }).catch((e)=>{
             console.dir(e)
            conn.close()
@@ -185,7 +185,7 @@ router.put('/plan/ubah',async(req,res,next)=>{
 
             res.status(200).json(reselect)
             conn.close()
-            console.dir(oracle.getPool().connectionsInUse)
+            //console.dir(oracle.getPool().connectionsInUse)
         }).catch((e)=>{
             console.dir(e)
             

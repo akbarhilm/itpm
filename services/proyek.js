@@ -43,7 +43,7 @@ async function find(params){
     query+=`\n  where to_char(i_itpm_proj) = :id or n_itpm_projuri =:id`;
     }   
     const result = await database.exec(query,param)
-    console.dir(result)
+    //console.dir(result)
     return result.rows
 }
 
@@ -95,8 +95,8 @@ async function add(params,commit,conn){
     )
     returning i_itpm_proj into :idproj`
    params.idproj = {dir:oracledb.BIND_OUT}
-   // console.dir(query);
-    console.dir(params)  
+   // //console.dir(query);
+    //console.dir(params)  
     const result = await database.seqexec(query,params,commit,conn)
     
     params.idproj = parseInt(result.outBinds.idproj[0]);
@@ -141,7 +141,7 @@ async function edit(params,commit,conn){
     D_UPDATE = sysdate
     where i_itpm_proj = :idproj`
     
-    console.log(params);
+    //console.log(params);
     const result = await database.seqexec(query,params,commit,conn)
     if(result.rowsAffected ==1){
         return params
@@ -318,7 +318,7 @@ async function summaryByYear(){
         group by tahun
         )`
     const result = await database.exec(query,{})
-    console.dir(result.rows)
+    //console.dir(result.rows)
     return result.rows
     
 }

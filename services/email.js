@@ -20,8 +20,8 @@ var postData = JSON.stringify(params)
     //       }
     //     ]
     //   }
-    console.dir("masuk mail")
-console.dir(process.env.ITPM_MAIL)
+    //console.dir("masuk mail")
+//console.dir(process.env.ITPM_MAIL)
 try{
     const res = await axios
     //.post('http://10.1.94.235:8025/send', postData,
