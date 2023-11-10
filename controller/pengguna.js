@@ -104,13 +104,14 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
 
         if (req.query.d) {
             let restrows = []
-            await rows.list.forEach(d=>restrows.push({...d,
+            await rows.list.forEach(d=>{console.log(d) 
+                restrows.push({...d,
                 nama_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).nama,
                 divisi_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).organisasi,
                 nama_PM:datanik.data.find(x=>x.nik===d.nik_PM).nama,
                 divisi_PM:datanik.data.find(x=>x.nik===d.nik_PM).organisasi,
             
-            }) 
+            }) }
             )
             const batch = await restrows.map(async (v) => {
                 const cr = await charter.find({
