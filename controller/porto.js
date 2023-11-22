@@ -43,8 +43,9 @@ router.post('/porto/tambah',async(req,res,next)=>{
         params.identry = req.user.data.nik
 
         const rest = await porto.add(params)
-
-        res.status(200).json(rest)
+        const r = await porto.find()
+        
+        res.status(200).json(r)
 
     }catch(err){
         const { errorNum } = err;
@@ -61,8 +62,9 @@ router.put('/porto/edit',async(req,res,next)=>{
         params.idupdate = req.user.data.nik
 
         const rest = await porto.edit(params)
-
-        res.status(200).json(rest)
+        const r = await porto.find()
+        
+        res.status(200).json(r)
 
     }catch(err){
         const { errorNum } = err;
@@ -74,10 +76,13 @@ router.put('/porto/edit',async(req,res,next)=>{
 
 router.delete('/porto/hapus',async (req,res,next)=>{
     try{
-        const rest = await porto.remove({idporto:req.body.idporto})
+        console.log(req.body.id);
+        const rest = await porto.remove({idporto:req.body.id})
 
         if(rest==1){
-            res.status(200).json({"code":200,"message":"Berhasil Hapus"})
+            const r = await porto.find()
+        
+        res.status(200).json(r)
         }else{
             res.status(500).json({"code":500,"message":"TIdak Berhasil Hapus"})
         }

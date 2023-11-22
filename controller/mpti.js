@@ -11,7 +11,7 @@ router.get('/mpti',async(req,res,next)=>{
         if (row.length !== 0) {
             res.status(200).json(row);
         } else {
-            res.status(200).json({});
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)
@@ -40,11 +40,11 @@ router.post('/mpti/tambah',async(req,res,next)=>{
     try{
 
         const params = req.body
-        params.identry = req.user.data.nik
+        params.IDENTRY = req.user.data.nik
 
         const rest = await mpti.add(params)
-
-        res.status(200).json(rest)
+        const r = await mpti.find()
+        res.status(200).json(r)
 
     }catch(err){
         const { errorNum } = err;
@@ -58,11 +58,11 @@ router.put('/mpti/edit',async(req,res,next)=>{
     try{
 
         const params = req.body
-        params.idupdate = req.user.data.nik
+        params.IDUPDATE = req.user.data.nik
 
         const rest = await mpti.edit(params)
-
-        res.status(200).json(rest)
+        const r = await mpti.find()
+        res.status(200).json(r)
 
     }catch(err){
         const { errorNum } = err;
@@ -74,10 +74,11 @@ router.put('/mpti/edit',async(req,res,next)=>{
 
 router.delete('/mpti/hapus',async (req,res,next)=>{
     try{
-        const rest = await mpti.remove({idmpti:req.body.idmpti})
+        const rest = await mpti.remove({idmpti:req.body.id})
 
         if(rest==1){
-            res.status(200).json({"code":200,"message":"Berhasil Hapus"})
+            const r = await mpti.find()
+            res.status(200).json(r)
         }else{
             res.status(500).json({"code":500,"message":"TIdak Berhasil Hapus"})
         }

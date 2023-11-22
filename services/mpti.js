@@ -3,9 +3,9 @@ const oracledb = require('oracledb');
 
 async function find(params){
 
-    let query=`select i_idmpti as idmpti,
-                d_mpti_start as tglmulai,
-                d_mpti_compl as tglselesai,
+    let query=`select i_idmpti as "id",
+                d_mpti_start as tahunmulai,
+                d_mpti_compl as tahunselesai,
                 c_mpti as kodempti,
                 e_mpti as ketmpti
                 from dbadmit.tritpmmpti
@@ -17,8 +17,9 @@ async function find(params){
                  query += `\n where i_idmpti = :idmpti`;
                 param.idmpti = params.idmpti
              }
+            query+=`\n order by 1 desc`
         
-  
+
     const res = await database.exec(query,params)
     return res.rows;
 }
@@ -33,30 +34,30 @@ async function add(params){
     i_entry,
     d_entry
     )values(
-    :tglmulai,
-    :tglselesai,
-    :kodempti,
-    :ketmpti,
-    :identry,
+    :TAHUNMULAI,
+    :TAHUNSELESAI,
+    :KODEMPTI,
+    :KETMPTI,
+    :IDENTRY,
     sysdate
-    )returning i_idmpti into :idmpti`
+    )returning i_idmpti into :id`
     
-    params.idmpti = {dir:oracledb.BIND_OUT}
+    params.id = {dir:oracledb.BIND_OUT}
         
     const result = await database.exec(query,params)
-    params.idmpti = result.outBinds.idmpti[0];
+    params.id = result.outBinds.id[0];
     return params
 }
 
 async function edit(params){
     let query=`update dbadmit.tritpmmpti set
-    d_mpti_start = :tglmulai,
-    d_mpti_compl = :tglselesai,
-    c_mpti = :kodempti,
-    e_mpti = :ketmpti,
-    i_update = :idupdate,
+    d_mpti_start = :TAHUNMULAI,
+    d_mpti_compl = :TAHUNSELESAI,
+    c_mpti = :KODEMPTI,
+    e_mpti = :KETMPTI,
+    i_update = :IDUPDATE,
     d_update = sysdate
-    where i_idmpti = :idmpti `
+    where i_idmpti = :id `
 
     const res = await database.exec(query,params)
     if(res.rowsAffected ==1){

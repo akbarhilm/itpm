@@ -40,11 +40,11 @@ router.post('/proker/tambah',async(req,res,next)=>{
     try{
 
         const params = req.body
-        params.identry = req.user.data.nik
+        params.IDENTRY = req.user.data.nik
 
         const rest = await proker.add(params)
-
-        res.status(200).json(rest)
+        const r = await proker.find()
+        res.status(200).json(r)
 
     }catch(err){
         const { errorNum } = err;
@@ -58,11 +58,11 @@ router.put('/proker/edit',async(req,res,next)=>{
     try{
 
         const params = req.body
-        params.idupdate = req.user.data.nik
+        params.IDUPDATE = req.user.data.nik
 
         const rest = await proker.edit(params)
-
-        res.status(200).json(rest)
+        const r = await proker.find()
+        res.status(200).json(r)
 
     }catch(err){
         const { errorNum } = err;
@@ -74,10 +74,11 @@ router.put('/proker/edit',async(req,res,next)=>{
 
 router.delete('/proker/hapus',async (req,res,next)=>{
     try{
-        const rest = await proker.remove({idproker:req.body.idproker})
+        const rest = await proker.remove({idproker:req.body.id})
 
         if(rest==1){
-            res.status(200).json({"code":200,"message":"Berhasil Hapus"})
+            const r = await proker.find()
+            res.status(200).json(r)
         }else{
             res.status(500).json({"code":500,"message":"TIdak Berhasil Hapus"})
         }
