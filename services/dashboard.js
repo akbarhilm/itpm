@@ -5,7 +5,8 @@ const oracledb = require('oracledb');
 
 
 async function listProyek(params) {
-    let query = `select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
+    let query = `
+	select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
     from(
     select "id","no_layanan","nama_proyek","keterangan",
     case "status" when 'SELESAI' THEN 'CLOSED' 
@@ -17,7 +18,7 @@ async function listProyek(params) {
     b.I_ITPM_SCNBR as "no_layanan",
     N_ITPM_PROJ as "nama_proyek",
     E_ITPM_PROJ as "keterangan",
-   case C_ITPM_PROJSTAT when 'BERJALAN' THEN (case when c_itpm_useraprv = '1' then 'TOBE_LAUNCHED' ELSE C_ITPM_PROJSTAT END) else C_ITPM_PROJSTAT  end as "status",
+   case C_ITPM_PROJSTAT when 'BERJALAN' THEN (case when c_itpm_useraprv = '1' then 'TOBE_LAUNCH' ELSE C_ITPM_PROJSTAT END) else C_ITPM_PROJSTAT  end as "status",
     p.d_itpm_actyfinish as max_tgl,
     to_char(z.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
     to_char(z.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai",
@@ -97,7 +98,7 @@ select a.I_ITPM_PROJ as "id",
     d.N_ITPM_MDL as "nama_modul",
     N_ITPM_PROJ as "nama_proyek",
     E_ITPM_PROJ as "keterangan",
-    case C_ITPM_PROJSTAT when 'BERJALAN' THEN (case when c_itpm_useraprv = '1' then 'TOBE_LAUNCHED' ELSE C_ITPM_PROJSTAT END) else C_ITPM_PROJSTAT  end as "status",
+    case C_ITPM_PROJSTAT when 'BERJALAN' THEN (case when c_itpm_useraprv = '1' then 'TOBE_LAUNCH' ELSE C_ITPM_PROJSTAT END) else C_ITPM_PROJSTAT  end as "status",
     p.d_itpm_actyfinish as max_tgl,
     a.I_EMP_REQ as "bisnis_owner",
     a.I_EMP_PM as "project_mgr",
@@ -118,8 +119,9 @@ select a.I_ITPM_PROJ as "id",
     group by "id","no_layanan","type_layanan",
     "jenis_app",
     "nama_modul","nama_proyek","keterangan","status","bisnis_owner","project_mgr","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
-    )`
-    //console.dir("byid")
+    )
+	`
+    console.dir("byid")
     const param = {}
     param.id = params.id
     const result = await database.exec(query, param)
@@ -149,7 +151,7 @@ async function realisasi(params) {
 async function summary(params) {
 
 
-    let query = `SELECT SUM(total) as "total",sum(baru) as "new" , sum(berjalan) as "on_going", sum(tbl) as "tobe_launched", sum(delay) as "delay",sum(pending) as "pending", sum(cancl) as "cancel",sum(hold) as "hold", sum(blocked) as "blocked", sum(selesai) as "closed" from (
+    let query = `SELECT SUM(total) as "total",sum(baru) as "new" , sum(berjalan) as "on_going", sum(tbl) as "tobe_launch", sum(delay) as "delay",sum(pending) as "pending", sum(cancl) as "cancel",sum(hold) as "hold", sum(blocked) as "blocked", sum(selesai) as "closed" from (
         select count(*) as total,0 as baru, 0 as berjalan, 0 as tbl, 0 as delay, 0 as pending, 0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ  where  to_char(d_entry,'yyyy') = :tahun
        
