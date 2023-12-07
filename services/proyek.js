@@ -21,10 +21,10 @@ async function find(params){
     N_ITPM_PROJURI as namauri,
     I_EMP_REQ as nikreq,
     I_EMP_PM as nikpm,
-    C_MPTI as kodempti,
-    N_REF_MPTI as ketmpti,
-    C_proker as kodeproker,
-    N_REF_proker as ketproker,
+    C_MPTI as idmpti,
+   
+    C_proker as idproker,
+   
     I_ITPM_RISKNBR as norisk,
     I_ITPM_PLANNBR as noplan,
     I_ITPM_RESRCNBR as nores,
@@ -53,7 +53,7 @@ async function add(params,commit,conn){
     let query =`INSERT INTO DBADMIT.TMITPMPROJ 
     (I_ITPM_SC,    C_ITPM_APPLSTAT, C_ITPM_SC,    N_ITPM_PROJ, E_ITPM_PROJ,
         C_ITPM_PROJSTAT,   D_ITPM_PROJSTATCHNG,
-    C_ITPM_ACTV,    N_ITPM_PROJURI,    I_EMP_REQ,    I_EMP_PM,C_MPTI,N_REF_MPTI,C_proker,N_REF_proker`
+    C_ITPM_ACTV,    N_ITPM_PROJURI,    I_EMP_REQ,    I_EMP_PM,C_MPTI,C_proker`
     if(params.idaplikasi){
      query+=`,I_ITPM_APPL`
     }
@@ -73,10 +73,10 @@ async function add(params,commit,conn){
     DBADMIT.SEQ01MITPMPROJ.CURRVAL,
     :nikreq,
     :nikpm,
-    :kodempti,
-    :ketmpti,
-    :kodeproker,
-    :ketproker,`
+    :idmpti,
+    
+    :idproker,
+    `
     if(params.idaplikasi){
         query+=`:idaplikasi,`
        }
@@ -131,10 +131,10 @@ async function edit(params,commit,conn){
        
     I_EMP_REQ = :nikreq,    
     I_EMP_PM = :nikpm,
-    C_MPTI = :kodempti,
-    N_REF_MPTI = :ketmpti,
-    C_proker = :kodeproker,
-    N_REF_proker = :ketproker,
+    C_MPTI = :idmpti,
+   
+    C_proker = :idproker,
+    
     I_ITPM_APPL = :idaplikasi,
     I_ITPM_MDL = :idmodul,
     I_UPDATE = :idupdate,
@@ -207,6 +207,19 @@ async function updateStatus(params,commit,conn){
     param.ket = params.ket || ''
 
     const result = await database.seqexec(query,param,commit,conn)
+    return result.rowsAffected
+}
+
+async function addHistoryStatus(params,commit,conn){
+    let query=`insert into DBADMIT.THITPMPROJSTAT values(
+        :idproj,
+        :status,
+        :ket,
+        sysdate,
+        :identry,
+        sysdate)
+        `
+        const result = await database.seqexec(query,params,commit,conn)
     return result.rowsAffected
 }
 
@@ -342,6 +355,7 @@ async function summaryByDev(){
     return result.rows
 }
 
+module.exports.addHistoryStatus = addHistoryStatus
 module.exports.summaryByDev = summaryByDev
 module.exports.summaryByYear = summaryByYear
 module.exports.summaryByKategori = summaryByKategori
