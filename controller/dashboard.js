@@ -13,7 +13,7 @@ router.get('/projects', async (req, res, next) => {
                     id: ''+v.id
                 })
                 const pr = await dashboard.progressById({idproj:""+v.id})
-                console.log(pr);
+                //console.log(pr);
               const mappr = pr.map(x => Object.fromEntries(Object.entries(x).map(
                 ([key, value]) => [key, typeof value == 'string' ? value.replace(/& /g,"").replace(/ /g,"_").toLowerCase() : value]))).map(y=>({[y.NAMAKEGIATAN]:y.PROGRESS}))
              // console.log(mappr);

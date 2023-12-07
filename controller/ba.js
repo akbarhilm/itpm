@@ -34,7 +34,7 @@ router.post('/ba/tambah', async (req, res, next) => {
 
         if (rest == 1) {
             const mail = await smail.mail(parammail)
-            console.dir(mail)
+            //console.dir(mail)
                      if(mail && mail.status == 200){
                         res.status(200).json({ "code": 200, "message": "berhasil Simpan" })
                      }else{
@@ -82,7 +82,7 @@ router.post('/ba/approve', async (req, res, next) => {
                         // res.data
                         //)
 
-                        console.dir(rest.data)
+                        //console.dir(rest.data)
                         res.status(200).json({ "code": 200, "message": "berhasil Approve" })
                          const  updatestatus = await proj.updateStatusBa({ idproj: idproj, status:"SELESAI" });
                         //return res.data

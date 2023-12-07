@@ -97,12 +97,12 @@ router.post('/uat/tambah', async (req, res, next) => {
 
         let reselect;
         //const resdetail = []
-        console.dir("DATA")
-        console.dir(temparray)
+        //console.dir("DATA")
+        //console.dir(temparray)
         const dtl = temparray.map(async (el, i, array) => {
             el.iduat = respar.iduat;
             if (i == array.length - 1) {
-                console.dir(el.nikuat);
+                //console.dir(el.nikuat);
                 const res = await uat.addChild(el, { autoCommit: true }, conn);
 
                 //resdetail.push(res)
@@ -113,11 +113,11 @@ router.post('/uat/tambah', async (req, res, next) => {
             }
 
         });
-        console.dir("Mapped Data")
-        console.dir(dtl)
+        //console.dir("Mapped Data")
+        //console.dir(dtl)
         return Promise.all(dtl).then(async (ress) => {
-            console.dir("Hasil promises")
-            console.dir(ress)
+            //console.dir("Hasil promises")
+            //console.dir(ress)
             reselect = await uat.find({ idproj: idproj });
             if (reselect.length !== 0) {
 
@@ -186,7 +186,7 @@ router.put('/uat/ubah', async (req, res, next) => {
 
         let reselect;
         //const resdetail = []
-        console.dir(temparray);
+        //console.dir(temparray);
         const dtl = temparray.map(async (el, i, array) => {
             el.iduat = iduat;
             if (i == array.length - 1) {
@@ -230,15 +230,15 @@ router.put('/uat/approveuser', async (req, res, next) => {
         const param = req.body;
         param.idubah = req.user.data.nik;
        
-        console.dir("Uat user");
+        //console.dir("Uat user");
         const result = await uat.approveuser(param);
         
-        console.dir(result);
+        //console.dir(result);
        
 
        const rest = await uat.approvebyUAT(param)
-        console.dir("charter uat");
-        console.dir(rest);
+        //console.dir("charter uat");
+        //console.dir(rest);
         if (result == 1) {
             res.status(200).json({ "code": 200, "message": "Berhasil Approve" });
         } else {
@@ -259,9 +259,9 @@ router.put('/uat/approveqa', async (req, res, next) => {
         param.idubah = req.user.data.nik;
         const iduatparam = req.body.iduat.toString();
         const datauat = await uat.find({ iduat: iduatparam });
-        console.dir(datauat)
+        //console.dir(datauat)
         const datapro = await proj.find({ id: datauat[0].IDPROJ.toString() });
-        console.dir(datapro)
+        //console.dir(datapro)
         const email = await alamatemail.useremail({ nik: datapro[0].NIKREQ });
         const mailbpo = {};
         mailbpo.email = email[0].EMAIL;
@@ -278,7 +278,7 @@ router.put('/uat/approveqa', async (req, res, next) => {
         const result = await uat.approveqa(param);
         if (result == 1) {
             const mail = await smail.mail(parammail)
-            console.dir(mail)
+            //console.dir(mail)
                      if(mail && mail.status == 200){
                         res.status(200).json({ "code": 200, "message": "Berhasil Approve" });
                      }else{
