@@ -88,7 +88,7 @@ async function summaryProyek(params){
        
        )`
 
-    console.dir(otor)
+    //console.dir(otor)
     const paramq = {}
 
     const mapotor = otor.map(x=>x.KODEAUTH)
@@ -145,24 +145,25 @@ async function findPenggunaProyek(params){
     query+=` and :nik in (a.i_emp_req,a.i_emp_pm)`;
     }
     //console.dir(params.status)
-    if(params.status != 'ALL' ){
-        if(params.status === 'DELAYED'){
-            params.status = 'BERJALAN'
-            query+=`and a.i_itpm_proj in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )`
-        }
+    if(params.status !== 'ALL' ){
         if(params.status === 'BERJALAN'){
            
             query+=`and a.i_itpm_proj not in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )`
         }
+        if(params.status === 'DELAY'){
+            params.status = 'BERJALAN'
+            query+=`and a.i_itpm_proj in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )`
+        }
         
+         
       param.status = params.status
     query += ` and  a.C_ITPM_PROJSTAT = :status`;
     }
     query+=` order by a.d_entry desc`;
 
-    console.dir(query)
-    console.dir(param)
-    console.dir(param.status)
+    //console.dir(query)
+    //console.dir(param)
+    //console.dir(param.status)
 
     let result = await database.exec(query,param)
     let list = {"list":result.rows}

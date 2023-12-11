@@ -45,7 +45,7 @@ function exec(statement, bind = [], opt = []) {
             if (conn) {
                 try {
                     await conn.close();
-                    console.dir("close");
+                    //console.dir("close");
                 } catch (err) {
                     console.log(err);
                 }
@@ -71,11 +71,11 @@ function exec(statement, bind = [], opt = []) {
                 //console.dir(oracle.getPool().connectionsInUse)
                 //console.dir(seqconn)
             const result = await conn.execute(statement, bind, opt);
-            console.dir(result);
+            //console.dir(result);
             resolve(result);
         } catch (err) {
             console.dir(err);
-            console.dir("tryyyyy")
+            //console.dir("tryyyyy")
             reject(err);
         } 
         // finally {

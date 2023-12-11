@@ -5,7 +5,8 @@ const oracledb = require('oracledb');
 
 
 async function listProyek(params) {
-    let query = `select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
+    let query = `
+	select "id","no_layanan","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
     from(
     select "id","no_layanan","nama_proyek","keterangan",
     case "status" when 'SELESAI' THEN 'CLOSED' 
@@ -17,7 +18,7 @@ async function listProyek(params) {
     b.I_ITPM_SCNBR as "no_layanan",
     N_ITPM_PROJ as "nama_proyek",
     E_ITPM_PROJ as "keterangan",
-   C_ITPM_PROJSTAT as "status",
+   case C_ITPM_PROJSTAT when 'BERJALAN' THEN (case when c_itpm_useraprv = '1' then 'TOBE_LAUNCH' ELSE C_ITPM_PROJSTAT END) else C_ITPM_PROJSTAT  end as "status",
     p.d_itpm_actyfinish as max_tgl,
     to_char(z.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
     to_char(z.D_ITPM_CHARTERFINISH,'dd/mm/yyyy') as "tanggal_selesai",
@@ -29,6 +30,7 @@ async function listProyek(params) {
     
     from DBADMIT.TMITPMPROJ a full join  dbadmit.tmitpmcharter z on  a.i_itpm_proj= z.i_itpm_proj
                               full join dbadmit.tmitpmplanreal p on a.I_itpm_proj = p.I_itpm_proj and p.c_Itpm_planreal = 'PLAN'
+                               full join DBADMIT.TMITPMUAT c on a.i_Itpm_proj = c.I_itpm_proj
                               , DBADMIT.TMITPMSC b
     where a.i_itpm_sc = b.i_Itpm_sc 
     
@@ -40,7 +42,7 @@ async function listProyek(params) {
     const param = {}
     param.tahun = params.tahun
     const result = await database.exec(query, param)
-    console.dir(result)
+    //console.dir(result)
     return result.rows
 }
 
@@ -76,14 +78,28 @@ async function progressById(params){
 
 
 async function projectById(params) {
-    let query = `select a.I_ITPM_PROJ as "id",
+    let query = `select "id","no_layanan","type_layanan",
+    "jenis_app",
+    "nama_modul","nama_proyek","keterangan",case "status" when 'BERJALAN' THEN (case when max_tgl <= trunc(sysdate) then 'DELAYED' else 'ONGOING' end) else "status" end as "status", "bisnis_owner","project_mgr","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
+    from(
+    select "id","no_layanan", "type_layanan",
+    "jenis_app",
+    "nama_modul",
+    "nama_proyek","keterangan",
+    case "status" when 'SELESAI' THEN 'CLOSED' 
+                  when 'BARU' then 'NEW'
+                  ELSE "status" end as "status",
+    "tanggal_mulai","tanggal_selesai", max(max_tgl) as max_tgl,"bisnis_owner","project_mgr","mpti","ref_mpti","proker","ref_proker"
+        FROM(
+select a.I_ITPM_PROJ as "id",
     b.I_ITPM_SCNBR as "no_layanan",
     a.C_ITPM_SC as "type_layanan",
     C_ITPM_APPLSTAT as "jenis_app",
-    d.N_ITPM_MDL as "jenis_app",
+    d.N_ITPM_MDL as "nama_modul",
     N_ITPM_PROJ as "nama_proyek",
     E_ITPM_PROJ as "keterangan",
-    C_ITPM_PROJSTAT as "status",
+    case C_ITPM_PROJSTAT when 'BERJALAN' THEN (case when c_itpm_useraprv = '1' then 'TOBE_LAUNCH' ELSE C_ITPM_PROJSTAT END) else C_ITPM_PROJSTAT  end as "status",
+    p.d_itpm_actyfinish as max_tgl,
     a.I_EMP_REQ as "bisnis_owner",
     a.I_EMP_PM as "project_mgr",
     to_char(c.D_ITPM_CHARTERSTART,'dd/mm/yyyy') as "tanggal_mulai",
@@ -92,10 +108,19 @@ async function projectById(params) {
     a.n_ref_mpti as "ref_mpti",
     a.c_proker as "proker",
     a.n_ref_proker as "ref_proker"
-
-    from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMSC b, DBADMIT.TMITPMCHARTER c,dbadmit.tritpmmdl d
-    where a.i_itpm_sc = b.i_Itpm_sc and a.i_itpm_proj = c.i_itpm_proj and a.i_Itpm_mdl = d.i_itpm_mdl
-    and a.I_itpm_proj = :id`
+    
+    from DBADMIT.TMITPMPROJ a full join DBADMIT.TMITPMCHARTER c on a.i_itpm_proj = c.i_itpm_proj
+                                full join dbadmit.tmitpmuat z on a.I_itpm_proj = z.i_itpm_proj
+                                full join dbadmit.tmitpmplanreal p on a.I_itpm_proj = p.I_itpm_proj and p.c_Itpm_planreal = 'PLAN'
+    , DBADMIT.TMITPMSC b, dbadmit.tritpmmdl d
+    where a.i_itpm_sc = b.i_Itpm_sc and   a.i_Itpm_mdl = d.i_itpm_mdl
+    and a.I_itpm_proj = :id
+    )
+    group by "id","no_layanan","type_layanan",
+    "jenis_app",
+    "nama_modul","nama_proyek","keterangan","status","bisnis_owner","project_mgr","tanggal_mulai","tanggal_selesai","mpti","ref_mpti","proker","ref_proker"
+    )
+	`
     console.dir("byid")
     const param = {}
     param.id = params.id
@@ -126,48 +151,53 @@ async function realisasi(params) {
 async function summary(params) {
 
 
-    let query = `SELECT SUM(total) as "total",sum(baru) as "new" , sum(berjalan) as "on_going", sum(delay) as "delay",sum(pending) as "pending", sum(cancl) as "cancel",sum(hold) as "hold", sum(blocked) as "blocked", sum(selesai) as "closed" from (
-        select count(*) as total,0 as baru, 0 as berjalan,0 as delay, 0 as pending, 0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+    let query = `SELECT SUM(total) as "total",sum(baru) as "new" , sum(berjalan) as "on_going", sum(tbl) as "tobe_launch", sum(delay) as "delay",sum(pending) as "pending", sum(cancl) as "cancel",sum(hold) as "hold", sum(blocked) as "blocked", sum(selesai) as "closed" from (
+        select count(*) as total,0 as baru, 0 as berjalan, 0 as tbl, 0 as delay, 0 as pending, 0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ  where  to_char(d_entry,'yyyy') = :tahun
        
        union all
    
-       select 0 as total, count(*) as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, count(*) as baru, 0 as berjalan, 0 as tbl, 0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BARU'  and to_char(d_entry,'yyyy') = :tahun
      
        union all
        
-       select 0 as total, 0 as baru, count(*) as berjalan,0 as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, 0 as baru, count(*) as berjalan, 0 as tbl, 0 as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj not in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
       and  to_char(d_entry,'yyyy') = :tahun
        union all
        
-        select 0 as total, 0 as baru, 0 as berjalan,count(*)  as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+          select 0 as total, 0 as baru, 0 as berjalan, count(*) as tbl,0 as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       from DBADMIT.TMITPMPROJ a, DBADMIT.TMITPMUAT b WHERE C_ITPM_PROJSTAT = 'BERJALAN' and a.i_itpm_proj not in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
+      and  a.i_itpm_proj = b.i_itpm_proj and b.c_itpm_useraprv = 1 and to_char(a.d_entry,'yyyy') = :tahun
+       union all
+       
+        select 0 as total, 0 as baru, 0 as berjalan, 0 as tbl, count(*)  as delay,0 as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BERJALAN' and i_itpm_proj in (select  case when max(d_itpm_actyfinish)<= trunc(sysdate) then i_itpm_proj else 0 end as i_itpm_proj from  dbadmit.tmitpmplanreal where C_ITPM_PLANREAL = 'PLAN' group by I_itpm_proj  )
     and to_char(d_entry,'yyyy') = :tahun
        union all
        
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, count(*) as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan, 0 as tbl, 0 as delay, count(*) as pending,0 as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'PENDING' 
        and to_char(d_entry,'yyyy') = :tahun
        union all
    
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,count(*) as cancl, 0 as hold, 0 as blocked, 0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan, 0 as tbl, 0 as delay, 0 as pending,count(*) as cancl, 0 as hold, 0 as blocked, 0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'CANCEL' 
        and to_char(d_entry,'yyyy') = :tahun
        union all
    
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, count(*) as hold, 0 as blocked,0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan, 0 as tbl, 0 as delay, 0 as pending,0 as cancl, count(*) as hold, 0 as blocked,0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'HOLD' 
        and to_char(d_entry,'yyyy') = :tahun
        union all
    
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, count(*) as blocked,0 as selesai
+       select 0 as total, 0 as baru, 0 as berjalan, 0 as tbl, 0 as delay, 0 as pending,0 as cancl, 0 as hold, count(*) as blocked,0 as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'BLOCKED' 
        and to_char(d_entry,'yyyy') = :tahun
 
        union all
-       select 0 as total, 0 as baru, 0 as berjalan,0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, count(*) as selesai
+       select 0 as total, 0 as baru, 0 as berjalan, 0 as tbl, 0 as delay, 0 as pending,0 as cancl, 0 as hold, 0 as blocked, count(*) as selesai
        from DBADMIT.TMITPMPROJ WHERE C_ITPM_PROJSTAT = 'SELESAI' 
        and to_char(d_entry,'yyyy') = :tahun
        )

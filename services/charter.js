@@ -49,7 +49,7 @@ async function findChild(params){
 
 async function addParent(params,commit,conn) {
     const nocharter = await noCharter()
-    console.dir(nocharter[0].NOCHARTER)
+    //console.dir(nocharter[0].NOCHARTER)
     let query = `insert into dbadmit.tmitpmcharter (
   I_ITPM_PROJ       ,
   I_ITPM_CHARTERNBR ,
@@ -129,7 +129,7 @@ async function addChild(params, commit, conn) {
 }
 
 async function editParent(params,commit,conn) {
-    console.dir("edit")
+    //console.dir("edit")
     const res = []
     let query = `update dbadmit.tmitpmcharter 
        
@@ -155,7 +155,7 @@ async function editParent(params,commit,conn) {
 }
 
 async function deleteChild(params,commit,conn) {
-    console.dir("del")
+    //console.dir("del")
     let query = `delete dbadmit.tmitpmcharterdtl where i_itpm_charter = :idcharter`
     const param ={}
     param.idcharter = params.idcharter
@@ -165,7 +165,7 @@ async function deleteChild(params,commit,conn) {
 }
 
 async function failAddParent(params,commit,conn) {
-    console.dir("del")
+    //console.dir("del")
     let query = `delete dbadmit.tmitpmcharte where i_itpm_charter = :idcharter`
     const param ={}
     param.idcharter = params.idcharter
@@ -175,7 +175,7 @@ async function failAddParent(params,commit,conn) {
 }
 
 async function failAddChild(params,commit,conn) {
-    console.dir("del")
+    //console.dir("del")
     let query = `delete dbadmit.tmitpmcharterdtl where i_itpm_charter = :idcharter`
     const param ={}
     param.idcharter = params.idcharter

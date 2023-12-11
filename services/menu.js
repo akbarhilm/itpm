@@ -17,7 +17,7 @@ async function find(params){
 async function findMenuProyekByPengguna(params){
     const otor = await pengguna.findPenggunaOtoritas(params);
     let query=""
-    console.dir(otor)
+    //console.dir(otor)
     const param ={}
     const mapotor = otor.map(x=>x.KODEAUTH)
     const checkotor = ["PMO","QA","BOD","DBA","SYSADMIN","PROGRAMMER","ANALYST"]
@@ -25,8 +25,8 @@ async function findMenuProyekByPengguna(params){
   
     // if(otor.find(x=>x.KODEAUTH=="BPO") || otor.find(x=>x.KODEAUTH=="PM")){
     if(!checkotor.some(val => mapotor.includes(val))){
-        console.dir(params.nik)
-        console.dir(params.id)
+        //console.dir(params.nik)
+        //console.dir(params.id)
         param.nik = params.nik
     param.id = params.id
      query +=`select i_itpm_menu as idmenu,n_itpm_menu as namaMenu,n_itpm_menuuri as namaUri,e_itpm_menu as ketMenu,

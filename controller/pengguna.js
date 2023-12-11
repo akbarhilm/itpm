@@ -95,23 +95,29 @@ router.get('/pengguna/proyek/nik', async (req, res, next) => {
         let rows
         if (req.query.nik) {
             rows = await proyek.proyekByNik({ nik: req.query.nik })
-            console.dir(rows)
+            //console.dir(rows)
         } else {
             rows = await pengguna.findPenggunaProyek(param);
-            console.dir("zxc")
+            //console.dir("zxc")
         }
 
 
         if (req.query.d) {
             let restrows = []
-            await rows.list.forEach(d=>restrows.push({...d,
-                nama_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).nama,
-                divisi_BPO:datanik.data.find(x=>x.nik===d.nik_BPO).organisasi,
-                nama_PM:datanik.data.find(x=>x.nik===d.nik_PM).nama,
-                divisi_PM:datanik.data.find(x=>x.nik===d.nik_PM).organisasi,
+            await rows.list.forEach(d=>{console.log(d) 
+                const nbpo = datanik.data.filter(x=>x.nik===d.nik_BPO)
+                
+                const npm = datanik.data.filter(x=>x.nik===d.nik_PM)
+                
+                restrows.push({...d,
+                nama_BPO:nbpo.length>0?nbpo[0].nama : d.nik_BPO,
+                divisi_BPO:nbpo.length>0?nbpo[0].organisasi:' - ',
+                nama_PM:npm.length>0?npm[0].nama : d.nik_PM,
+                divisi_PM:npm.length>0?npm[0].organisasi : ' - ',
             
-            }) 
+            }) }
             )
+            
             const batch = await restrows.map(async (v) => {
                 const cr = await charter.find({
                     idproj: v.IDPROYEK
