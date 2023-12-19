@@ -11,7 +11,7 @@ router.get('/porto',async(req,res,next)=>{
         if (row.length !== 0) {
             res.status(200).json(row);
         } else {
-            res.status(200).json({});
+            res.status(200).json([]);
         }
     } catch (err) {
         console.error(err)
