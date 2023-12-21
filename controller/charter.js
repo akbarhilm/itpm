@@ -106,7 +106,7 @@ router.post('/charter/tambah', async (req, res, next) => {
 
             }
             const mail = await smail.mail(parammail);
-            console.dir(mail);
+            //console.dir(mail);
             if (mail && mail.status == 200) {
                 res.status(200).json(reselect[0]);
             } else {

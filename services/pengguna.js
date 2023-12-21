@@ -88,7 +88,7 @@ async function summaryProyek(params){
        
        )`
 
-    console.dir(otor)
+    //console.dir(otor)
     const paramq = {}
 
     const mapotor = otor.map(x=>x.KODEAUTH)
@@ -161,9 +161,9 @@ async function findPenggunaProyek(params){
     }
     query+=` order by a.d_entry desc`;
 
-    console.dir(query)
-    console.dir(param)
-    console.dir(param.status)
+    //console.dir(query)
+    //console.dir(param)
+    //console.dir(param.status)
 
     let result = await database.exec(query,param)
     let list = {"list":result.rows}

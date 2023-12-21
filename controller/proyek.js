@@ -136,7 +136,7 @@ async function getinfonik(param) {
        return data
       })
 
-      console.dir(data)
+      //console.dir(data)
     return data
 
 }
@@ -218,11 +218,11 @@ router.post('/tambah', async (req, res, next) => {
 
 
         const mail = await smail.mail(parammail)
-        console.dir(mail)
+        //console.dir(mail)
         if (mail && mail.status == 200) {
             res.status(200).json(rows);
         } else {
-            console.dir("else 1")
+            //console.dir("else 1")
             const delt = await proyek.delproyek({ idproj: rows.idproj })
             res.status(500).json({ "code": "500", "message": "Gagal Membuat Proyek" });
         }
@@ -250,13 +250,23 @@ router.put('/ubahstatus', async (req, res, next) => {
         const idlayanan = datapro[0].IDLAYANAN
         const statusBeforeUpdate = datapro[0].KODESTATUS
 
+        const paramhistory = {}
+        paramhistory.idproj = datapro[0].IDPROYEK
+        paramhistory.identry = req.user.data.nik;
+        paramhistory.status = datapro[0].KODESTATUS
+        paramhistory.ket = datapro[0].KETSTATUS
         const param = {}
         param.idproj = req.body.idproj
         param.ket = req.body.ket
         param.status = req.body.status
         const updatestatus = await proyek.updateStatus(param, {
             autoCommit: true
-        }, conn);
+        }, conn)
+
+        const historystatus = await proyek.addHistoryStatus(paramhistory, {
+            autoCommit: true
+        }, conn)
+
 
 
         const postData = { kode_status: "FBP", catatan: "Selesai dengan Keterangan : " + param.ket }
@@ -273,7 +283,7 @@ router.put('/ubahstatus', async (req, res, next) => {
                             }
                         })
                     .then(async rest => {
-                        console.dir(rest.data)
+                        //console.dir(rest.data)
                         res.status(200).json({ "code": 200, "message": "berhasil Ubah" })
                     })
                     .catch(async (error) => {

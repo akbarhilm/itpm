@@ -110,10 +110,10 @@ async function updateRoboMaster(params, commit, conn){
     param.identry = params.identry
     param.idproj = params.idproj
     param.idrobo = { dir: oracledb.BIND_OUT }
-    console.dir("update master")
+    ////console.dir("update master")
     const result = await database.seqexec(query, param, commit, conn)
     param.idrobo = result.outBinds.idrobo[0];
-    console.dir(result)
+    ////console.dir(result)
     return param
 }
 ///////////////////////////end/////////////////////////////
@@ -172,7 +172,7 @@ async function addRoboResp(params, commit, conn) {
     param.identry = params.identry
     
     //param.idroboroleresp = { dir: oracledb.BIND_OUT }
-    console.dir("add resp")
+    ////console.dir("add resp")
     const result = await database.seqexec(query, param, commit, conn)
     //param.idroboroleresp = result.outBinds.idroboroleresp[0];
     
@@ -239,9 +239,9 @@ async function addRoboAct(params, commit, conn) {
     param.tglmulai = params.tanggalMulai
     param.tglselesai = params.tanggalSelesai
     param.identry = params.identry
-    //    console.dir(param)
+    //    ////console.dir(param)
     //param.idroboact = { dir: oracledb.BIND_OUT }
-    console.dir("add act")
+    ////console.dir("add act")
     const result = await database.seqexec(query, param, commit, conn)
    // param.idroboact = result.outBinds.idroboact[0];
     return param
@@ -298,7 +298,7 @@ async function addBOPlan(params, commit, conn) {
     param.identry = params.identry
 
     //param.idroboplan = { dir: oracledb.BIND_OUT }
-    console.dir("add bo")
+    ////console.dir("add bo")
     const result = await database.seqexec(query, param, commit, conn)
     //param.idroboplan = result.outBinds.idroboplan[0];
     return param
@@ -457,25 +457,25 @@ async function deleteMaster(param){
 async function deleteResp(param){
     let query=`delete from DBADMIT.TMITPMROBOROLERESP where i_itpm_idrobo = (select i_itpm_idrobo from DBADMIT.TMITPMROBO where i_itpm_proj = :idproj)`
     const result = await database.exec(query, param)
-    console.dir("resp")
-    console.dir(param)
-    console.dir(result)
+    //console.dir("resp")
+    //console.dir(param)
+    //console.dir(result)
     return result.rows
 }
 async function deleteAct(param){
     let query=`delete from DBADMIT.TMITPMROBOACT where i_itpm_idrobo = (select i_itpm_idrobo from DBADMIT.TMITPMROBO where i_itpm_proj = :idproj)`
     const result = await database.exec(query, param)
-    console.dir("act")
-    console.dir(param)
-    console.dir(result)
+    //console.dir("act")
+    //console.dir(param)
+    //console.dir(result)
     return result.rows
 }
 async function deleteBO(param){
     let query=`delete from DBADMIT.TMITPMROBOPLAN where i_itpm_idrobo = (select i_itpm_idrobo from DBADMIT.TMITPMROBO where i_itpm_proj = :idproj)`
     const result = await database.exec(query, param)
-    console.dir("bo")
-    console.dir(param)
-    console.dir(result)
+    //console.dir("bo")
+    //console.dir(param)
+    //console.dir(result)
     return result.rows
 }
 

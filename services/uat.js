@@ -16,7 +16,7 @@ async function find(params) {
      from dbadmit.tmitpmuat`
 
     if (!Object.keys(params).length == 0) {
-        // console.dir(!!params)
+        // //console.dir(!!params)
         query += `\n where`
         if (Object.keys(params).find(x => x == 'idproj')) {
             query += `\n I_ITPM_PROJ = :idproj`
@@ -27,7 +27,7 @@ async function find(params) {
         }
     }
     query+=` order by d_entry desc`
-    //console.dir(query)
+    ////console.dir(query)
     const result = await database.exec(query, params)
     return result.rows;
 }
@@ -49,7 +49,7 @@ async function findChild(params){
 
 async function addParent(params,commit,conn) {
     const nouat = await noUat()
-    console.dir(nouat[0].NOUAT)
+    //console.dir(nouat[0].NOUAT)
     let query = `insert into dbadmit.tmitpmuat (
         i_itpm_proj,
         i_itpm_uatnbr,
@@ -100,7 +100,7 @@ async function addChild(params, commit, conn) {
    :kodeuat,
     :nikuat
     )returning i_itpm_uatdtl into :iddetail`
-    console.dir(params)
+    //console.dir(params)
     const param = {}
     param.iduat = params.iduat
     param.kodeuat = params.kodeuat
@@ -143,7 +143,7 @@ async function addChild(params, commit, conn) {
 // }
 
 async function deleteChild(params,commit,conn) {
-    console.dir("del")
+    //console.dir("del")
     let query = `delete dbadmit.tmitpmuatdtl where i_itpm_uat = :iduat`
     const param ={}
     param.iduat = params.iduat

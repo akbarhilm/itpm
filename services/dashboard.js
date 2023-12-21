@@ -42,7 +42,7 @@ async function listProyek(params) {
     const param = {}
     param.tahun = params.tahun
     const result = await database.exec(query, param)
-    console.dir(result)
+    //console.dir(result)
     return result.rows
 }
 

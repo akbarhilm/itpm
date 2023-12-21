@@ -158,7 +158,7 @@ router.post('/robo/tambah', async (req, res, next) => {
         if(req.body.LISTDETAIL.EDIT){
             resmaster = await robo.updateRoboMaster(parammaster, { autoCommit: true }, conn)
             
-            console.dir(resmaster)
+            //console.dir(resmaster)
             await robo.deleteResp({idproj:parammaster.idproj})
             await robo.deleteAct({idproj:parammaster.idproj})
             await robo.deleteBO({idproj:parammaster.idproj})
@@ -166,8 +166,8 @@ router.post('/robo/tambah', async (req, res, next) => {
         }else{
             resmaster = await robo.addRoboMaster(parammaster, { autoCommit: false }, conn)
         }
-        console.dir("param master")
-        console.dir(resmaster)
+        //console.dir("param master")
+        //console.dir(resmaster)
     const pr = await Promise.all(paramresp.map(async (el, i, array) => {
             el.idrobo = resmaster.idrobo;
             el.identry = req.user.data.nik;
@@ -229,7 +229,7 @@ router.post('/robo/tambah', async (req, res, next) => {
               
         })
         )).then(async (ress) => {
-            console.dir(ress)
+            //console.dir(ress)
             const rs = await robo.findRoboMaster({idproj:req.body.IDPROJ.toString()})
             return rs
         })

@@ -30,7 +30,7 @@ let query=`select I_ITPM_SC as idlayanan, I_ITPM_SCNBR as nolayanan ,I_EMP_REQ a
 
 async function findUnsed(params){
     const param = {}
-    console.dir(params)
+    //console.dir(params)
     let query=`select I_ITPM_SC as idlayanan, I_ITPM_SCNBR as nolayanan ,I_EMP_REQ as nikreq,
     C_ITPM_SC as kodelayanan,
     N_ITPM_APPL as namaaplikasi,
@@ -44,7 +44,7 @@ async function findUnsed(params){
     from   DBADMIT.TMITPMSC a
     where not exists (select 1 from dbadmit.tmitpmproj b where B.I_ITPM_SC = a.i_itpm_sc)`
     if(params.idproj){
-        console.dir('masuk')
+       // console.dir('masuk')
         param.idproj = params.idproj
         query+=`
 union all

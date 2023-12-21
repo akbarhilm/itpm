@@ -22,7 +22,7 @@ async function find(params){
              param.idpidkegiatanlanreal = params.idkegiatan
          }
      }
-     console.dir(query)
+     //.dir(query)
  
      const result = await database.exec(query,param)
      return result.rows;

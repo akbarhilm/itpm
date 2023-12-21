@@ -24,6 +24,9 @@ const roboRoute = require('../../controller/robo')
 const dashRoute = require('../../controller/dashboard')
 const swaggerRoute = require('../../controller/swagger')
 const otoritasRoute = require('../../controller/otoritas')
+const mptiRoute = require('../../controller/mpti')
+const portoRoute = require('../../controller/porto')
+const prokerRoute = require('../../controller/proker')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
@@ -119,6 +122,9 @@ function init() {
         app.use('/api/proyek',uatRoute)
         app.use('/api/proyek',baRoute)
         app.use('/api/proyek',roboRoute)
+        app.use('/api/ref',mptiRoute)
+        app.use('/api/ref',portoRoute)
+        app.use('/api/ref',prokerRoute)
 
         app.use(function(req,res){
           res.status(404).send('Not Found');
