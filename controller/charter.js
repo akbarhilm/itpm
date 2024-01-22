@@ -5,6 +5,8 @@ const proj = require('../services/proyek');
 const map = require('../util/errorHandling');
 const smail = require('../services/email');
 const oracle = require("oracledb");
+const upload = require('../util/upload')
+
 
 router.get('/charter', async (req, res, next) => {
     try {
@@ -30,28 +32,7 @@ router.get('/charter', async (req, res, next) => {
     }
 });
 
-router.get('/charter/:id', async (req, res, next) => {
-    try {
 
-        const rowspar = await charter.find({
-            idproj: req.params.id
-        });
-
-        if (rowspar.length !== 0) {
-
-            const rowsch = await charter.findChild({ idcharter: rowspar[0].IDCHARTER });
-
-            rowspar[0].LISTDETAIL = rowsch || null;
-
-            res.status(200).json(rowspar[0]);
-        } else {
-            res.status(200).json({});
-        }
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
-});
 
 router.post('/charter/tambah', async (req, res, next) => {
     const conn = await oracle.getConnection();
@@ -191,6 +172,63 @@ router.put('/charter/approve', async (req, res, next) => {
         const { errorNum } = err;
         const message = await map.map(errorNum);
         res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
+    }
+});
+
+router.post('/charter/upload',upload.single('file'), async(req,res,next)=>{
+    try{
+       console.log(req.file);
+        if(req.file){
+           res.status(200).json({ "code": 200, "message": "Berhasil Upload" });
+        }else{
+            res.status(500).json({ "code": 500, "message": "Tidak Berhasil Upload" });
+        }
+
+    }catch(e){
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
+    }
+})
+
+router.get('/charter/download',async(req,res,next)=>{
+    try{
+        const name = req.query.filename
+        const file = '/data2/ITPM/'+name
+        console.log(file);
+        res.type('blob')
+       res.setHeader('Content-disposition', 'attachment; filename=' + name);
+        res.download(file)
+    }catch(e){
+        console.log(e);
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
+    }
+})
+
+router.get('/charter/:id', async (req, res, next) => {
+    try {
+
+        const rowspar = await charter.find({
+            idproj: req.params.id
+        });
+
+        if (rowspar.length !== 0) {
+
+            const rowsch = await charter.findChild({ idcharter: rowspar[0].IDCHARTER });
+
+            rowspar[0].LISTDETAIL = rowsch || null;
+
+            res.status(200).json(rowspar[0]);
+        } else {
+            res.status(200).json({});
+        }
+    } catch (err) {
+        console.error(err);
         next(err);
     }
 });

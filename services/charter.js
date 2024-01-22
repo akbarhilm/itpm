@@ -12,7 +12,8 @@ async function find(params) {
   C_ITPM_ACTV          kodeaktif,
   C_ITPM_APPRV         kodeapprove,
   e_itpm_charterbenffin benefitfinansial,
-  e_itpm_charterbenfnonfin benefitnonfinansial
+  e_itpm_charterbenfnonfin benefitnonfinansial,
+  i_doc_ref dokumen
   from dbadmit.tmitpmcharter`
 
     if (!Object.keys(params).length == 0) {
@@ -58,6 +59,7 @@ async function addParent(params,commit,conn) {
   C_ITPM_ACTV          ,
   e_itpm_charterbenffin,
   e_itpm_charterbenfnonfin,
+  i_doc_ref,
   I_ENTRY,
   D_ENTRY,
   C_ITPM_APPRV )
@@ -69,6 +71,7 @@ async function addParent(params,commit,conn) {
       1,
       :benffin,
       :benfnonfin,
+      :dokumen,
       :identry,
       sysdate,
       0
@@ -82,7 +85,7 @@ async function addParent(params,commit,conn) {
     param.identry = params.identry
     param.benffin = params.benffin
     param.benfnonfin = params.benfnonfin
-
+    param.dokumen = params.dokumen
 
     param.idcharter = { dir: oracledb.BIND_OUT }
 
