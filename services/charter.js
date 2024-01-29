@@ -140,6 +140,7 @@ async function editParent(params,commit,conn) {
         D_ITPM_CHARTERFINISH = to_date(:tglselesai,'dd/mm/yyyy') ,
         e_itpm_charterbenffin = :benffin,
         e_itpm_charterbenfnonfin = :benfnonfin,
+        i_doc_ref = :dokumen,
         I_UPDATE = :idubah        ,
         D_UPDATE = sysdate
         where I_ITPM_CHARTER = :idcharter`
@@ -150,6 +151,7 @@ async function editParent(params,commit,conn) {
     param.idubah = params.idubah
     param.idcharter = params.idcharter
     param.benffin = params.benffin
+    param.dokumen = params.dokumen
     param.benfnonfin = params.benfnonfin
 
 

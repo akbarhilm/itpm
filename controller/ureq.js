@@ -4,6 +4,7 @@ const ureq = require('../services/ureq');
 const proj = require('../services/proyek')
 const map = require('../util/errorHandling')
 const oracle = require("oracledb");
+const upload = require('../util/upload')
 
 router.get('/ureq', async (req, res, next) => {
     try {
@@ -21,6 +22,40 @@ router.get('/ureq', async (req, res, next) => {
         const message = await map.map(errorNum)
         res.status(500).json({"code":errorNum,"message":message});
         next(err)
+    }
+})
+
+router.post('/ureq/upload',upload.single('file'), async(req,res,next)=>{
+    try{
+       console.log(req.file);
+        if(req.file){
+           res.status(200).json({ "code": 200, "message": "Berhasil Upload" });
+        }else{
+            res.status(500).json({ "code": 500, "message": "Tidak Berhasil Upload" });
+        }
+
+    }catch(e){
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
+    }
+})
+
+router.get('/ureq/download',async(req,res,next)=>{
+    try{
+        const name = req.query.filename
+        const file = '/data2/ITPM/'+name
+        console.log(file);
+        res.type('blob')
+       res.setHeader('Content-disposition', 'attachment; filename=' + name);
+        res.download(file)
+    }catch(e){
+        console.log(e);
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
     }
 })
 
@@ -68,11 +103,12 @@ router.post('/ureq/tambah',async(req,res,next)=>{
         paramproj.table = 'ureq'
         paramproj.field = 'ureq'
         paramproj.idproj = req.body.idproj
-
+        console.log(req.body.dokumen);
         let reselect = {}
         const batch =  paramureq.map(async (el, i, array) => {
             el.identry = req.user.data.nik
             el.idproj = idproj
+            el.dokumen = req.body.dokumen
             if (i == array.length - 1) {
                 
                 const res = await ureq.add(el, {
@@ -125,6 +161,7 @@ router.put('/ureq/ubah',async(req,res,next)=>{
         const batch =  paramureq.listdetail.map(async (el, i, array) => {
             el.identry = req.user.data.nik
             el.idproj = idproj
+            el.dokumen = req.body.dokumen
             if (i == array.length - 1) {
                 
                 const res = await ureq.add(el, {
