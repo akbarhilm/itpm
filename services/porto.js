@@ -46,8 +46,8 @@ async function editParent(params, commit, conn) {
     n_porto_dev = :namadev,
     n_porto_apltype = :tipeapl,
     n_fileappl = :namafile,
-    d_porto_publish = :tglpublish,
-    d_porto_retired = :tglretired
+    d_porto_publish = to_date(:tglpublish,'dd/mm/yyyy'),
+    d_porto_retired = to_date(:tglretired,'dd/mm/yyyy')
     where i_id = :idporto `;
   const param = {};
   param.idporto = params.idporto
@@ -62,8 +62,9 @@ async function editParent(params, commit, conn) {
   param.tglpublish = params.publish;
   param.tglretired = params.retired;
   param.namafile = params.namafile;
-
-  const result = await database.seqexec(query, param, commit, conn);
+  
+  const result = await database.exec(query, param);
+  console.log(param);
   return param;
 }
 async function addParent(params) {
@@ -92,8 +93,8 @@ async function addParent(params) {
         :status,
         :namadev,
         :tipeapl,
-        :tglpublish,
-        :tglretired,
+        to_date(:tglpublish,'dd/mm/yyyy'),
+        to_date(:tglretired,'dd/mm/yyyy'),
         :namafile,
         :identry,
         sysdate
