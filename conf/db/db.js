@@ -34,7 +34,7 @@ function exec(statement, bind = [], opt = []) {
 
         try {
             conn = await oracle.getConnection();
-            //console.dir(bind)
+            //console.dir(statement)
             result = await conn.execute(statement, bind, opt);
             //console.dir(result)
             resolve(result);

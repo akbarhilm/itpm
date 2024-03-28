@@ -7,6 +7,7 @@ const smail = require('../services/email');
 const charter = require('../services/charter');
 const alamatemail = require('../services/pengguna');
 const oracle = require("oracledb");
+const upload = require('../util/upload')
 
 router.get('/uat', async (req, res, next) => {
     try {
@@ -31,6 +32,40 @@ router.get('/uat', async (req, res, next) => {
         next(err);
     }
 });
+
+router.post('/uat/upload',upload.single('file'), async(req,res,next)=>{
+    try{
+       console.log(req.file);
+        if(req.file){
+           res.status(200).json({ "code": 200, "message": "Berhasil Upload" });
+        }else{
+            res.status(500).json({ "code": 500, "message": "Tidak Berhasil Upload" });
+        }
+
+    }catch(e){
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
+    }
+})
+
+router.get('/uat/download',async(req,res,next)=>{
+    try{
+        const name = req.query.filename
+        const file = '/data2/ITPM/'+name
+        console.log(file);
+        res.type('blob')
+       res.setHeader('Content-disposition', 'attachment; filename=' + name);
+        res.download(file)
+    }catch(e){
+        console.log(e);
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
+    }
+})
 
 router.get('/uat/:id', async (req, res, next) => {
     try {
@@ -300,5 +335,18 @@ router.put('/uat/approveqa', async (req, res, next) => {
         next(err);
     }
 });
+
+router.put('/uat/file', async(req,res,next)=>{
+    try{
+        const param = req.body
+        const rs = await uat.savefile(param)
+       res.status(200).json({"code": 200, "message": "Berhasil Simpan Dokumen" })
+    }catch(e){
+        const { errorNum } = err;
+        const message = await map.map(errorNum);
+        res.status(500).json({ "code": errorNum, "message": message });
+        next(err);
+    }
+})
 
 module.exports = router;

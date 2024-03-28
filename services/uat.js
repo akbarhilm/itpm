@@ -11,8 +11,8 @@ async function find(params) {
     d_itpm_useraprv as tglaproveuser,
     i_emp_qa as nikqa,
     c_itpm_qaaprv as aproveqa,
-    d_itpm_qaaprv as tglaproveqa
-    
+    d_itpm_qaaprv as tglaproveqa,
+    I_DOC_UAT as dokumen
      from dbadmit.tmitpmuat`
 
     if (!Object.keys(params).length == 0) {
@@ -55,6 +55,7 @@ async function addParent(params,commit,conn) {
         i_itpm_uatnbr,
         c_itpm_useraprv,
         c_itpm_qaaprv,
+        I_DOC_UAT,
         i_entry,
         d_entry
         )values(
@@ -62,6 +63,7 @@ async function addParent(params,commit,conn) {
         :nouat,
         0,
         0,
+        :dokumen,
         :identry,
         sysdate
   ) returning i_itpm_uat into :iduat`
@@ -70,7 +72,7 @@ async function addParent(params,commit,conn) {
     param.nouat = nouat[0].NOUAT,
      param.idproj= params.idproj ,
     param.identry= params.identry 
-
+    param.dokumen = params.dokumen
 
     param.iduat = { dir: oracledb.BIND_OUT }
 
@@ -221,6 +223,20 @@ async function failApproveqa(params){
     return result.rowsAffected
 }
 
+async function savefile(params){
+    let query=`update dbadmit.tmitpmuat
+    set I_DOC_UAT = :filename
+    where i_itpm_proj = :idproyek`
+
+    const param ={}
+    param.filename = params.filename
+    param.idproyek = params.idproyek
+
+    const res = await database.exec(query,param)
+    return res.rowsAffected
+}
+
+module.exports.savefile = savefile
 module.exports.approvebyUAT = approvebyUAT
 module.exports.failApproveqa = failApproveqa
 module.exports.approveuser = approveuser
