@@ -93,8 +93,8 @@ async function addParent(params) {
         :status,
         :namadev,
         :tipeapl,
-        to_date(:tglpublish,'dd/mm/yyyy'),
-        to_date(:tglretired,'dd/mm/yyyy'),
+        to_date(to_char(:tglpublish,'dd/mm/yyyy'),'dd/mm/yyyy'),
+        to_date(to_char(:tglretired,'dd/mm/yyyy'),'dd/mm/yyyy'),
         :namafile,
         :identry,
         sysdate
