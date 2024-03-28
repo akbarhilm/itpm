@@ -59,8 +59,8 @@ async function editParent(params, commit, conn) {
   param.status = params.status;
   param.namadev = params.dev;
   param.tipeapl = params.tipe;
-  param.tglpublish = params.publish;
-  param.tglretired = params.retired;
+  param.tglpublish = params.publish === 'Invalid date'? null :params.publish ;
+  param.tglretired = params.retired === 'Invalid date'? null :params.retired;
   param.namafile = params.namafile;
   
   const result = await database.exec(query, param);
@@ -110,8 +110,9 @@ async function addParent(params) {
   param.status = params.status;
   param.namadev = params.dev;
   param.tipeapl = params.tipe;
-  param.tglpublish = params.publish;
-  param.tglretired = params.retired;
+  param.tglpublish = params.publish === 'Invalid date'? null :params.publish ;
+  param.tglretired = params.retired === 'Invalid date'? null :params.retired;
+  
   param.identry = params.identry;
   param.namafile = params.namafile;
   param.id = { dir: oracledb.BIND_OUT };
