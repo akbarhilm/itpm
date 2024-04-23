@@ -2,15 +2,29 @@ const database = require("../conf/db/db");
 const oracledb = require("oracledb");
 
 async function findParent(params) {
-  let query = `select a.i_id as idporto,a.I_PORTO as kodeporto, a.I_SERV kodeservis, b.n_SERV as namaservis, a.N_PORTO_APL as namaaplikasi, a.N_PORTO_OWNER as namaowner, 
-  a.C_PORTO_GRP as kodegrup, c.N_PORTO_GRP as namagrup, a.E_PORTO_URL as url, 
-  a.C_PORTO_STATUS as status, a.N_PORTO_DEV as pengembang, a.N_PORTO_APLTYPE as tipeaplikasi, a.n_fileappl as namafile,
-  TO_CHAR(a.D_PORTO_PUBLISH, 'DD-MM-YYYY') as publish,
-  TO_CHAR(a.D_PORTO_RETIRED, 'DD-MM-YYYY') as retired
-  from DBADMIT.TMITPMPORTOFOLIO a
-left join DBADMIT.TMITPMSERVCATALOQUE b on (a.I_SERV = b.I_SERV)
-inner JOIN DBADMIT.TRITPMPORTOFOLIOGRP c on (a.C_PORTO_GRP = c.C_PORTO_GRP)`
-  if (params) {
+  let query = `
+with data1 as (
+  select I_ITPM_APPL, count(I_ITPM_PROJ) as jml
+  from DBADMIT.TMITPMPROJ
+  where I_ITPM_APPL is not null
+  group by I_ITPM_APPL 
+ )
+ 
+ select d.I_ITPM_APPL as appl, a.I_ID as idporto, 
+ case when d.I_ITPM_APPL is null then 'BOLEH DIHAPUS'
+ else 'DILARANG HAPUS'
+ end as "FLAG_HAPUS"
+ ,a.I_PORTO as kodeporto, a.I_SERV as kodeservis, b.n_SERV as namaservis, a.N_PORTO_APL as namaaplikasi, a.N_PORTO_OWNER as namaowner, 
+ a.C_PORTO_GRP as kodegrup, c.N_PORTO_GRP as namagrup, a.E_PORTO_URL as url, 
+ a.C_PORTO_STATUS as status, a.N_PORTO_DEV as pengembang, a.N_PORTO_APLTYPE as tipeaplikasi, 
+ TO_CHAR(a.D_PORTO_PUBLISH, 'DD-MM-YYYY') as publish,
+ TO_CHAR(a.D_PORTO_RETIRED, 'DD-MM-YYYY') as retired
+ from DBADMIT.TMITPMPORTOFOLIO a
+ left join DBADMIT.TMITPMSERVCATALOQUE b on (a.I_SERV = b.I_SERV)
+ inner JOIN DBADMIT.TRITPMPORTOFOLIOGRP c on (a.C_PORTO_GRP = c.C_PORTO_GRP)
+ left join data1 d on (a.I_ID = d.I_ITPM_APPL)
+ `
+if (params) {
     query += `where a.i_id = :idporto`;
   }
   query += ` order by a.I_SERV, a.I_PORTO, a.D_PORTO_PUBLISH desc`;
@@ -93,8 +107,8 @@ async function addParent(params) {
         :status,
         :namadev,
         :tipeapl,
-        to_date(to_char(:tglpublish,'dd/mm/yyyy'),'dd/mm/yyyy'),
-        to_date(to_char(:tglretired,'dd/mm/yyyy'),'dd/mm/yyyy'),
+        to_date(:tglpublish,'dd/mm/yyyy'),
+        to_date(:tglretired,'dd/mm/yyyy'),
         :namafile,
         :identry,
         sysdate
@@ -131,6 +145,8 @@ async function addChild(params) {
         n_porto_modul,
         e_porto_modul,
         c_porto_itemstat,
+        d_porto_itempublish,
+        d_porto_itemretired,
         i_entry,
         d_entry
     )values(
@@ -139,6 +155,8 @@ async function addChild(params) {
        :namamodul,
        :ketmodul,
        :statusitem,
+       to_date(:tglitempublish,'dd/mm/yyyy'),
+       to_date(:tglitemretired,'dd/mm/yyyy'),
        :identry,
        sysdate
 
@@ -150,6 +168,8 @@ async function addChild(params) {
     (param.namamodul = params.nama),
     (param.ketmodul = params.keterangan),
     (param.statusitem = params.status),
+    (param.tglitempublish = params.tglitempublish),
+    (param.tglitemretired = params.tglitemretired),
     (param.identry = params.identry);
   param.id = { dir: oracledb.BIND_OUT };
 
@@ -168,7 +188,7 @@ async function removeChild(params) {
   return res.rowsAffected;
 }
 async function removeParent(params) {
-  let query = `delete dbadmit.tmitpmportofolio where i_porto = :idporto`;
+  let query = `delete dbadmit.tmitpmportofolio where i_id = :idporto`;
   const res = await database.exec(query, params);
 
   return res.rowsAffected;

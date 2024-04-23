@@ -49,7 +49,7 @@ process.on('SIGINT',()=>{
 
 process.on('uncaughtException',err=>{
     console.log('Uncaught Excp');
-    console.error('err');
+    console.error(err);
     shutdown(err);
 })
 

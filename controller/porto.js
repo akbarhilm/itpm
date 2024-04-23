@@ -24,13 +24,13 @@ router.get('/porto',async(req,res,next)=>{
 
 
 router.post('/porto/tambah',async(req,res,next)=>{
-    const conn = await oracle.getConnection();
+    
     try{
 
         const params = req.body
         params.identry = req.user.data.nik
 
-        const respar = await porto.addParent(params, {}, conn);
+        const respar = await porto.addParent(params);
 
         let reselect;
 
@@ -38,12 +38,12 @@ router.post('/porto/tambah',async(req,res,next)=>{
             el.idporto = respar.id;
             el.identry = req.user.data.nik;
             if (i == array.length - 1) {
-                const res = await porto.addChild(el, {autoCommit: true}, conn);
+                const res = await porto.addChild(el);
                
                 //resdetail.push(res)
 
             } else {
-                const res = await porto.addChild(el, [], conn);
+                const res = await porto.addChild(el);
                 //resdetail.push(res)
             }
 
@@ -69,7 +69,7 @@ router.post('/porto/tambah',async(req,res,next)=>{
                 res.status(500).json({ "code": "500", "message": "Gagal Simpan" });
             }
             res.status(200).json(reselect)
-            await conn.close();
+           
         });
 
     }catch(err){
@@ -132,12 +132,14 @@ router.put('/porto/edit',async(req,res,next)=>{
 router.delete('/porto/hapus',async (req,res,next)=>{
     try{
         console.log(req.body.id);
-        const rest = await porto.remove({idporto:req.body.id})
-
-        if(rest==1){
-            const r = await porto.find()
+        const restc = await porto.removeChild({idporto:req.body.id})
+        const restp = await porto.removeParent({idporto:req.body.id})
+        console.log(restc);
+        console.log(restp);
+        if(restc==1 && restp===1){
+            
         
-        res.status(200).json(r)
+        res.status(200).json({"code":200,"message":"Berhasil Hapus"})
         }else{
             res.status(500).json({"code":500,"message":"TIdak Berhasil Hapus"})
         }
