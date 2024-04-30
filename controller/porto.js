@@ -136,7 +136,7 @@ router.delete('/porto/hapus',async (req,res,next)=>{
         const restp = await porto.removeParent({idporto:req.body.id})
         console.log(restc);
         console.log(restp);
-        if(restc==1 && restp===1){
+        if(restc==1 || restp===1){
             
         
         res.status(200).json({"code":200,"message":"Berhasil Hapus"})
