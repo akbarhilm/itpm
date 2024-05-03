@@ -18,7 +18,8 @@ with data1 as (
  a.C_PORTO_GRP as kodegrup, c.N_PORTO_GRP as namagrup, a.E_PORTO_URL as url, 
  a.C_PORTO_STATUS as status, a.N_PORTO_DEV as pengembang, a.N_PORTO_APLTYPE as tipeaplikasi, 
  TO_CHAR(a.D_PORTO_PUBLISH, 'DD-MM-YYYY') as publish,
- TO_CHAR(a.D_PORTO_RETIRED, 'DD-MM-YYYY') as retired
+ TO_CHAR(a.D_PORTO_RETIRED, 'DD-MM-YYYY') as retired,
+ a.N_FILEAPPL as namafile
  from DBADMIT.TMITPMPORTOFOLIO a
  left join DBADMIT.TMITPMSERVCATALOQUE b on (a.I_SERV = b.I_SERV)
  inner JOIN DBADMIT.TRITPMPORTOFOLIOGRP c on (a.C_PORTO_GRP = c.C_PORTO_GRP)

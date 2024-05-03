@@ -136,7 +136,7 @@ router.delete('/porto/hapus',async (req,res,next)=>{
         const restp = await porto.removeParent({idporto:req.body.id})
         console.log(restc);
         console.log(restp);
-        if(restc==1 && restp===1){
+        if(restc==1 || restp===1){
             
         
         res.status(200).json({"code":200,"message":"Berhasil Hapus"})
@@ -187,13 +187,13 @@ router.post('/porto/upload',upload.single('file'), async(req,res,next)=>{
     }
 })
 
-router.get('/charter/download',async(req,res,next)=>{
+router.get('/porto/download',async(req,res,next)=>{
     try{
         const name = req.query.filename
         const file = '/data2/ITPM/'+name
         console.log(file);
         res.type('blob')
-       res.setHeader('Content-disposition', 'attachment; filename=' + name);
+       res.setHeader('Content-disposition', 'attachment; filename=' + name +', content-type=image/'+name.split('.').pop());
         res.download(file)
     }catch(e){
         console.log(e);
