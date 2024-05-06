@@ -8,7 +8,8 @@ async function find(params) {
          E_ITPM_UREQ  ketureq,
          I_ITPM_UREQPRTY  prioritas,
          N_ITPM_USECASE   usecase,
-        C_ITPM_ACTV          kodeaktif
+        C_ITPM_ACTV          kodeaktif,
+        I_DOC_UREQ dokumen
          from dbadmit.tmitpmureq`;
     const param = {}
     if (Object.keys(params).some(function(k) {return params[k];})) {
@@ -38,6 +39,7 @@ async function add(params,commit,conn){
          I_ITPM_UREQPRTY ,
          N_ITPM_USECASE,
         C_ITPM_ACTV,
+        I_DOC_UREQ,
         I_ENTRY,
         D_ENTRY
     )VALUES(
@@ -47,6 +49,7 @@ async function add(params,commit,conn){
         :prioritas,
         :usecase,
         1,
+        :dokumen,
         :identry,
         sysdate
     ) returning i_itpm_ureq into :idureq`
@@ -58,7 +61,7 @@ async function add(params,commit,conn){
     param.prioritas = params.prioritas
     param.usecase = params.usecase
     param.identry = params.identry
-
+    param.dokumen = params.dokumen
     param.idureq = { dir: oracledb.BIND_OUT }
 
     const result = await database.seqexec(query, param, commit,conn)

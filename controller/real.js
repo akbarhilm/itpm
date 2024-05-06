@@ -185,8 +185,10 @@ router.put('/real/ubah',async(req,res,next)=>{
          return Promise.all(batch).then(async() => {
             const find = await real.find({idproj:idproj})
             const resnr = await proj.stepper({id:idproj})
+            const pln = await plan.find({idproj:idproj})
             reselect.NOREAL=resnr[0].NOREAL
-            reselect.LISTDETAIL = find
+            const refined = find.map((d)=>({...d,BOBOT:pln.find((x)=>x.IDKEGIATAN === d.IDKEGIATAN).BOBOT}))
+            reselect.LISTDETAIL = refined
            
 
             res.status(200).json(reselect)

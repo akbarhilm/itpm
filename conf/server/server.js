@@ -27,6 +27,7 @@ const otoritasRoute = require('../../controller/otoritas')
 const mptiRoute = require('../../controller/mpti')
 const portoRoute = require('../../controller/porto')
 const prokerRoute = require('../../controller/proker')
+const cataRoute = require('../../controller/catalog')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
@@ -124,6 +125,7 @@ function init() {
         app.use('/api/proyek',roboRoute)
         app.use('/api/ref',mptiRoute)
         app.use('/api/ref',portoRoute)
+        app.use('/api/ref',cataRoute)
         app.use('/api/ref',prokerRoute)
 
         app.use(function(req,res){
