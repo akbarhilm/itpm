@@ -1,11 +1,65 @@
 const database = require('../conf/db/db')
 const oracledb = require('oracledb');
 const nomer = require('./nomer');
+const pengguna = require('./pengguna')
 const { autoCommit } = require('oracledb');
 //  const aplikasi = require('./aplikasi');
 //  const layanan = require('./layanan')
 //  const modul = require('./modul') 
 
+async function listProyek(params){
+    const paramotor = {}
+    paramotor.nik = params.nik
+    const otor = await pengguna.findPenggunaOtoritas(paramotor);
+
+    let query=`with data1 as (
+        select distinct a.C_ITPM_PROJSTAT
+        from dbadmit.TMITPMPROJ a	
+    ),
+     data2 as (
+        select case 
+        when C_ITPM_PROJSTAT = 'BARU' then 1
+        when C_ITPM_PROJSTAT = 'BERJALAN' then 2
+        when C_ITPM_PROJSTAT = 'SELESAI' then 3
+        when C_ITPM_PROJSTAT = 'PENDING' then 4
+        when C_ITPM_PROJSTAT = 'HOLD' then 5
+        when C_ITPM_PROJSTAT = 'CANCEL' then 6
+        when C_ITPM_PROJSTAT = 'BLOCKED' then 7
+        end as kode_status,
+        C_ITPM_PROJSTAT
+        from data1 
+    )
+    select a.I_ITPM_PROJ as idproyek,b.I_ITPM_SCNBR nolayanan, a.N_ITPM_PROJ namaproyek,a.I_EMP_REQ as BPO,
+    a.I_EMP_PM as PM, a.C_ITPM_PROJSTAT statusproyek, c.kode_status, a.N_ITPM_PROJURI as namauri,
+    to_char(D_ITPM_CHARTERSTART, 'DD-MM-YYYY') as D_START, to_char(D_ITPM_CHARTERFINISH, 'DD-MM-YYYY') as D_FINISH,
+    to_char(D_ITPM_REMINDER, 'DD-MM-YYYY') as D_REMINDER
+    from DBADMIT.TMITPMPROJ a
+    join DBADMIT.TMITPMSC b on (a.I_ITPM_SC = b.I_ITPM_SC)
+    full join DBADMIT.TMITPMCHARTER d on (a.I_ITPM_PROJ = d.I_ITPM_PROJ)
+    join data2 c on (a.C_ITPM_PROJSTAT = c.C_ITPM_PROJSTAT)
+    
+    `
+    const param ={}
+    const mapotor = otor.map(x=>x.KODEAUTH)
+    const checkotor = ["PMO","QA","BOD"]
+    if(!checkotor.some(val => mapotor.includes(val))){
+        param.nik = params.nik
+    
+        query+=` where :nik in (a.i_emp_req,a.i_emp_pm)`;
+        }
+        
+    query+=`order by c.kode_status, to_char(D_ITPM_CHARTERSTART, 'DD-MM-YYYY')`
+    let result = await database.exec(query,param)
+    let list = {"list":result.rows}
+    
+    const checks = checkotor.reduce((obj, val) => ({[val]: mapotor.includes(val), ...obj}), {})
+    
+    
+        list.otoritas = checks
+
+        return list
+    
+}
 
 async function find(params){
     let query =`select I_ITPM_PROJ as idproyek,
@@ -371,3 +425,4 @@ module.exports.addUserAuth = addUserAuth
 module.exports.addNumber = addNumber
 module.exports.updateStatus = updateStatus
 module.exports.updateStatusBa = updateStatusBa
+module.exports.listProyek = listProyek
