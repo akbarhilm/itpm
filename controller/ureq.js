@@ -190,7 +190,9 @@ router.put('/ureq/ubah',async(req,res,next)=>{
         const batch =  paramureq.listdetail.map(async (el, i, array) => {
             el.identry = req.user.data.nik
             el.idproj = idproj
-            el.dokumen = req.body.dokumen
+            el.dokumen = req.body.
+
+            el.nofd = req.body.nofd
             if (i == array.length - 1) {
                 
                 const res = await ureq.add(el, {
