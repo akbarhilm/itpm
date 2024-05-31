@@ -105,6 +105,7 @@ async function summaryProyek(params){
     return res.rows
 }
 
+
 async function findPenggunaProyek(params){
     const paramotor = {}
     paramotor.nik = params.nik

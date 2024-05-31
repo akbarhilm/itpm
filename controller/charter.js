@@ -209,6 +209,19 @@ router.get('/charter/download',async(req,res,next)=>{
         next(err);
     }
 })
+router.get('/charter/reminder',async (req,res,next)=>{
+    try{
+        const param = req.query.tgl
+       console.log(param);
+        const rest = await charter.tglReminder({tgl:param})
+
+        return res.status(200).json(rest[0])
+
+    }catch(e){
+        console.error(e)
+        next(e)
+    }
+})
 
 router.get('/charter/:id', async (req, res, next) => {
     try {
@@ -232,5 +245,7 @@ router.get('/charter/:id', async (req, res, next) => {
         next(err);
     }
 });
+
+
 
 module.exports = router;
