@@ -9,6 +9,7 @@ async function find(params) {
   I_ITPM_CHARTERNBR  nocharter,
   to_char(D_ITPM_CHARTERSTART,'dd/mm/yyyy')   tglmulai,
   to_char(D_ITPM_CHARTERFINISH,'dd/mm/yyyy')  tglselesai,
+  to_char(D_ITPM_REMINDER,'dd/mm/yyyy') tglreminder,
   C_ITPM_ACTV          kodeaktif,
   C_ITPM_APPRV         kodeapprove,
   e_itpm_charterbenffin benefitfinansial,
@@ -56,6 +57,7 @@ async function addParent(params,commit,conn) {
   I_ITPM_CHARTERNBR ,
   D_ITPM_CHARTERSTART,
   D_ITPM_CHARTERFINISH ,
+  D_ITPM_REMINDER,
   C_ITPM_ACTV          ,
   e_itpm_charterbenffin,
   e_itpm_charterbenfnonfin,
@@ -68,6 +70,7 @@ async function addParent(params,commit,conn) {
       :nocharter,
       to_date(:tglmulai,'dd/mm/yyyy'),
       to_date(:tglselesai,'dd/mm/yyyy'),
+      to_date(:tglreminder,'dd/mm/yyyy'),
       1,
       :benffin,
       :benfnonfin,
@@ -80,8 +83,9 @@ async function addParent(params,commit,conn) {
     const param = {}
     param.nocharter = nocharter[0].NOCHARTER
     param.idproj = params.idproj
-    param.tglmulai = params.tglmulai
-    param.tglselesai = params.tglselesai
+    param.tglmulai = params.tglmulai === "Invalid date"?null:params.tglmulai
+    param.tglselesai = params.tglselesai === "Invalid date"?null:params.tglselesai
+    param.tglreminder = params.tglreminder === "Invalid date"?null:params.tglreminder
     param.identry = params.identry
     param.benffin = params.benffin
     param.benfnonfin = params.benfnonfin
@@ -138,6 +142,7 @@ async function editParent(params,commit,conn) {
        
         set D_ITPM_CHARTERSTART =  to_date(:tglmulai,'dd/mm/yyyy'),
         D_ITPM_CHARTERFINISH = to_date(:tglselesai,'dd/mm/yyyy') ,
+        D_ITPM_REMINDER = to_date(:tglreminder,'dd/mm/yyyy'),
         e_itpm_charterbenffin = :benffin,
         e_itpm_charterbenfnonfin = :benfnonfin,
         i_doc_ref = :dokumen,
@@ -146,8 +151,9 @@ async function editParent(params,commit,conn) {
         where I_ITPM_CHARTER = :idcharter`
 
     const param = {}
-    param.tglmulai = params.tglmulai
-    param.tglselesai = params.tglselesai
+    param.tglmulai = params.tglmulai === "Invalid date"?null:params.tglmulai
+    param.tglselesai = params.tglselesai === "Invalid date"?null:params.tglselesai
+    param.tglreminder = params.tglreminder === "Invalid date"?null:params.tglreminder
     param.idubah = params.idubah
     param.idcharter = params.idcharter
     param.benffin = params.benffin
@@ -204,7 +210,24 @@ async function approve(params){
     return result.rowsAffected
 }
 
+async function tglReminder(param){
+    let query =`with data1 as (
+        select to_char(D_WT_CAL, 'YYYY-MM-DD') as D_WT_CAL
+        from DBADMSI.TRWTNOHA a
+        where a.C_WT_CLASS in ('1','4', '7', '10')
+        and to_char(a.D_WT_CAL, 'YYYY-MM-DD') <= :tgl
+        order by a.D_WT_CAL desc
+        fetch  first 4 rows only
+        )
+        select MIN(D_WT_CAL)  as D_REMINDER from data1`
+        const params={}
+        params.tgl = param.tgl
+        console.dir(params);
+    const rest = await database.exec(query,params)
+    return rest.rows
+}
 
+module.exports.tglReminder = tglReminder
 module.exports.failAddChild = failAddChild
 module.exports.failAddParent = failAddParent
 module.exports.approve = approve

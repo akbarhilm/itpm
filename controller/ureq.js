@@ -25,6 +25,25 @@ router.get('/ureq', async (req, res, next) => {
     }
 })
 
+router.get('/ureq/nofd', async (req, res, next) => {
+    try {
+
+        const rows = await ureq.noFD({
+            grupaplikasi: req.query.grupaplikasi
+        });
+        if (rows.length !== 0) {
+            res.status(200).json(rows);
+        } else {
+            res.status(200).json({});
+        }
+    } catch (err) {
+        const { errorNum } = err;
+        const message = await map.map(errorNum)
+        res.status(500).json({"code":errorNum,"message":message});
+        next(err)
+    }
+})
+
 router.post('/ureq/upload',upload.single('file'), async(req,res,next)=>{
     try{
        console.log(req.file);
@@ -105,15 +124,25 @@ router.post('/ureq/tambah',async(req,res,next)=>{
         paramproj.idproj = req.body.idproj
         console.log(req.body.dokumen);
         let reselect = {}
+        const parad = {}
+        parad.no = req.body.nofd.substr(-7,2)
+        parad.grup = req.body.grup
+        parad.identry = req.user.data.nik
         const batch =  paramureq.map(async (el, i, array) => {
             el.identry = req.user.data.nik
             el.idproj = idproj
             el.dokumen = req.body.dokumen
+            el.nofd = req.body.nofd
+           
+
             if (i == array.length - 1) {
                 
                 const res = await ureq.add(el, {
                 } ,conn)
+                const del = await ureq.delmaxnodoc(parad,{},conn)
+                const addn = await ureq.addmaxnodoc(parad,{},conn)
                 const nr = await proj.addNumber(paramproj,{autoCommit:true},conn)
+
                
             } else {
                 const res = await ureq.add(el, {},conn)
@@ -162,6 +191,8 @@ router.put('/ureq/ubah',async(req,res,next)=>{
             el.identry = req.user.data.nik
             el.idproj = idproj
             el.dokumen = req.body.dokumen
+
+            el.nofd = req.body.nofd
             if (i == array.length - 1) {
                 
                 const res = await ureq.add(el, {

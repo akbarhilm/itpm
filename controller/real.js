@@ -157,8 +157,8 @@ router.put('/real/ubah',async(req,res,next)=>{
         
         //const raw = parampr
         //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai }) => pelaksana.map(nik => (Object.assign({ idkegiatan,nik,tglmulai,tglselesai},formap))))
-        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,progress})))
-         
+        //const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,progress }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,progress})))
+        const mapdata = parampr.listdetail.flatMap(({ idkegiatan, pelaksana,tglmulai,tglselesai,progress,bobot }) => pelaksana.map(nik => ({ idkegiatan,nik,tglmulai,tglselesai,progress,bobot}))) 
        // const rest = await real.addPlan(mapdata)
         const del = await real.delreal({idproj:idproj},{},conn)
         //console.dir(mapdata)
@@ -170,11 +170,14 @@ router.put('/real/ubah',async(req,res,next)=>{
                 
                 const res = await real.addReal(el, {
                 } ,conn)
+                const pl = await plan.ubahbobotplan (el, {
+                } ,conn)
                 const nr = await proj.addNumber(paramproj,{autoCommit:true},conn)
                 
                
                
             } else {
+                const pl = await plan.ubahbobotplan(el, {},conn)
                 const res = await real.addReal(el, {},conn)
                
             }

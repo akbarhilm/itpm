@@ -15,11 +15,10 @@ const axios = require('axios')
 router.get('/detail/:id', async (req, res, next) => {
 
     try {
-
         const rpro = await proyek.find({ id: req.params.id });
         const rla = await layanan.find({ id: rpro[0].IDLAYANAN });
-        const rapp = await aplikasi.find({ id: rpro[0].IDAPLIKASI });
-        const rmod = await modul.find({ idmodul: rpro[0].IDMODUL });
+        const rapp = await aplikasi.findbyid({ idaplikasi: rpro[0].IDAPLIKASI });
+        const rmod = await modul.find2({ idmodul: rpro[0].IDMODUL });
 
         const robj = rpro[0];
 
@@ -42,6 +41,33 @@ router.get('/detail/:id', async (req, res, next) => {
 
 });
 
+router.get('/listproyek',async(req,res,next)=>{
+    try{
+        const datanik = await getinfonik()
+        //console.log(datanik);
+        const param={}
+        param.nik = req.user.data.nik
+        console.log(param);
+        rows = await proyek.listProyek(param);
+        let newrows = []
+      await rows.list.forEach(d=>{
+        const pm = datanik.data.filter(z=>z.nik===d.PM)
+        const bpo = datanik.data.filter(z=>z.nik===d.BPO)
+        newrows.push({...d,
+            PM:pm.length>0?pm[0].nik+" - "+pm[0].nama:d.PM,
+            BPO: bpo.length>0?bpo[0].nik+" - "+bpo[0].nama:d.BPO,
+        })
+      })
+      rows.list = newrows
+    
+        return res.status(200).json(rows)
+        
+
+    }catch(e){
+        console.error(e);
+        next(e);
+    }
+})
 router.get('/', async (req, res, next) => {
     try {
 
@@ -126,9 +152,11 @@ router.get('/stepper/:id', async (req, res, next) => {
 async function getinfonik(param) {
     let options
     let data
-   
+   if(param){
         options = process.env.NIK_INFO + `?nik=`+ param
-   
+   }else{
+    options = process.env.NIK_INFO
+   }
    await axios.get(options).then((res)=>
     {
        //console.dir(res.data)
@@ -140,6 +168,7 @@ async function getinfonik(param) {
     return data
 
 }
+
 
 
 
