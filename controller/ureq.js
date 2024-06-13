@@ -139,8 +139,10 @@ router.post('/ureq/tambah',async(req,res,next)=>{
                 
                 const res = await ureq.add(el, {
                 } ,conn)
+                if(req.body.grup){
                 const del = await ureq.delmaxnodoc(parad,{},conn)
                 const addn = await ureq.addmaxnodoc(parad,{},conn)
+                }
                 const nr = await proj.addNumber(paramproj,{autoCommit:true},conn)
 
                
