@@ -24,13 +24,15 @@ router.get('/porto',async(req,res,next)=>{
 
 
 router.post('/porto/tambah',async(req,res,next)=>{
-    
+    const conn = await oracle.getConnection();
     try{
 
         const params = req.body
         params.identry = req.user.data.nik
 
-        const respar = await porto.addParent(params);
+        const respar = await porto.addParent(params,{},conn);
+
+       
 
         let reselect;
 
@@ -38,12 +40,12 @@ router.post('/porto/tambah',async(req,res,next)=>{
             el.idporto = respar.id;
             el.identry = req.user.data.nik;
             if (i == array.length - 1) {
-                const res = await porto.addChild(el);
+                const res = await porto.addChild(el,{autoCommit: true},conn);
                
                 //resdetail.push(res)
 
             } else {
-                const res = await porto.addChild(el);
+                const res = await porto.addChild(el,{},conn);
                 //resdetail.push(res)
             }
 
@@ -51,8 +53,9 @@ router.post('/porto/tambah',async(req,res,next)=>{
 
         return Promise.all(dtl).then(async () => {
             reselect = await porto.findParent({ idporto: respar.id });
+            console.dir(reselect);
             if (reselect.length !== 0) {
-
+               
                 const rowsch = await porto.findChild({ idporto: respar.id });
 
                 reselect[0].LISTDETAIL = rowsch || null;
@@ -64,12 +67,12 @@ router.post('/porto/tambah',async(req,res,next)=>{
             //console.dir(mail);
              else {
 
-                const delt = await porto.removeParent({ idporto: respar.IDPORTO });
-                const deltch = await porto.removeChild({ idporto: respar.IDPORTO });
+                const delt = await porto.removeParent({ idporto: respar.id },{},conn);
+                const deltch = await porto.removeChild({ idporto: respar.id },{autoCommit: true},conn);
                 res.status(500).json({ "code": "500", "message": "Gagal Simpan" });
             }
             res.status(200).json(reselect)
-           
+            await  conn.close()
         });
 
     }catch(err){
@@ -79,6 +82,7 @@ router.post('/porto/tambah',async(req,res,next)=>{
         await conn.close();
         next(err)
     }
+    
 })
 
 router.put('/porto/edit',async(req,res,next)=>{
@@ -87,7 +91,7 @@ router.put('/porto/edit',async(req,res,next)=>{
         const idporto = req.body.idporto;
         const params = req.body;
         params.idubah = req.user.data.nik;
-        const respar = await porto.editParent(params);
+        const respar = await porto.editParent(params,{},conn);
         const del = await porto.removeChild(params, {}, conn);
         let reselect;
 
@@ -126,14 +130,16 @@ router.put('/porto/edit',async(req,res,next)=>{
        await conn.close();
         next(err);
     }
+   
 
 })
 
 router.delete('/porto/hapus',async (req,res,next)=>{
+    const conn = await oracle.getConnection();
     try{
         console.log(req.body.id);
-        const restc = await porto.removeChild({idporto:req.body.id})
-        const restp = await porto.removeParent({idporto:req.body.id})
+        const restc = await porto.removeChild({idporto:req.body.id},{},conn)
+        const restp = await porto.removeParent({idporto:req.body.id},{autoCommit:true},conn)
         console.log(restc);
         console.log(restp);
         if(restc==1 || restp===1){
@@ -143,9 +149,13 @@ router.delete('/porto/hapus',async (req,res,next)=>{
         }else{
             res.status(500).json({"code":500,"message":"TIdak Berhasil Hapus"})
         }
+        await conn.close()
     }catch(e){
         console.error(e)
+        await conn.close()
     }
+
+   
 })
 
 router.get('/porto/grup',async(req,res,next)=>{
