@@ -29,8 +29,9 @@ if (params) {
     query += `where a.i_id = :idporto`;
   }
   query += ` order by a.I_SERV, a.I_PORTO, a.D_PORTO_PUBLISH desc`;
-
+console.dir(params);
   const rest = await database.exec(query, params);
+ 
   return rest.rows;
 }
 
@@ -78,11 +79,11 @@ async function editParent(params, commit, conn) {
   param.tglretired = params.retired === 'Invalid date'? null :params.retired;
   param.namafile = params.namafile;
   
-  const result = await database.exec(query, param);
+  const result = await database.seqexec(query, param,commit,conn);
   console.log(param);
   return param;
 }
-async function addParent(params) {
+async function addParent(params,commit,conn) {
   let query = `insert into dbadmit.tmitpmportofolio
     (   i_porto,
         i_serv,
@@ -132,13 +133,13 @@ async function addParent(params) {
   param.namafile = params.namafile;
   param.id = { dir: oracledb.BIND_OUT };
 
-  const result = await database.exec(query, param);
+  const result = await database.seqexec(query, param,commit,conn);
   param.id = result.outBinds.id[0];
   delete param.identry;
   return param;
 }
 
-async function addChild(params) {
+async function addChild(params,commit,conn) {
   let query = `insert into dbadmit.tmitpmportofoliodtl
     (
         i_idporto,
@@ -174,23 +175,23 @@ async function addChild(params) {
     (param.identry = params.identry);
   param.id = { dir: oracledb.BIND_OUT };
 
-  const result = await database.exec(query, param);
+  const result = await database.seqexec(query, param,commit,conn);
   param.id = result.outBinds.id[0];
   delete param.identry;
   return param;
 }
 
-async function removeChild(params) {
+async function removeChild(params,commit,conn) {
   let query = `delete dbadmit.tmitpmportofoliodtl where i_idporto = :idporto`;
   const param = {}
   param.idporto = params.idporto
-  const res = await database.exec(query, param);
+  const res = await database.seqexec(query, param,commit,conn);
 
   return res.rowsAffected;
 }
-async function removeParent(params) {
+async function removeParent(params,commit,conn) {
   let query = `delete dbadmit.tmitpmportofolio where i_id = :idporto`;
-  const res = await database.exec(query, params);
+  const res = await database.seqexec(query, params,commit,conn);
 
   return res.rowsAffected;
 }
