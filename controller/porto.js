@@ -90,7 +90,7 @@ router.put('/porto/edit',async(req,res,next)=>{
         const idporto = req.body.idporto;
         const params = req.body;
         params.idubah = req.user.data.nik;
-        const respar = await porto.editParent(params);
+        const respar = await porto.editParent(params,{},conn);
         const del = await porto.removeChild(params, {}, conn);
         let reselect;
 
