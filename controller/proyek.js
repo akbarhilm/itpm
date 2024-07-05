@@ -178,10 +178,10 @@ router.put('/ubah', async (req, res, next) => {
         const param = req.body;
         param.idupdate = req.user.data.nik;
         const row = await proyek.edit(param,{ autoCommit: true }, conn);
-        conn.close()
+        await conn.close()
         res.status(200).json(row);
     } catch (err) {
-        conn.close()
+       await conn.close()
         console.error(err);
         next(err);
     }
@@ -264,7 +264,7 @@ router.post('/tambah', async (req, res, next) => {
         const { errorNum } = err;
         const message = await map.map(errorNum);
         res.status(500).json({ "code": errorNum, "message": message });
-        conn.close()
+        await conn.close()
         next(err);
     }
 });
@@ -333,7 +333,7 @@ router.put('/ubahstatus', async (req, res, next) => {
         const { errorNum } = err;
         const message = await map.map(errorNum);
         res.status(500).json({ "code": errorNum, "message": message });
-        conn.close();
+        await conn.close();
         next(err);
     }
 });

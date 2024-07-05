@@ -78,9 +78,9 @@ async function editParent(params, commit, conn) {
   param.tglpublish = params.publish === 'Invalid date'? null :params.publish ;
   param.tglretired = params.retired === 'Invalid date'? null :params.retired;
   param.namafile = params.namafile;
-  
+ 
   const result = await database.seqexec(query, param,commit,conn);
-  console.log(param);
+  console.dir(result);
   return param;
 }
 async function addParent(params,commit,conn) {

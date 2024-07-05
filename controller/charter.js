@@ -104,7 +104,7 @@ router.post('/charter/tambah', async (req, res, next) => {
         const { errorNum } = err;
         const message = await map.map(errorNum);
         res.status(500).json({ "code": errorNum, "message": message });
-        conn.close();
+       await conn.close();
         next(err);
     }
 });
@@ -151,7 +151,7 @@ router.put('/charter/ubah', async (req, res, next) => {
         const { errorNum } = err;
         const message = await map.map(errorNum);
         res.status(500).json({ "code": errorNum, "message": message });
-        conn.close();
+        await conn.close();
         next(err);
     }
 

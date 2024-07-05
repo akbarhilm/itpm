@@ -28,6 +28,7 @@ const mptiRoute = require('../../controller/mpti')
 const portoRoute = require('../../controller/porto')
 const prokerRoute = require('../../controller/proker')
 const cataRoute = require('../../controller/catalog')
+const servRoute = require('../../controller/refservis')
 //const assignJwt = require('../../util/assign');
 const os = require('os')
 var jwt = require('express-jwt');
@@ -127,6 +128,7 @@ function init() {
         app.use('/api/ref',portoRoute)
         app.use('/api/ref',cataRoute)
         app.use('/api/ref',prokerRoute)
+        app.use('/api/ref',servRoute)
 
         app.use(function(req,res){
           res.status(404).send('Not Found');
@@ -134,6 +136,7 @@ function init() {
        server =  http.createServer(app).listen(port)
             .on('listening', () => {
                 console.log('Starting on localhost:' + port)
+                //app._router.stack.forEach(print.bind(null, []))
                 resolve();
             })
             .on('erro', (err) => {
@@ -154,6 +157,35 @@ function close(){
        }) 
     })
 }
+
+// function print (path, layer) {
+//   if (layer.route) {
+//     layer.route.stack.forEach(print.bind(null, path.concat(split(layer.route.path))))
+//   } else if (layer.name === 'router' && layer.handle.stack) {
+//     layer.handle.stack.forEach(print.bind(null, path.concat(split(layer.regexp))))
+//   } else if (layer.method) {
+//     console.log('%s /%s',
+//       layer.method.toUpperCase(),
+//       path.concat(split(layer.regexp)).filter(Boolean).join('/'))
+//   }
+// }
+
+// function split (thing) {
+//   if (typeof thing === 'string') {
+//     return thing.split('/')
+//   } else if (thing.fast_slash) {
+//     return ''
+//   } else {
+//     var match = thing.toString()
+//       .replace('\\/?', '')
+//       .replace('(?=\\/|$)', '$')
+//       .match(/^\/\^((?:\\[.*+?^${}()|[\]\\\/]|[^.*+?^${}()|[\]\\\/])*)\$\//)
+//     return match
+//       ? match[1].replace(/\\(.)/g, '$1').split('/')
+//       : '<complex:' + thing.toString() + '>'
+//   }
+// }
+
 
 module.exports.init = init;
 module.exports.close = close;
